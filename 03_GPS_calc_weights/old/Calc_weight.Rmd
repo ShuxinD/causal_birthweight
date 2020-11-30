@@ -1,0 +1,39 @@
+---
+title: "Calculate Weights"
+output: html_notebook
+---
+
+```{r}
+rm(list=ls())
+gc()
+library(dplyr)
+```
+
+```{r}
+# directory
+dir_input <- "/Users/dongshuxin/Desktop/MA_births/GPS_result/"
+dir_output <- "/Users/dongshuxin/Desktop/MA_births/Weight_result/"
+data_name <- "gbm_sens" # change each time
+# import
+gps <- readRDS(paste0(dir_input, "gps_", data_name,".rds"))
+# calculation
+gps$numrt_bc_30d <- with(gps, dnorm(bc_30d, mean = mean(bc_30d), sd=sd(bc_30d)))
+gps$wt_bc_30d_r <- with(gps, numrt_bc_30d/gps_bc_30d)
+gps$numrt_bc_90d <- with(gps, dnorm(bc_90d, mean = mean(bc_90d), sd=sd(bc_90d)))
+gps$wt_bc_90d_r <- with(gps, numrt_bc_90d/gps_bc_90d)
+gps$numrt_bc_280d <- with(gps, dnorm(bc_280d, mean = mean(bc_280d), sd=sd(bc_280d)))
+gps$wt_bc_280d_r <- with(gps, numrt_bc_280d/gps_bc_280d)
+# truncate
+gps <- gps %>% mutate(wt_bc_30d = ifelse(wt_bc_30d_r<quantile(wt_bc_30d_r,0.025),quantile(wt_bc_30d_r,0.025), wt_bc_30d_r),
+                      wt_bc_30d = ifelse(wt_bc_30d_r>quantile(wt_bc_30d_r,0.975),quantile(wt_bc_30d_r,0.975), wt_bc_30d_r),
+                      wt_bc_90d = ifelse(wt_bc_90d_r<quantile(wt_bc_90d_r,0.025),quantile(wt_bc_90d_r,0.025), wt_bc_90d_r),
+                      wt_bc_90d = ifelse(wt_bc_90d_r>quantile(wt_bc_90d_r,0.975),quantile(wt_bc_90d_r,0.975), wt_bc_90d_r),
+                      wt_bc_280d = ifelse(wt_bc_280d_r<quantile(wt_bc_280d_r,0.025),quantile(wt_bc_280d_r,0.025), wt_bc_280d_r),
+                      wt_bc_280d = ifelse(wt_bc_280d_r>quantile(wt_bc_280d_r,0.975),quantile(wt_bc_280d_r,0.975), wt_bc_280d_r))
+# new ipw dataset
+ipw <- gps %>% select(uniqueid_yr, wt_bc_30d, wt_bc_90d, wt_bc_280d)
+saveRDS(ipw, paste0(dir_output,"wt_",data_name,".rds"))
+summary(ipw)
+```
+
+

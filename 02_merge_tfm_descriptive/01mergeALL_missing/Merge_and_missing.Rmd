@@ -1,0 +1,140 @@
+---
+title: "Merge datasets and detect missingness"
+author: "Shuxin Dong"
+date: "10/28/2020"
+output:
+  html_document:
+    df_print: paged
+---
+**Tasks**:
+- Merge all the datafiles (MA birth registry, SES, BC exposure data) together, get the study population dataset.
+- Based on the codebook, recode variables to incorporate the missingness.
+- Do the inclusion and exlusion.
+- Exclude the observations with missing values, get the final sample population dataset `birth_complt.csv`.
+
+```{r message=FALSE}
+rm(list = ls())
+gc() 
+library(dplyr)
+library(data.table)
+```
+
+```{r import data}
+birth0 <- fread("/Users/shuxind/Desktop/BC_birthweight_data/MAbirth_02Nov18/mabirths_02NOV18.csv", header = TRUE)
+print("dimension of original birth data")
+dim(birth0)
+```
+## Before Dataset Restriction
+### Only include those born between 2001 and 2015
+```{r}
+birth0 <- birth0 %>% filter(!year==2000)
+print("dimension after omitting 2000 born babies")
+dim(birth0)
+```
+### Merge SES variables
+```{r merge income}
+SES <- fread("/Users/shuxind/Desktop/BC_birthweight_data/MAbirth_w_SES/birth_SES.csv",
+             drop = c("V1","year"))
+print("SES variable dimension")
+dim(SES)
+birthSES <- left_join(birth0, SES, by = "uniqueid_yr")
+remove(SES)
+print("dimension of birth data with SES info")
+dim(birthSES)
+remove(birth0)
+```
+### Merge BC exposure data
+```{r merge BC}
+bc <- readRDS("/Users/shuxind/Desktop/BC_birthweight_data/bc_mean.rds")
+birthBC <- left_join(birthSES, bc, by = "uniqueid_yr")
+remove(bc)
+remove(birthSES)
+birth <- birthBC # create a copy
+print("study population")
+dim(birth)[1]
+```
+### Coorperate with missingness coded
+The codes for the Kotelchuck variable are:
+4 – Adequate Intensive;
+3 – Adequate  Basic;
+2 – Intermediate;
+1 – Inadequate;
+0 – Unknown.
+
+- `mrace==6` coded as missing
+- `kotck==0` coded as missing
+```{r coporate with missing}
+birth$mrace[birth$mrace==6] <- NA
+birth$kotck[birth$kotck==0] <- NA
+```
+## Restrict dataset to complete exposure history
+```{r restrict by exposure history}
+birth <- birth %>% filter(!is.na(bc_30d) & !is.na(bc_90d) & !is.na(bc_280d)) # exclude those with missing average exposure
+print(paste("1st: Number of observation with complete exposure history", dim(birth)[1]))
+```
+## Inclusion and Exclusion criteria
+- singleton and live birth (from 2001 to 2015)
+- exclude those with birthweight less than 500g and larger than 6000g
+- clinical gestational age between 37 and 42 weeks
+```{r}
+birth <- birth %>% filter(plurality==1 & baby_alive==1)
+birth <- birth %>% filter(bwg>=500 & bwg<=6000)
+birth <- birth %>% filter(clinega>=37 & clinega<=42)
+print(paste("2st: Number of observation after inclusion and exclusion", dim(birth)[1]))
+```
+## Variable Selection
+**The propensity score model should include all the variables could predict the outcomes as long as they are not colliders**
+### Drop irrelevant variables
+```{r}
+names(birth)
+```
+- drop father related variables
+- drop precise location info
+- drop date of first prenatal care visit
+- drop the geographic `BLOCK10`, `tract`
+```{r irrelevant}
+birth <- birth %>% select(-fage, - frace, -long, -lat, -date1prenat_vis, -BLOCK10, -tract)
+```
+<!-- ## Create the new variable I need -->
+<!-- ```{r} -->
+<!-- birth$bdob <- as.Date(as.character(birth$bdob), format="%m/%d/%Y") -->
+<!-- birth$date_last_menses <- as.Date(as.character(birth$date_last_menses), format="%m/%d/%Y") -->
+<!-- birth$ga_cal_date <- as.numeric(birth$bdob-birth$date_last_menses) -->
+<!-- ``` -->
+### Drop the downstream variables of outcome
+- drop the current status of live birth (alive/dead), Agnar score, and Jaundice
+```{r downstream of outcome}
+birth <- birth %>% select(-apgar1, -apgar5, -jaund, -lbnl, -lbnd)
+```
+### Drop the variables with duplicated info
+- drop the variables used in the criteria
+- choose Kotelchuck over Kessner index
+- drop baby's date of birth and date of last menses for gestational age
+- drop other gestational age variables
+```{r duplicated info}
+birth <- birth %>% select(-plurality, -baby_alive)
+birth <- birth %>% select(-kess, -bdob, -date_last_menses, -gacalc)
+```
+### Drop uncommon predictors
+- drop some risk factors according to Joel
+- drop the mode of delivery
+```{r}
+# drop some risk factors
+birth <- birth %>% select(-rf_lung, -rf_anem, -rf_card, -rf_prev_bd, -rf_renal,-rf_rh_sens, -rf_sickle, -rf_ut_bld, -modvag, -modfor, -modvac, -modpcs, -modrcs, -modvbac)
+birth <- birth %>% select(-gravid)
+```
+## Summarize the current
+```{r}
+summary(birth)
+mod1 <- lm(bwg ~ ., data = subset(birth, select = -c(uniqueid_yr, bc_30d, bc_90d, bc_280d)))
+summary(mod1)
+library(questionr)
+freq.na(birth[,-1])
+```
+
+
+```{r}
+birth_complt <- birth %>% na.omit()
+write.csv(birth_complt, file = "/Users/shuxind/Desktop/BC_birthweight_data/birth_complt.csv")
+print(paste("Final Sample Size is", dim(birth_complt)[1]))
+```

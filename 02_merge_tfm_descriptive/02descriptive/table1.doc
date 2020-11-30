@@ -1,0 +1,599 @@
+{\rtf1\ansi
+\deff{\fonttbl
+{\f1\fswiss\fcharset0 Helvetica;}
+{\f2\ffroman\charset0\fprg2 Times New Roman;}
+{\f3\ffswiss\charset0\fprg2 Arial;}
+{\f4\fftech\charset0\fprg2 Symbol;}
+{\f4\ffroman\charset0\fprg2 Cambria;}
+}{\colortbl
+{\red0\green0\blue0;}
+{\red255\green0\blue0;}
+{\red0\green255\blue0;}
+{\red0\green0\blue255;}
+}\paperw12240\paperh15840\widowctrl\ftnbj\fet0\sectd\linex0
+\margl1440\margr1440\margt1440\margb1440
+\titlepg\headery720\footery720
+{\footer {\pard\qc\fi0\li0 \f2\fs20 \field{\fldinst{page}} \par}}
+{\pard\fi0\li0\f2\fs20
+Table1\par}
+{\pard
+\trowd\trgaph100\trleft0 \trhdr\clvertalb\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\clbrdrt\brdrs\brdrw15\clbrdrb\brdrs\brdrw15\cellx1
+\clvertalb\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\clbrdrt\brdrs\brdrw15\clbrdrb\brdrs\brdrw15\cellx2
+\clvertalb\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\clbrdrt\brdrs\brdrw15\clbrdrb\brdrs\brdrw15\cellx3
+\clvertalb\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\clbrdrt\brdrs\brdrw15\clbrdrb\brdrs\brdrw15\cellx4
+\pard\ql\widctlpar\intbl\fi0\f2\fs20\b V1\b0\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20\b Overall\b0\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20\b 0\b0\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20\b 1\b0\cell
+\widctlpar\intbl\row
+
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\ql\widctlpar\intbl\fi0\f2\fs20 n\cell
+\pard\qr\widctlpar\intbl\fi0\f2\fs20    881666\cell
+\pard\qr\widctlpar\intbl\fi0\f2\fs20    862883\cell
+\pard\qr\widctlpar\intbl\fi0\f2\fs20     18783\cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\ql\widctlpar\intbl\fi0\f2\fs20 bwg (mean (SD))\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20   3440.00 (470.86)\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20   3464.91 (442.98)\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20   2295.86 (233.47)\cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\ql\widctlpar\intbl\fi0\f2\fs20 bc_30d (mean (SD))\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      0.47 (0.14)\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      0.47 (0.14)\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      0.48 (0.14)\cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\ql\widctlpar\intbl\fi0\f2\fs20 bc_90d (mean (SD))\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      0.47 (0.13)\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      0.47 (0.13)\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      0.48 (0.14)\cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\ql\widctlpar\intbl\fi0\f2\fs20 bc_280d (mean (SD))\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      0.48 (0.12)\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      0.48 (0.12)\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      0.49 (0.13)\cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\ql\widctlpar\intbl\fi0\f2\fs20 bc_3090d (mean (SD))\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      0.47 (0.13)\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      0.47 (0.13)\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      0.48 (0.14)\cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\ql\widctlpar\intbl\fi0\f2\fs20 bc_90280d (mean (SD))\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      0.48 (0.12)\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      0.48 (0.12)\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      0.49 (0.13)\cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\ql\widctlpar\intbl\fi0\f2\fs20 year (%)\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20    \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20    \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\qr\widctlpar\intbl\fi0\f2\fs20    2001\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     69464 ( 7.9) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     68028 ( 7.9) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      1436 ( 7.6) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\qr\widctlpar\intbl\fi0\f2\fs20    2002\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     68659 ( 7.8) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     67235 ( 7.8) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      1424 ( 7.6) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\qr\widctlpar\intbl\fi0\f2\fs20    2003\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     67866 ( 7.7) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     66544 ( 7.7) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      1322 ( 7.0) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\qr\widctlpar\intbl\fi0\f2\fs20    2004\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     64118 ( 7.3) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     62845 ( 7.3) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      1273 ( 6.8) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\qr\widctlpar\intbl\fi0\f2\fs20    2005\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     62655 ( 7.1) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     61374 ( 7.1) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      1281 ( 6.8) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\qr\widctlpar\intbl\fi0\f2\fs20    2006\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     64025 ( 7.3) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     62606 ( 7.3) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      1419 ( 7.6) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\qr\widctlpar\intbl\fi0\f2\fs20    2007\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     58815 ( 6.7) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     57538 ( 6.7) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      1277 ( 6.8) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\qr\widctlpar\intbl\fi0\f2\fs20    2008\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     63703 ( 7.2) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     62336 ( 7.2) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      1367 ( 7.3) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\qr\widctlpar\intbl\fi0\f2\fs20    2009\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     61942 ( 7.0) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     60650 ( 7.0) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      1292 ( 6.9) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\qr\widctlpar\intbl\fi0\f2\fs20    2010\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     61456 ( 7.0) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     60081 ( 7.0) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      1375 ( 7.3) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\qr\widctlpar\intbl\fi0\f2\fs20    2011\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     51237 ( 5.8) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     50082 ( 5.8) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      1155 ( 6.1) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\qr\widctlpar\intbl\fi0\f2\fs20    2012\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     45606 ( 5.2) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     44576 ( 5.2) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      1030 ( 5.5) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\qr\widctlpar\intbl\fi0\f2\fs20    2013\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     44801 ( 5.1) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     43836 ( 5.1) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20       965 ( 5.1) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\qr\widctlpar\intbl\fi0\f2\fs20    2014\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     48541 ( 5.5) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     47471 ( 5.5) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      1070 ( 5.7) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\qr\widctlpar\intbl\fi0\f2\fs20    2015\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     48778 ( 5.5) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     47681 ( 5.5) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      1097 ( 5.8) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\ql\widctlpar\intbl\fi0\f2\fs20 mage (mean (SD))\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     30.11 (5.94)\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     30.13 (5.92)\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     29.02 (6.47)\cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\ql\widctlpar\intbl\fi0\f2\fs20 sex = 1 (%)\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20    431921 (49.0) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20    420738 (48.8) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     11183 (59.5) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\ql\widctlpar\intbl\fi0\f2\fs20 married = 1 (%)\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20    605182 (68.6) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20    595027 (69.0) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     10155 (54.1) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\ql\widctlpar\intbl\fi0\f2\fs20 mrace (%)\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20    \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20    \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\qr\widctlpar\intbl\fi0\f2\fs20    1\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20    642193 (72.8) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20    630640 (73.1) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     11553 (61.5) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\qr\widctlpar\intbl\fi0\f2\fs20    2\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     76524 ( 8.7) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     73908 ( 8.6) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      2616 (13.9) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\qr\widctlpar\intbl\fi0\f2\fs20    3\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     68757 ( 7.8) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     66702 ( 7.7) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      2055 (10.9) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\qr\widctlpar\intbl\fi0\f2\fs20    4\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     94192 (10.7) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     91633 (10.6) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      2559 (13.6) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\ql\widctlpar\intbl\fi0\f2\fs20 m_edu (%)\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20    \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20    \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\qr\widctlpar\intbl\fi0\f2\fs20    1\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     92251 (10.5) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     89150 (10.3) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      3101 (16.5) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\qr\widctlpar\intbl\fi0\f2\fs20    2\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20    203196 (23.0) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20    197590 (22.9) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      5606 (29.8) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\qr\widctlpar\intbl\fi0\f2\fs20    3\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20    202240 (22.9) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20    197927 (22.9) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      4313 (23.0) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\qr\widctlpar\intbl\fi0\f2\fs20    4\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20    230255 (26.1) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20    226816 (26.3) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      3439 (18.3) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\qr\widctlpar\intbl\fi0\f2\fs20    5\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20    153724 (17.4) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20    151400 (17.5) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      2324 (12.4) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\ql\widctlpar\intbl\fi0\f2\fs20 pncgov = 1 (%)\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20    294136 (33.4) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20    285402 (33.1) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      8734 (46.5) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\ql\widctlpar\intbl\fi0\f2\fs20 mhincome (mean (SD))\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20  62332.03 (26096.43)\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20  62459.29 (26097.38)\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20  56486.11 (25374.26)\cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\ql\widctlpar\intbl\fi0\f2\fs20 mhvalue (mean (SD))\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20 295697.71 (133341.57)\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20 296097.21 (133468.75)\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20 277344.92 (126007.18)\cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\ql\widctlpar\intbl\fi0\f2\fs20 percentPoverty (mean (SD))\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     11.67 (10.53)\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     11.62 (10.49)\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     14.34 (11.76)\cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\ql\widctlpar\intbl\fi0\f2\fs20 cigdpp (mean (SD))\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      1.63 (5.68)\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      1.59 (5.64)\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      3.10 (7.09)\cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\ql\widctlpar\intbl\fi0\f2\fs20 cigddp (mean (SD))\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      0.55 (2.61)\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      0.53 (2.52)\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      1.50 (5.40)\cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\ql\widctlpar\intbl\fi0\f2\fs20 clinega (mean (SD))\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     39.32 (1.14)\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     39.35 (1.13)\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     38.14 (1.17)\cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\ql\widctlpar\intbl\fi0\f2\fs20 firstborn = 1 (%)\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20    398820 (45.2) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20    388239 (45.0) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     10581 (56.3) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\ql\widctlpar\intbl\fi0\f2\fs20 kotck (%)\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20    \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20    \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\qr\widctlpar\intbl\fi0\f2\fs20    1\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     75518 ( 8.6) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     73274 ( 8.5) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      2244 (11.9) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\qr\widctlpar\intbl\fi0\f2\fs20    2\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     68619 ( 7.8) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     67393 ( 7.8) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      1226 ( 6.5) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\qr\widctlpar\intbl\fi0\f2\fs20    3\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20    430083 (48.8) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20    423822 (49.1) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      6261 (33.3) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\qr\widctlpar\intbl\fi0\f2\fs20    4\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20    307446 (34.9) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20    298394 (34.6) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      9052 (48.2) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\ql\widctlpar\intbl\fi0\f2\fs20 m_wg_cat (%)\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20    \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20    \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\qr\widctlpar\intbl\fi0\f2\fs20    1\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      3328 ( 0.4) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      3185 ( 0.4) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20       143 ( 0.8) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\qr\widctlpar\intbl\fi0\f2\fs20    2\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     73345 ( 8.3) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     70588 ( 8.2) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      2757 (14.7) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\qr\widctlpar\intbl\fi0\f2\fs20    3\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20    192488 (21.8) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20    186788 (21.6) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      5700 (30.3) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\qr\widctlpar\intbl\fi0\f2\fs20    4\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20    372314 (42.2) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20    365096 (42.3) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      7218 (38.4) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\qr\widctlpar\intbl\fi0\f2\fs20    5\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20    240191 (27.2) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20    237226 (27.5) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      2965 (15.8) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\ql\widctlpar\intbl\fi0\f2\fs20 rf_db_gest = 1 (%)\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     37263 ( 4.2) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     36457 ( 4.2) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20       806 ( 4.3) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\ql\widctlpar\intbl\fi0\f2\fs20 rf_db_other = 1 (%)\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      7289 ( 0.8) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      7121 ( 0.8) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20       168 ( 0.9) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\ql\widctlpar\intbl\fi0\f2\fs20 rf_hbp_pregn = 1 (%)\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     30372 ( 3.4) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     28906 ( 3.3) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      1466 ( 7.8) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\ql\widctlpar\intbl\fi0\f2\fs20 rf_hbp_chronic = 1 (%)\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     10596 ( 1.2) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20     10066 ( 1.2) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20       530 ( 2.8) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\ql\widctlpar\intbl\fi0\f2\fs20 rf_cervix = 1 (%)\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      3117 ( 0.4) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      2963 ( 0.3) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20       154 ( 0.8) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\ql\widctlpar\intbl\fi0\f2\fs20 rf_prev_4kg = 1 (%)\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      5864 ( 0.7) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      5853 ( 0.7) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20        11 ( 0.1) \cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2702\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\clbrdrb\brdrs\brdrw15\cellx1
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\clbrdrb\brdrs\brdrw15\cellx2
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\clbrdrb\brdrs\brdrw15\cellx3
+\clvertalt\clshdrawnil\clwWidth2219\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\clbrdrb\brdrs\brdrw15\cellx4
+\pard\ql\widctlpar\intbl\fi0\f2\fs20 rf_prev_sga = 1 (%)\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      7003 ( 0.8) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      6589 ( 0.8) \cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20       414 ( 2.2) \cell
+\widctlpar\intbl\row
+}
+
+}

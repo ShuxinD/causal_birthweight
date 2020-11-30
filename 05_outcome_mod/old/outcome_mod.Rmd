@@ -1,0 +1,150 @@
+---
+title: "Outcome Regression"
+output: html_notebook
+---
+
+```{r}
+rm(list = ls())
+gc()
+library(dplyr)
+```
+## Use weights from gradient boosting
+```{r }
+birth <- readRDS("/Users/dongshuxin/Desktop/MA_births/Reformat_Descrp_Tfm/birth_tfm.rds")
+wt <- readRDS("/Users/dongshuxin/Desktop/MA_births/Weight_result/wt_gbm_depth2_tree200.rds")# change
+gbm <- left_join(wt, birth, by = "uniqueid_yr") %>% select(bwg, lbw, bc_30d, wt_bc_30d, bc_90d, wt_bc_90d, bc_280d, wt_bc_280d)
+remove(wt)
+```
+### fit marginal model
+```{r GBM}
+# y as continuous birth weight
+gbm_bc30d_cont <- lm(bwg ~ bc_30d, data = gbm, weights = wt_bc_30d)
+summary(gbm_bc30d_cont)
+gbm_bc90d_cont <- lm(bwg ~ bc_90d, data = gbm, weights = wt_bc_90d)
+summary(gbm_bc90d_cont)
+gbm_bc280d_cont <- lm(bwg ~ bc_280d, data = gbm, weights = wt_bc_280d)
+summary(gbm_bc280d_cont)
+# y as binary low birth weight
+gbm_bc30d_binr <- glm(lbw ~ bc_30d, data = gbm, weights = wt_bc_30d, 
+                      family = binomial(link = "logit"))
+summary(gbm_bc30d_binr)
+gbm_bc90d_binr <- glm(lbw ~ bc_90d, data = gbm, weights = wt_bc_90d, 
+                      family = binomial(link = "logit"))
+summary(gbm_bc90d_binr)
+gbm_bc280d_binr <- glm(lbw ~ bc_280d, data = gbm, weights = wt_bc_280d, 
+                      family = binomial(link = "logit"))
+summary(gbm_bc280d_binr)
+```
+### calculate
+```{r}
+iqr_bc30d <- IQR(gbm$bc_30d)
+iqr_bc90d <- IQR(gbm$bc_90d)
+iqr_bc280d <- IQR(gbm$bc_280d)
+
+iqr_bc30d
+iqr_bc90d
+iqr_bc280d
+
+effect <- rbind(gbm_bc30d_cont$coefficients[2]*iqr_bc30d,
+                gbm_bc90d_cont$coefficients[2]*iqr_bc90d,
+                gbm_bc280d_cont$coefficients[2]*iqr_bc280d)
+halfCI <- rbind(qnorm(0.975)*summary(gbm_bc30d_cont)$coef[2,2]*iqr_bc30d,
+                qnorm(0.975)*summary(gbm_bc90d_cont)$coef[2,2]*iqr_bc90d,
+                qnorm(0.975)*summary(gbm_bc280d_cont)$coef[2,2]*iqr_bc280d)
+result1 <- cbind(effect,effect-halfCI,effect+halfCI)
+colnames(result1) <- c("effect for IQR", "lower CI", "upper CI")
+rownames(result1) <- c("bc_30d", "bc_90d", "bc_280d")
+print(result1)
+
+ORs <- rbind(exp(gbm_bc30d_binr$coefficients[2]*iqr_bc30d),
+             exp(gbm_bc90d_binr$coefficients[2]*iqr_bc90d),
+             exp(gbm_bc280d_binr$coefficients[2]*iqr_bc280d))
+uppCI <- rbind(exp((gbm_bc30d_binr$coefficients[2]+qnorm(0.975)*summary(gbm_bc30d_binr)$coef[2,2])*iqr_bc30d),
+               exp((gbm_bc90d_binr$coefficients[2]+qnorm(0.975)*summary(gbm_bc90d_binr)$coef[2,2])*iqr_bc90d),
+               exp((gbm_bc280d_binr$coefficients[2]+qnorm(0.975)*summary(gbm_bc280d_binr)$coef[2,2])*iqr_bc280d))
+lowCI <- rbind(exp((gbm_bc30d_binr$coefficients[2]-qnorm(0.975)*summary(gbm_bc30d_binr)$coef[2,2])*iqr_bc30d),
+               exp((gbm_bc90d_binr$coefficients[2]-qnorm(0.975)*summary(gbm_bc90d_binr)$coef[2,2])*iqr_bc90d),
+               exp((gbm_bc280d_binr$coefficients[2]-qnorm(0.975)*summary(gbm_bc280d_binr)$coef[2,2])*iqr_bc280d))
+result2 <- cbind(ORs, lowCI, uppCI)
+colnames(result2) <- c("OR for IQR", "lower CI", "upper CI")
+rownames(result2) <- c("bc_30d", "bc_90d", "bc_280d")
+print(result2)
+```
+
+```{r}
+bcdays <- c(1:3)
+diff_lowCI <- result2[,1]-result2[,2]
+diff_uppCI <- result2[,3]-result2[,1]
+
+par(mfrow=c(1,2))
+plot(bcdays, effect,
+     xlim = range(c(0.5,3.5)),
+    ylim=range(c(-7.5, 0.2)),
+    xaxt = "n",
+    pch=19, xlab="Moving averages of BC exposure \n (a)", ylab="Change of birth weight with 95% CI (g)"
+)
+arrows(bcdays, effect-halfCI, bcdays, effect+halfCI, length=0.05, angle=90, code=3)
+abline(h=0,col = 1, lty = 3)
+axis(1, at=1:3, labels=c("30d","90d","280d"))
+
+plot(bcdays, ORs,
+     xlim = range(c(0.5,3.5)),
+    ylim=range(c(0.99, 1.08)),
+    xaxt = "n",
+    pch=19, xlab="Moving averages of BC exposure \n (b)", ylab="OR of LBW with 95% CI"
+)
+arrows(bcdays, ORs-diff_lowCI, bcdays, ORs+diff_uppCI, length=0.05, angle=90, code=3)
+abline(h=1,col = 1, lty = 3)
+axis(1, at=1:3, labels=c("30d","90d","280d"))
+
+
+```
+
+
+
+
+<!-- ## Use weights from random forest -->
+<!-- ```{r} -->
+<!-- moonRF <- readRDS("/Users/dongshuxin/Desktop/MA_births/gps_moonRF_birth.rds") -->
+<!-- moonRF$lbw <- 0 -->
+<!-- moonRF$lbw[moonRF$bwg<2500] <- 1 -->
+<!-- ``` -->
+
+<!-- ```{r moonRF} -->
+<!-- # y as continuous birth weight -->
+<!-- moonRF_bc30d <- lm(bwg ~ bc_30d, data = moonRF, weights = gps_bc_30d) -->
+<!-- summary(moonRF_bc30d) -->
+<!-- moonRF_bc90d <- lm(bwg ~ bc_90d, data = moonRF, weights = gps_bc_90d) -->
+<!-- summary(moonRF_bc90d) -->
+<!-- moonRF_bc280d <- lm(bwg ~ bc_280d, data = moonRF, weights = gps_bc_280d) -->
+<!-- summary(moonRF_bc280d) -->
+<!-- # y as binary low birth weight -->
+<!-- moonRF_bc30d_binr <- glm(lbw ~ bc_30d, data = moonRF, weights = gps_bc_30d,  -->
+<!--                       family = binomial(link = "logit")) -->
+<!-- summary(moonRF_bc30d_binr) -->
+<!-- moonRF_bc90d_binr <- glm(lbw ~ bc_90d, data = moonRF, weights = gps_bc_90d,  -->
+<!--                       family = binomial(link = "logit")) -->
+<!-- summary(moonRF_bc90d_binr) -->
+<!-- moonRF_bc280d_binr <- glm(lbw ~ bc_280d, data = moonRF, weights = gps_bc_280d,  -->
+<!--                        family = binomial(link = "logit")) -->
+<!-- summary(moonRF_bc280d_binr) -->
+<!-- ``` -->
+
+<!-- ## Use weights from GAM -->
+<!-- ```{r} -->
+<!-- gam <- readRDS("/Users/dongshuxin/Desktop/MA_births/GAM.rds") -->
+<!-- gam$lbw <- 0 -->
+<!-- gam$lbw[gam$bwg<2500] <- 1 -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- # y as continuous birth weight -->
+<!-- gam_bc30d <- lm(bwg ~ bc_30d, data = gam, weights = gps_bc_30d) -->
+<!-- summary(gam_bc30d) -->
+
+<!-- # y as binary low birth weight -->
+<!-- gam_bc30d_binr <- glm(lbw ~ bc_30d, data = gam, weights = gps_bc_30d,  -->
+<!--                       family = binomial(link = "logit")) -->
+<!-- summary(gam_bc30d_binr) -->
+<!-- ``` -->
+
