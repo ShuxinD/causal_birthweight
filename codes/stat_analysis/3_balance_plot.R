@@ -1,8 +1,9 @@
 ###############################################################################
 # Project: Causal black carbon on birth weight in MA                          #
 # Code: balance checking                                                      #
-# Input: clean birth data "birth_final.csv", ipweights "birth_ipw.csv"        #
-# Output: balance plot                                                        #
+# Input: "birth_final.csv", ipweights "birth_ipw.csv"                         #
+# Output: "birth_all.csv" birth data with ip weights                          #
+# Output: balance plots                                                       #
 # Author: Shuxin Dong                                                         #
 # Date: Nov 16, 2020                                                          #
 ###############################################################################

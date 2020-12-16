@@ -1,8 +1,8 @@
 ###############################################################################
 # Project: Causal black carbon on birth weight in MA                          #
 # Code: Estimate GPS with hyperparameter we set                               #
-# Input: clean birth data, BC averages, hyperparameters                       #
-# Output: weights dataset "birth_ipw.csv"                                     #
+# Input: birth_final.csv, hyperparameters                                     #
+# Output: weights dataset "birth_ipw.csv" with ID and weights                 #
 # Author: Shuxin Dong                                                         #
 # Date: Nov 16, 2020                                                          #
 ###############################################################################

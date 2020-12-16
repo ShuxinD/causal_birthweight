@@ -2,8 +2,9 @@
 # Project: Causal black carbon on birth weight in MA                          #
 # Code: GBM to estimate GPS with balance stopping rule                        #
 # Code : from three non-overlapping periods                                   #
-# Input: clean birth data, BC averages                                        #
+# Input: "birth_final.csv"                                                    #
 # Output: best hyperpamater combination for three BC periods                  #
+# Output: "gridSearch_30d.csv" "gridSearch_3090d.csv" "gridSearch_90280d.csv" #
 # Author: Shuxin Dong                                                         #
 # Date: Oct 13, 2020                                                          #
 ###############################################################################
