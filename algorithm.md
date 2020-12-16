@@ -111,7 +111,8 @@ F.aac.iter <- function(i, data, data.hex, ps.num, ps.model.pred, rep) {
 - **truncate the SIPW** at 1\% and 99\%: those larger than 99 percentile are set to 99 percentile, less than 1 percentile are set to 1 percentile
 
 - **calculate the balances, get AAC for each combination**
-  - *do bootstrapping* to create data samples from the pseudo-population (bootstrap sampling with replacements with SIPW) for a designated number of replicates (`rep.bootstrap`)
+  
+  - *do bootstrapping* to create data samples from the pseudo-population (bootstrap sampling with replacements with SIPW) for a designated number of replicates (`rep.bootstrap`)  
     - the sample size is set to `population^{0.7}` according to [references]
     - `rep.bootstrap = 50` in consideration of computation sources.
     - in each bootstrap sample, calculate the Pearson correlation coefficients for binary and continuous confounders, and calculate the polyserial correlation for the ordinal confounders
@@ -122,3 +123,4 @@ F.aac.iter <- function(i, data, data.hex, ps.num, ps.model.pred, rep) {
       - while all the other balancing results are good according to previous results, we do not want to put all of efforts on the exposure correlation, which may result in overfitting/overadjustment for the other reasonable confounders
   
 - **search the minimum of AACs**, and find its corresponding combination of `ntrees`, `max_depth` and `col_sample_rate`.
+

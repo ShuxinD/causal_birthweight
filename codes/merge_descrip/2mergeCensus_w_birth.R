@@ -2,7 +2,7 @@
 # Project: Causal black carbon on birth weight in MA                          #
 # Code: merge census data into birth registry by tract                        #
 # Input: birth_w_geoid`year`.csv and census (.csv) files                      #
-# Output: "birth_SES.csv" birth dataset with merged SES variables             #
+# Output: "birth_SES.csv" birth data with merged SES variables                #
 # Author: Shuxin Dong                                                         #
 # Date: Oct 21, 2020                                                          #
 ###############################################################################
@@ -17,8 +17,6 @@ library(dplyr)
 dir_input_birth <- "/Users/shuxind/Desktop/BC_birthweight_data/MAbirth_w_geoid/"
 dir_input_census <- "/Users/shuxind/Desktop/census/"
 dir_output_birth <- "/Users/shuxind/Desktop/BC_birthweight_data/MAbirth_w_SES/"
-# dir_input <- "/nfs/home/S/shd968/shared_space/ci3_shd968_proj/"
-# dir_output <- "/nfs/home/S/shd968/shared_space/ci3_shd968_proj/"
 
 ######################### 1. Load and check birth data #########################
 ## load data

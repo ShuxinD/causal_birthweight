@@ -2,7 +2,7 @@
 # Project: Causal black carbon on birth weight in MA                          #
 # Code: get geoinfo from latitude and longitude                               #
 # Input: mabirths_02NOV18.csv (from Anna)                                     #
-# Output: datasets with tract info and geoid                                  #
+# Output: "birth_w_geocode`year`.csv"                                         #
 # Author: Shuxin Dong                                                         #
 # Date: Oct 21, 2020                                                          #
 ###############################################################################
