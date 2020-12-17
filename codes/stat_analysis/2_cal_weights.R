@@ -72,7 +72,7 @@ birth[, bc_30d := NULL]
 
 h2o.init(nthreads = n_cores, min_mem_size = "200G", port = 54345)
 independent <- c("year","sex","married","mage","m_edu", "cigdpp","cigddp",
-                 "clinega","kotck","pncgov", "bwg", "rf_db_gest","rf_db_other",
+                 "clinega","kotck","pncgov", "rf_db_gest","rf_db_other",
                  "rf_hbp_chronic", "rf_hbp_pregn","rf_cervix","rf_prev_4kg",
                  "rf_prev_sga","firstborn","m_wg_cat",
                  "log_mhincome", "log_mhvalue", "percentPoverty",
@@ -118,7 +118,7 @@ birth[, bc_3090d := NULL]
 
 h2o.init(nthreads = n_cores, min_mem_size = "200G", port = 54345)
 independent <- c("year","sex","married","mage","m_edu", "cigdpp","cigddp",
-                 "clinega","kotck","pncgov", "bwg", "rf_db_gest","rf_db_other",
+                 "clinega","kotck","pncgov", "rf_db_gest","rf_db_other",
                  "rf_hbp_chronic", "rf_hbp_pregn","rf_cervix","rf_prev_4kg",
                  "rf_prev_sga","firstborn","m_wg_cat",
                  "log_mhincome", "log_mhvalue", "percentPoverty",
@@ -164,7 +164,7 @@ birth[, bc_90280d := NULL]
 
 h2o.init(nthreads = n_cores, min_mem_size = "200G", port = 54345)
 independent <- c("year","sex","married","mage","m_edu", "cigdpp","cigddp",
-                 "clinega","kotck","pncgov", "bwg", "rf_db_gest","rf_db_other",
+                 "clinega","kotck","pncgov","rf_db_gest","rf_db_other",
                  "rf_hbp_chronic", "rf_hbp_pregn","rf_cervix","rf_prev_4kg",
                  "rf_prev_sga","firstborn","m_wg_cat",
                  "log_mhincome", "log_mhvalue", "percentPoverty",
