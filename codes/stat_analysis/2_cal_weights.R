@@ -19,33 +19,25 @@ library(parallel)
 n_cores <- detectCores() - 1 
 
 # dir_input <- "/Users/shuxind/Desktop/BC_birthweight_data/"
-setwd("/media/gate/Shuxin")
-dir_input <- "/media/gate/Shuxin/"
-
+setwd("/media/qnap3/Shuxin")
+dir_input <- "/media/qnap3/Shuxin/"
 ## set default parameters for H2O
 min.rows <- 10
 learn.rate <- 0.005
+## set hyperparameter values after grid search
+n.trees_bc30d <- 15451
+max.depth_bc30d <- 10
+col.sample.rate_bc30d <- 1.0
+n.trees_bc3090d <- 15451
+max.depth_bc3090d <- 10
+col.sample.rate_bc3090d <- 1.0
+n.trees_bc90280d <- 18236
+max.depth_bc90280d <- 10
+col.sample.rate_bc90280d <- 1.0
 
-############################# 1. data manipulation ############################
-## load data
-# birth <- fread(paste0(dir_input, "birth_final.csv"),
-#                drop = "V1")
-# birth$year <- as.factor(birth$year)
-# birth$m_edu <- as.factor(birth$m_edu)
-# birth$kotck <- as.factor(birth$kotck)
-# birth$m_wg_cat <- as.factor(birth$m_wg_cat)
-# 
-# var <- c("year","sex","married","mage","m_edu", "cigdpp","cigddp",
-#          "clinega","kotck","pncgov", "bwg", "rf_db_gest","rf_db_other",
-#          "rf_hbp_chronic", "rf_hbp_pregn","rf_cervix","rf_prev_4kg",
-#          "rf_prev_sga", "bc_30d","bc_3090d", "bc_90280d", "firstborn","m_wg_cat",
-#          "log_mhincome", "log_mhvalue", "percentPoverty",
-#          "mrace_1", "mrace_2", "mrace_3", "mrace_4")
-# birth <- birth[ , var, with = F]
+############################# 1. Fit GBM ######################################
 
-############################# 2. Fit GBM ######################################
-
-############################# 2.1 bc_30d ######################################
+############################# 1.1 bc_30d ######################################
 ## load data
 birth <- fread(paste0(dir_input, "birth_final.csv"),
                drop = "V1")
@@ -55,18 +47,12 @@ birth$kotck <- as.factor(birth$kotck)
 birth$m_wg_cat <- as.factor(birth$m_wg_cat)
 
 var <- c("year","sex","married","mage","m_edu", "cigdpp","cigddp",
-         "clinega","kotck","pncgov", "bwg", "rf_db_gest","rf_db_other",
+         "clinega","kotck","pncgov","rf_db_gest","rf_db_other",
          "rf_hbp_chronic", "rf_hbp_pregn","rf_cervix","rf_prev_4kg",
          "rf_prev_sga", "bc_30d","bc_3090d", "bc_90280d", "firstborn","m_wg_cat",
          "log_mhincome", "log_mhvalue", "percentPoverty",
          "mrace_1", "mrace_2", "mrace_3", "mrace_4")
 birth <- birth[ , var, with = F]
-
-## set the best hyperparameter
-n.trees <- 15451
-max.depth <- 10
-col.sample.rate <- 1.0
-
 birth[, T := bc_30d]
 birth[, bc_30d := NULL]
 
@@ -82,17 +68,17 @@ birth.hex <- as.h2o(birth, destination_frame = "birth.hex")
 gbm_30d <- h2o.gbm(y = "T",
                    x = independent,
                    training_frame = birth.hex,
-                   ntrees = n.trees, 
-                   max_depth = max.depth, # change
+                   ntrees = n.trees_bc30d, # change
+                   max_depth = max.depth_bc30d, # change
                    min_rows = min.rows,
                    learn_rate = learn.rate, 
-                   col_sample_rate = col.sample.rate,
+                   col_sample_rate = col.sample.rate_bc30d, # change
                    distribution = "gaussian")
 pred.gbm_30d <- h2o.predict(object = gbm_30d, newdata = birth.hex)
 GBM.fitted_30d <- as.vector(pred.gbm_30d)
 h2o.shutdown(prompt = FALSE)
 
-############################# 2.2 bc_3090d ####################################
+############################# 1.2 bc_3090d ####################################
 birth <- fread(paste0(dir_input, "birth_final.csv"),
                drop = "V1")
 birth$year <- as.factor(birth$year)
@@ -101,18 +87,12 @@ birth$kotck <- as.factor(birth$kotck)
 birth$m_wg_cat <- as.factor(birth$m_wg_cat)
 
 var <- c("year","sex","married","mage","m_edu", "cigdpp","cigddp",
-         "clinega","kotck","pncgov", "bwg", "rf_db_gest","rf_db_other",
+         "clinega","kotck","pncgov","rf_db_gest","rf_db_other",
          "rf_hbp_chronic", "rf_hbp_pregn","rf_cervix","rf_prev_4kg",
          "rf_prev_sga", "bc_30d","bc_3090d", "bc_90280d", "firstborn","m_wg_cat",
          "log_mhincome", "log_mhvalue", "percentPoverty",
          "mrace_1", "mrace_2", "mrace_3", "mrace_4")
 birth <- birth[ , var, with = F]
-
-## set the best hyperparameter
-n.trees <- 15451
-max.depth <- 10
-col.sample.rate <- 1.0
-  
 birth[, T := bc_3090d]
 birth[, bc_3090d := NULL]
 
@@ -128,17 +108,17 @@ birth.hex <- as.h2o(birth, destination_frame = "birth.hex")
 gbm_3090d <- h2o.gbm(y = "T",
                      x = independent,
                      training_frame = birth.hex,
-                     ntrees = n.trees, 
-                     max_depth = max.depth, # change
+                     ntrees = n.trees_bc3090d, # change
+                     max_depth = max.depth_bc3090d, # change
                      min_rows = min.rows,
                      learn_rate = learn.rate, 
-                     col_sample_rate = col.sample.rate,
+                     col_sample_rate = col.sample.rate_bc3090d, # change
                      distribution = "gaussian")
 pred.gbm_3090d <- h2o.predict(object = gbm_3090d, newdata = birth.hex)
 GBM.fitted_3090d <- as.vector(pred.gbm_3090d)
 h2o.shutdown(prompt = FALSE)
 
-############################# 2.3 bc_90280d ###################################
+############################# 1.3 bc_90280d ###################################
 birth <- fread(paste0(dir_input, "birth_final.csv"),
                drop = "V1")
 birth$year <- as.factor(birth$year)
@@ -147,18 +127,12 @@ birth$kotck <- as.factor(birth$kotck)
 birth$m_wg_cat <- as.factor(birth$m_wg_cat)
 
 var <- c("year","sex","married","mage","m_edu", "cigdpp","cigddp",
-         "clinega","kotck","pncgov", "bwg", "rf_db_gest","rf_db_other",
+         "clinega","kotck","pncgov","rf_db_gest","rf_db_other",
          "rf_hbp_chronic", "rf_hbp_pregn","rf_cervix","rf_prev_4kg",
          "rf_prev_sga", "bc_30d","bc_3090d", "bc_90280d", "firstborn","m_wg_cat",
          "log_mhincome", "log_mhvalue", "percentPoverty",
          "mrace_1", "mrace_2", "mrace_3", "mrace_4")
 birth <- birth[ , var, with = F]
-
-## set the best hyperparameter
-n.trees <- 18236
-max.depth <- 10
-col.sample.rate <- 1.0
-
 birth[, T := bc_90280d]
 birth[, bc_90280d := NULL]
 
@@ -174,16 +148,15 @@ birth.hex <- as.h2o(birth, destination_frame = "birth.hex")
 gbm_90280d <- h2o.gbm(y = "T",
                      x = independent,
                      training_frame = birth.hex,
-                     ntrees = n.trees, 
-                     max_depth = max.depth, # change
+                     ntrees = n.trees_bc90280d, # change
+                     max_depth = max.depth_bc90280d, # change
                      min_rows = min.rows,
                      learn_rate = learn.rate, 
-                     col_sample_rate = col.sample.rate,
+                     col_sample_rate = col.sample.rate_bc90280d, # change
                      distribution = "gaussian")
 pred.gbm_90280d <- h2o.predict(object = gbm_90280d, newdata = birth.hex)
 GBM.fitted_90280d <- as.vector(pred.gbm_90280d)
 h2o.shutdown(prompt = FALSE)
-
 gc()
 
 ############################# 3. Calculate Weights ############################
@@ -195,7 +168,6 @@ birth$m_edu <- as.factor(birth$m_edu)
 birth$kotck <- as.factor(birth$kotck)
 birth$m_wg_cat <- as.factor(birth$m_wg_cat)
 
-############################# calculate weights ###############################
 ## bc_30d
 model.num_30d = lm(bc_30d ~ 1, data = birth) 
 ps.num_30d <- dnorm((birth$bc_30d - model.num_30d$fitted)/(summary(model.num_30d))$sigma,0,1)

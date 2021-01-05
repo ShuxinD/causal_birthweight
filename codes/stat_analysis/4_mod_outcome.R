@@ -15,10 +15,10 @@ library(dplyr)
 library(data.table)
 library(mgcv)
 
-# dir_input <- "/Users/shuxind/Desktop/BC_birthweight_data/"
-# setwd("/media/gate/Shuxin")
-dir_input <- "/media/gate/Shuxin/"
-dir_output <- "/media/gate/Shuxin/"
+dir_input <- "/Users/shuxind/Desktop/BC_birthweight_data/"
+# setwd("/media/qnap3/Shuxin")
+# dir_input <- "/media/qnap3/Shuxin/"
+# dir_output <- "/media/qnap3/Shuxin/"
 
 ## load data
 birth <- fread(paste0(dir_input, "birth_all.csv"),
@@ -27,7 +27,8 @@ birth <- fread(paste0(dir_input, "birth_all.csv"),
                               "bc_30d.wt.t", "bc_3090d.wt.t", "bc_90280d.wt.t"))
 birth$lbw <- 0
 birth$lbw[birth$bwg<2500] <- 1
-
+birth[, bc_mean := (bc_30d*30 + bc_3090d*60 + bc_90280d*190)/280]
+IQR(birth$bc_mean)
 ############################# 1. splines ######################################
 ############################# 1.1 bc_30d ######################################
 spline_30d.c <- gam(bwg ~ s(bc_30d), family = gaussian, 
@@ -85,6 +86,7 @@ bwg_3090d <- lm(bwg ~ bc_3090d, data = birth, weights = bc_3090d.wt.t)
 summary(bwg_3090d)
 bwg_90280d <- lm(bwg ~ bc_90280d, data = birth, weights = bc_90280d.wt.t)
 summary(bwg_90280d)
+(bwg_30d$coefficients[2]+bwg_3090d$coefficients[2]+bwg_90280d$coefficients[2])*IQR(birth$bc_mean) # entire period
 ############################# 2.2 outcome as low birth weight binary###########
 lbw_30d <- glm(lbw ~ bc_30d, data = birth, weights = bc_30d.wt.t, 
                       family = binomial(link = "logit"))
@@ -127,9 +129,9 @@ write.csv(result2, file = paste0(dir_output, "result2_ORs.csv"))
 library(ggplot2)
 library(cowplot)
 
-effect <- read.csv("/Users/shuxind/Documents/GitHub/causal_BC_birthweight/05_outcome_mod/result1_effect.csv",
+effect <- read.csv("result1_effect.csv",
                    row.names = 1)
-ORs <- read.csv("/Users/shuxind/Documents/GitHub/causal_BC_birthweight/05_outcome_mod/result2_ORs.csv",
+ORs <- read.csv("result2_ORs.csv",
                 row.names = 1)
 bcdays <- c(1:3)
 bcdays <- factor(bcdays,
@@ -156,7 +158,7 @@ ggplot(ORs, aes(x = bcdays, y = OR.for.IQR)) +
 
 plot_grid(p_e, p_OR, labels = "AUTO")
 
-pdf(file = "/Users/shuxind/Documents/GitHub/causal_BC_birthweight/results/resultPlot.pdf",
+pdf(file = "resultPlot.pdf",
     width = 10.5)
 plot_grid(p_e, p_OR, labels = "AUTO")
 dev.off()

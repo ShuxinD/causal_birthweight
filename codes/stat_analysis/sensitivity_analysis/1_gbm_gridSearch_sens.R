@@ -1,12 +1,13 @@
 ###############################################################################
 # Project: Causal black carbon on birth weight in MA                          #
-# Code: GBM to estimate GPS with balance stopping rule                        #
+# Code: GBM to estimate GPS with balance stopping rule as sensitibiry analysis#
 # Code : from three non-overlapping periods                                   #
 # Input: "birth_final.csv"                                                    #
 # Output: best hyperpamater combination for three BC periods                  #
-# Output: "gridSearch_30d.csv" "gridSearch_3090d.csv" "gridSearch_90280d.csv" #
+# Output: "gridSearch_30dsens.csv" "gridSearch_3090dsens.csv"                 #
+# Output: "gridSearch_90280dsens.csv"                                         #
 # Author: Shuxin Dong                                                         #
-# Date: Oct 13, 2020                                                          #
+# Date: Dec 16, 2020                                                          #
 ###############################################################################
 
 ############################# 0. Setup ########################################
@@ -22,14 +23,13 @@ library(parallel)
 n_cores <- detectCores() - 1 
 
 # dir_input <- "/Users/shuxind/Desktop/BC_birthweight_data/"
-setwd("/media/gate/Shuxin")
-dir_input <- "/media/gate/Shuxin/"
+setwd("/media/qnap3/Shuxin")
+dir_input <- "/media/qnap3/Shuxin/"
 
 ## set parameters for h2o.gbm model
 min.rows <- 10
 learn.rate <- 0.005
 rep.bootstrap <- 50
-
 ## set hyperparameters range for h2o.gbm model
 n.trees <- 25000
 max.depth <- c(6, 8, 10, 12)
@@ -75,27 +75,8 @@ F.aac.iter <- function(i, data, data.hex, ps.num, ps.model.pred, rep) {
   aac <- mean(aac_iter)
   return(aac)
 }
-
-############################# 2. data manipulation ############################
-## load data
-# birth <- fread(paste0(dir_input, "birth_final.csv"),
-#                drop = "V1")
-# birth$year <- as.factor(birth$year)
-# birth$m_edu <- as.factor(birth$m_edu)
-# birth$kotck <- as.factor(birth$kotck)
-# birth$m_wg_cat <- as.factor(birth$m_wg_cat)
-# var <- c("year","sex","married","mage","m_edu", "cigdpp","cigddp",
-#          "clinega","kotck","pncgov", "bwg", "rf_db_gest","rf_db_other",
-#          "rf_hbp_chronic", "rf_hbp_pregn","rf_cervix","rf_prev_4kg",
-#          "rf_prev_sga", "bc_30d","bc_3090d", "bc_90280d", "firstborn","m_wg_cat",
-#          "log_mhincome", "log_mhvalue", "percentPoverty",
-#          "mrace_1", "mrace_2", "mrace_3", "mrace_4")
-# birth <- birth[ , var, with = F]
-# birth <- sample_n(birth, floor(0.001*dim(birth)[1])) # sample as an example
-
-############################## 3. do h2o.gbm ###################################
-
-############################## 3.1 bc_30d ######################################
+############################## 1. do h2o.gbm ###################################
+############################## 1.1 bc_30d ######################################
 ## load data
 birth <- fread(paste0(dir_input, "birth_final.csv"),
                drop = "V1")
@@ -104,9 +85,14 @@ birth$m_edu <- as.factor(birth$m_edu)
 birth$kotck <- as.factor(birth$kotck)
 birth$m_wg_cat <- as.factor(birth$m_wg_cat)
 var <- c("year","sex","married","mage","m_edu", "cigdpp","cigddp",
-         "clinega","kotck","pncgov", "rf_db_gest","rf_db_other",
-         "rf_hbp_chronic", "rf_hbp_pregn","rf_cervix","rf_prev_4kg",
-         "rf_prev_sga", "bc_30d","bc_3090d", "bc_90280d", "firstborn","m_wg_cat",
+         "clinega","kotck","pncgov", 
+         # "rf_db_gest",
+         "rf_db_other",
+         "rf_hbp_chronic", 
+         # "rf_hbp_pregn",
+         "rf_cervix","rf_prev_4kg",
+         "rf_prev_sga", "bc_30d","bc_3090d", "bc_90280d", "firstborn",
+         # "m_wg_cat",
          "log_mhincome", "log_mhvalue", "percentPoverty",
          "mrace_1", "mrace_2", "mrace_3", "mrace_4")
 birth <- birth[ , var, with = F]
@@ -116,14 +102,19 @@ birth[, bc_30d := NULL]
 model.num = lm(T~1, data = birth) 
 ps.num <- dnorm((birth$T-model.num$fitted)/(summary(model.num))$sigma,0,1)
 independent <- c("year","sex","married","mage","m_edu", "cigdpp","cigddp",
-                 "clinega","kotck","pncgov", "rf_db_gest","rf_db_other",
-                 "rf_hbp_chronic", "rf_hbp_pregn","rf_cervix","rf_prev_4kg",
-                 "rf_prev_sga","firstborn","m_wg_cat",
+                 "clinega","kotck","pncgov", 
+                 # "rf_db_gest",
+                 "rf_db_other",
+                 "rf_hbp_chronic", 
+                 # "rf_hbp_pregn",
+                 "rf_cervix","rf_prev_4kg",
+                 "rf_prev_sga","firstborn",
+                 # "m_wg_cat",
                  "log_mhincome", "log_mhvalue", "percentPoverty",
                  "mrace_1", "mrace_2", "mrace_3", "mrace_4",
                  "bc_3090d", "bc_90280d")
 
-h2o.init(nthreads = n_cores, min_mem_size = "460G", port = 54345)
+h2o.init(nthreads = n_cores, min_mem_size = "300G", port = 54345)
 ##### depth 6 ######
 opt_aac_depth6_30d <- NULL
 for (rate in col.sample.rate){
@@ -208,7 +199,7 @@ for (rate in col.sample.rate){
 row.names(opt_aac_depth10_30d) <- col.sample.rate
 h2o.shutdown(prompt = FALSE)
 
-############################## 3.2 bc_3090d ######################################
+############################## 1.2 bc_3090d ######################################
 ## load data
 birth <- fread(paste0(dir_input, "birth_final.csv"),
                drop = "V1")
@@ -217,9 +208,14 @@ birth$m_edu <- as.factor(birth$m_edu)
 birth$kotck <- as.factor(birth$kotck)
 birth$m_wg_cat <- as.factor(birth$m_wg_cat)
 var <- c("year","sex","married","mage","m_edu", "cigdpp","cigddp",
-         "clinega","kotck","pncgov", "rf_db_gest","rf_db_other",
-         "rf_hbp_chronic", "rf_hbp_pregn","rf_cervix","rf_prev_4kg",
-         "rf_prev_sga", "bc_30d","bc_3090d", "bc_90280d", "firstborn","m_wg_cat",
+         "clinega","kotck","pncgov", 
+         # "rf_db_gest",
+         "rf_db_other",
+         "rf_hbp_chronic", 
+         # "rf_hbp_pregn",
+         "rf_cervix","rf_prev_4kg",
+         "rf_prev_sga", "bc_30d","bc_3090d", "bc_90280d", "firstborn",
+         # "m_wg_cat",
          "log_mhincome", "log_mhvalue", "percentPoverty",
          "mrace_1", "mrace_2", "mrace_3", "mrace_4")
 birth <- birth[ , var, with = F]
@@ -229,14 +225,19 @@ birth[, bc_3090d := NULL]
 model.num = lm(T~1, data = birth) 
 ps.num <- dnorm((birth$T-model.num$fitted)/(summary(model.num))$sigma,0,1)
 independent <- c("year","sex","married","mage","m_edu", "cigdpp","cigddp",
-                 "clinega","kotck","pncgov", "rf_db_gest","rf_db_other",
-                 "rf_hbp_chronic", "rf_hbp_pregn","rf_cervix","rf_prev_4kg",
-                 "rf_prev_sga","firstborn","m_wg_cat",
+                 "clinega","kotck","pncgov", 
+                 # "rf_db_gest",
+                 "rf_db_other",
+                 "rf_hbp_chronic", 
+                 # "rf_hbp_pregn",
+                 "rf_cervix","rf_prev_4kg",
+                 "rf_prev_sga","firstborn",
+                 # "m_wg_cat",
                  "log_mhincome", "log_mhvalue", "percentPoverty",
                  "mrace_1", "mrace_2", "mrace_3", "mrace_4",
                  "bc_30d", "bc_90280d")
 
-h2o.init(nthreads = n_cores, min_mem_size = "460G", port = 54345)
+h2o.init(nthreads = n_cores, min_mem_size = "320G", port = 54345)
 
 ##### depth 6 ######
 opt_aac_depth6_3090d <- NULL
@@ -320,7 +321,7 @@ for (rate in col.sample.rate){
 row.names(opt_aac_depth10_3090d) <- col.sample.rate
 h2o.shutdown(prompt = FALSE)
 
-############################## 3.3 bc_90280d ##################################
+############################## 1.3 bc_90280d ##################################
 ## load data
 birth <- fread(paste0(dir_input, "birth_final.csv"),
                drop = "V1")
@@ -329,9 +330,14 @@ birth$m_edu <- as.factor(birth$m_edu)
 birth$kotck <- as.factor(birth$kotck)
 birth$m_wg_cat <- as.factor(birth$m_wg_cat)
 var <- c("year","sex","married","mage","m_edu", "cigdpp","cigddp",
-         "clinega","kotck","pncgov", "rf_db_gest","rf_db_other",
-         "rf_hbp_chronic", "rf_hbp_pregn","rf_cervix","rf_prev_4kg",
-         "rf_prev_sga", "bc_30d","bc_3090d", "bc_90280d", "firstborn","m_wg_cat",
+         "clinega","kotck","pncgov", 
+         # "rf_db_gest",
+         "rf_db_other",
+         "rf_hbp_chronic", 
+         # "rf_hbp_pregn",
+         "rf_cervix","rf_prev_4kg",
+         "rf_prev_sga", "bc_30d","bc_3090d", "bc_90280d", "firstborn",
+         # "m_wg_cat",
          "log_mhincome", "log_mhvalue", "percentPoverty",
          "mrace_1", "mrace_2", "mrace_3", "mrace_4")
 birth <- birth[ , var, with = F]
@@ -341,14 +347,20 @@ birth[, bc_90280d := NULL]
 model.num = lm(T~1, data = birth) 
 ps.num <- dnorm((birth$T-model.num$fitted)/(summary(model.num))$sigma,0,1)
 independent <- c("year","sex","married","mage","m_edu", "cigdpp","cigddp",
-                 "clinega","kotck","pncgov", "rf_db_gest","rf_db_other",
-                 "rf_hbp_chronic", "rf_hbp_pregn","rf_cervix","rf_prev_4kg",
-                 "rf_prev_sga","firstborn","m_wg_cat",
+                 "clinega","kotck","pncgov", 
+                 # "rf_db_gest",
+                 "rf_db_other",
+                 "rf_hbp_chronic", 
+                 # "rf_hbp_pregn",
+                 "rf_cervix","rf_prev_4kg",
+                 "rf_prev_sga","firstborn",
+                 # "m_wg_cat",
                  "log_mhincome", "log_mhvalue", "percentPoverty",
                  "mrace_1", "mrace_2", "mrace_3", "mrace_4",
                  "bc_30d", "bc_3090d")
 
-h2o.init(nthreads = n_cores, min_mem_size = "460G", port = 54345)
+h2o.init(nthreads = n_cores, min_mem_size = "400G", port = 54321)
+
 ##### depth 6 ######
 opt_aac_depth6_90280d <- NULL
 for (rate in col.sample.rate){
@@ -431,7 +443,7 @@ for (rate in col.sample.rate){
 row.names(opt_aac_depth10_90280d) <- col.sample.rate
 h2o.shutdown(prompt = FALSE)
 
-############################## 4. summarize results ###########################
+############################## 2. summarize results ###########################
 result_30d <-
   rbind(
     opt_aac_depth6_30d %>% mutate(depth = 6,col_rate = col.sample.rate),
@@ -453,8 +465,8 @@ result_90280d <-
     opt_aac_depth10_90280d %>% mutate(depth = 10,col_rate = col.sample.rate))
 colnames(result_90280d) <- c("optimal_ntrees", "AAC", "depth", "col_rate")
 
-write.csv(result_30d, "gridSearch_30d.csv")
-write.csv(result_3090d, "gridSearch_3090d.csv")
-write.csv(result_90280d, "gridSearch_90280d.csv")
+fwrite(result_30d, "gridSearch_30dsens.csv")
+fwrite(result_3090d, "gridSearch_3090dsens.csv")
+fwrite(result_90280d, "gridSearch_90280dsens.csv")
 
 gc()

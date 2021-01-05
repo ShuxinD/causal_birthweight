@@ -18,7 +18,7 @@ library(fastDummies)
 library(tableone)
 library(rtf)
 
-dir_input_birth <- "/Users/shuxind/Desktop/BC_birthweight_analysis/"
+dir_input_birth <- "/Users/shuxind/Desktop/BC_birthweight_data/"
 dir_output_table1 <- "/Users/shuxind/Desktop/BC_birthweight_analysis/"
 
 birth <- fread(paste0(dir_input_birth, "birth_complt.csv"), drop = "V1")
@@ -88,7 +88,49 @@ rtffile <- RTF(file = paste0(dir_output_table1, "table1.doc"))  # this can be an
 addParagraph(rtffile, "Table")
 addTable(rtffile, cbind(rownames(table1), table1))
 done(rtffile)
-
+## revise the output of smoking variable
+cigddp_smoker <- data$cigddp[data$cigddp!=0]
+cigdpp_smoker <- data$cigdpp[data$cigdpp!=0]
+length(cigddp_smoker)
+# [1] 63658
+length(cigdpp_smoker)
+# [1] 116740
+mean(cigddp_smoker)
+# [1] 7.615199
+mean(cigdpp_smoker)
+# [1] 12.2793
+sd(cigddp_smoker)
+# [1] 6.392116
+sd(cigdpp_smoker)
+# [1] 10.62188
+cigddp_smoker_nbw <- data$cigddp[data$cigddp!=0 & data$lbw==0]
+cigdpp_smoker_nbw <- data$cigdpp[data$cigdpp!=0 & data$lbw==0]
+length(cigddp_smoker_nbw)
+# [1] 60416
+length(cigdpp_smoker_nbw)
+# [1] 112538
+mean(cigddp_smoker_nbw)
+# [1] 7.556944
+mean(cigdpp_smoker_nbw)
+# [1] 12.22052
+sd(cigddp_smoker_nbw)
+# [1] 6.104632
+sd(cigdpp_smoker_nbw)
+# [1] 10.68288
+cigddp_smoker_lbw <- data$cigddp[data$cigddp!=0 & data$lbw==1]
+cigdpp_smoker_lbw <- data$cigdpp[data$cigdpp!=0 & data$lbw==1]
+length(cigddp_smoker_lbw)
+# [1] 3242
+length(cigdpp_smoker_lbw)
+# [1] 4202
+mean(cigddp_smoker_lbw)
+# [1] 8.700802
+mean(cigdpp_smoker_lbw)
+# [1] 13.85364
+sd(cigddp_smoker_lbw)
+# [1] 10.32468
+sd(cigdpp_smoker_lbw)
+# [1] 8.687039
 ######################## 3. Check variables ###################################
 ## check categorical variables with multiple levels
 ## check normality on continuous variables: take log for those skewed variables
@@ -143,4 +185,4 @@ summary(mhvalue)
 
 detach(data)
 
-write.csv(data, "/Users/shuxind/Desktop/BC_birthweight_data/birth_final.csv")
+fwrite(data, "/Users/shuxind/Desktop/BC_birthweight_data/birth_final.csv")
