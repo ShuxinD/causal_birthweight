@@ -1,10 +1,11 @@
 ###############################################################################
 # Project: Black Carbon and MA birth                                          #
 # Analysis: Link 1km grid NO2                                                 # 
-# Machine: RStudio Server                                                     #
-# Input: mabirths_02NOV18.csv (from Anna)                                     #
+# Machine: 164 RStudio Server                                                 #
+# Input: "mabirths_02NOV18.csv" (from Anna)                                   #
 # Input: NO2 daily prediction on QNAP3                                        #
-# Output: #
+# Output: "no2_birth.csv" contains 280 days exposure prior to dob             #
+# Output: "no2_birth_average.csv" (30d, 31-90d, 91-280d averages)             #
 # Author: Shuxin Dong (modified from Yaguang's codes)                         #
 # Date: 2021-01-06                                                            #
 ###############################################################################
@@ -15,15 +16,14 @@ gc()
 
 library(data.table)
 library(nabor)
-# require(dplyr)
-# require(magrittr)
-# require(lubridate)
-# library(fst)
 
+setDTthreads(threads = 0)
 setwd("/media/gate/Shuxin")
+
 dir_birth <- "/media/gate/Shuxin/"
 dir_no2 <- "/media/qnap3/Exposure modeling/3 National scale/USA/5 NO2 v1.2000_16/7 Final predictions 1 km/Daily/"
 dir_output <- "/media/gate/Shuxin/"
+
 ## read in birth data and convert formats
 birth <- fread(paste0(dir_birth, "mabirths_02NOV18.csv"))
 names(birth)
@@ -32,6 +32,7 @@ rm(birth)
 dat <- na.omit(dat)
 dat$id <- 1:nrow(dat)
 dat$bdob <- as.Date(dat$bdob, tryFormats = "%m/%d/%Y")
+
 ## split raw birth data for memory saving
 dim(dat)[1]/2
 dat_1 <- dat[1:floor(dim(dat)[1]/2),]
@@ -81,7 +82,7 @@ for (i in 1:length(no2_files)) { #
   no2_temp <- data.table(cbind(dat_1[, .(long, lat, id, bdob)], no2_temp))
   no2_temp$date <- as.Date(i + as.Date('2000-02-01') - 1)
   names(no2_temp) <- c("lon","lat", "id", "bdob", "no2", "date")
-  no2_temp <- no2_temp[(date >= bdob-280)&(date < bdob)]
+  no2_temp <- no2_temp[(date >= bdob-280)&(date < bdob)] # restrict to 280 days prior to dob
   no2 <- rbind(no2, no2_temp)
   
   rm(no2_temp)
@@ -92,76 +93,61 @@ for (i in 1:length(no2_files)) { #
 ## save long format
 no2_dat_1 <- no2
 setDT(no2_dat_1)
+no2_dat_1 <- no2_dat_1[order(id,-date)]
 fwrite(no2_dat_1, paste0(dir_output, "no2_dat_1_long.csv"))
-# ## transform from long format to wide format
-# no2_dat_1[, pre_day:=bdob-date][]
-# no2_dat_1_wide <- dcast(no2_dat_1, id ~ pre_day, value.var = "no2") # may change no2 var name
-# merge(no2_dat_1_wide, dat[,.(uniqueid_yr,id)], by = "id")
-# ## save wide format part 1
-# fwrite()
+## transform from long format to wide format
+no2_dat_1[, pre_day:= bdob - date][]
+no2_dat_1_wide <- dcast(no2_dat_1, id ~ pre_day, value.var = "no2") # may change no2 var name
+no2_dat_1_wide <- merge(no2_dat_1_wide, dat[,.(uniqueid_yr,id)], by = "id")
+## save wide format part 1
+# fwrite(no2_dat_1_wide, paste0(dir_output, "no2_dat_1_wide.csv"))
 
-####################################
+########################## 2nd part of birth data #############################
+## identify grid id
+link_no2 <- nabor::knn(sitecode_no2[, c("Lon","Lat")],
+                       dat_2[, c("long","lat")],
+                       k = 1, radius = 2*sqrt(2)/10*0.1)
+dat_2 <- dat_2[, grid_id_no2 := link_no2$nn.idx]
+## merge
+no2 <- data.table(matrix(vector(),0,6))
+names(no2) <- c("lon", "lat", "id", "bdob", "no2", "date")
+no2$bdob <- as.Date(no2$bdob)
+no2$date <- as.Date(no2$date)
+for (i in 1:length(no2_files)) { # 
+  no2_temp <- readRDS(paste0(dir_no2,no2_files[i]))
+  no2_temp <- no2_temp[1, dat_2$grid_id_no2]
+  
+  no2_temp <- data.table(cbind(dat_2[, .(long, lat, id, bdob)], no2_temp))
+  no2_temp$date <- as.Date(i + as.Date('2000-02-01') - 1)
+  names(no2_temp) <- c("lon","lat", "id", "bdob", "no2", "date")
+  no2_temp <- no2_temp[(date >= bdob-280)&(date < bdob)] # restrict to 280 days prior to dob
+  no2 <- rbind(no2, no2_temp)
+  
+  rm(no2_temp)
+  gc()
+  
+  if (i%%10 == 0) cat(paste0('Processed ', i, ' of ', length(no2_files),'\n'))
+}
+## save long format
+no2_dat_2 <- no2
+setDT(no2_dat_2)
+no2_dat_2 <- no2_dat_2[order(id,-date)]
+fwrite(no2_dat_2, paste0(dir_output, "no2_dat_2_long.csv"))
+## transform from long format to wide format
+no2_dat_2[, pre_day:= bdob - date][]
+no2_dat_2_wide <- dcast(no2_dat_2, id ~ pre_day, value.var = "no2") # may change no2 var name
+no2_dat_2_wide
+no2_dat_2_wide <- merge(no2_dat_2_wide, dat[,.(uniqueid_yr,id)], by = "id")
+## save wide format part 1
+# fwrite(no2_dat_2_wide, paste0(dir_output, "no2_dat_2_wide.csv"))
 
-### lagging and leading
-no2 <- as.data.frame(no2)
-no2 <- no2[order(no2$id,no2$date),]
-no2 <- as.data.table(no2)
+##################### 3. generate the final NO2 dataset ######################
+no2_birth <- rbind(no2_dat_1_wide, no2_dat_2_wide)
+setDT(no2_birth)
+fwrite(no2_birth, paste0(dir_output, "no2_birth.csv"))
 
-# no2 = no2[, no2_lag1 := shift(no2,type='lag'),.(id)]
-# no2 = no2[, no2_lag2 := shift(no2_lag1,type='lag'),.(id)]
-# no2 = no2[, no2_lag3 := shift(no2_lag2,type='lag'),.(id)]
-# no2 = no2[, no2_lag4 := shift(no2_lag3,type='lag'),.(id)]
-# no2 = no2[, no2_lag5 := shift(no2_lag4,type='lag'),.(id)]
-# no2 = no2[, no2_lag6 := shift(no2_lag5,type='lag'),.(id)]
-# no2 = no2[, no2_lag7 := shift(no2_lag6,type='lag'),.(id)]
-# no2 = no2[, no2_lag8 := shift(no2_lag7,type='lag'),.(id)]
-# no2 = no2[, no2_lag9 := shift(no2_lag8,type='lag'),.(id)]
-# no2 = no2[, no2_lag10 := shift(no2_lag9,type='lag'),.(id)]
-# no2 = no2[, no2_lag11 := shift(no2_lag10,type='lag'),.(id)]
-# no2 = no2[, no2_lag12 := shift(no2_lag11,type='lag'),.(id)]
-# no2 = no2[, no2_lag13 := shift(no2_lag12,type='lag'),.(id)]
-# no2 = no2[, no2_lag14 := shift(no2_lag13,type='lag'),.(id)]
-# no2 = no2[, no2_lag15 := shift(no2_lag14,type='lag'),.(id)]
-# no2 = no2[, no2_lag16 := shift(no2_lag15,type='lag'),.(id)]
-# no2 = no2[, no2_lag17 := shift(no2_lag16,type='lag'),.(id)]
-# no2 = no2[, no2_lag18 := shift(no2_lag17,type='lag'),.(id)]
-# no2 = no2[, no2_lag19 := shift(no2_lag18,type='lag'),.(id)]
-# no2 = no2[, no2_lag20 := shift(no2_lag19,type='lag'),.(id)]
-# 
-# no2$no2_lag713 <- (no2$no2_lag7+no2$no2_lag8+no2$no2_lag9+no2$no2_lag10+no2$no2_lag11+
-#                      no2$no2_lag12+no2$no2_lag13)/7
-# no2$no2_lag1420 <- (no2$no2_lag14+no2$no2_lag15+no2$no2_lag16+no2$no2_lag17+no2$no2_lag18+
-#                       no2$no2_lag19+no2$no2_lag20)/7
-
-no2 = no2[, no2_lead1 := shift(no2,type='lead'),.(id)]
-no2 = no2[, no2_lead2 := shift(no2_lead1,type='lead'),.(id)]
-no2 = no2[, no2_lead3 := shift(no2_lead2,type='lead'),.(id)]
-no2 = no2[, no2_lead4 := shift(no2_lead3,type='lead'),.(id)]
-no2 = no2[, no2_lead5 := shift(no2_lead4,type='lead'),.(id)]
-no2 = no2[, no2_lead6 := shift(no2_lead5,type='lead'),.(id)]
-no2 = no2[, no2_lead7 := shift(no2_lead6,type='lead'),.(id)]
-no2 = no2[, no2_lead8 := shift(no2_lead7,type='lead'),.(id)]
-no2 = no2[, no2_lead9 := shift(no2_lead8,type='lead'),.(id)]
-no2 = no2[, no2_lead10 := shift(no2_lead9,type='lead'),.(id)]
-no2 = no2[, no2_lead11 := shift(no2_lead10,type='lead'),.(id)]
-no2 = no2[, no2_lead12 := shift(no2_lead11,type='lead'),.(id)]
-no2 = no2[, no2_lead13 := shift(no2_lead12,type='lead'),.(id)]
-no2 = no2[, no2_lead14 := shift(no2_lead13,type='lead'),.(id)]
-no2 = no2[, no2_lead15 := shift(no2_lead14,type='lead'),.(id)]
-no2 = no2[, no2_lead16 := shift(no2_lead15,type='lead'),.(id)]
-no2 = no2[, no2_lead17 := shift(no2_lead16,type='lead'),.(id)]
-no2 = no2[, no2_lead18 := shift(no2_lead17,type='lead'),.(id)]
-no2 = no2[, no2_lead19 := shift(no2_lead18,type='lead'),.(id)]
-no2 = no2[, no2_lead20 := shift(no2_lead19,type='lead'),.(id)]
-
-no2$no2_lead713 <- (no2$no2_lead7+no2$no2_lead8+no2$no2_lead9+no2$no2_lead10+no2$no2_lead11+
-                      no2$no2_lead12+no2$no2_lead13)/7
-no2$no2_lead1420 <- (no2$no2_lead14+no2$no2_lead15+no2$no2_lead16+no2$no2_lead17+no2$no2_lead18+
-                       no2$no2_lead19+no2$no2_lead20)/7
-
-no2 <- no2[,c("lon","lat","date","no2","no2_lag1","no2_lag2","no2_lag3","no2_lag4","no2_lag5","no2_lag6","no2_lag713",
-              "no2_lag1420","no2_lead1","no2_lead2","no2_lead3","no2_lead4","no2_lead5","no2_lead6","no2_lead713",
-              "no2_lead1420")]
-
-### save
-saveRDS(no2,file=paste0(dir_save_GA,'no2_GA.rds'))
+no2_birth[, ":=" (no2_30d = rowMeans(no2_birth[,2:31], na.rm = TRUE),
+                  no2_3090d = rowMeans(no2_birth[,32:91], na.rm = TRUE),
+                  no2_90280d = rowMeans(no2_birth[,92:281], na.rm = TRUE))][]
+no2_birth_average <- na.omit(no2_birth[, 282:285])
+fwrite(no2_birth_average, paste0(dir_output, "no2_birth_average.csv"))

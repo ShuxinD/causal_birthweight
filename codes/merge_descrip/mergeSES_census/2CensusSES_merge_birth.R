@@ -2,7 +2,7 @@
 # Project: Causal black carbon on birth weight in MA                          #
 # Code: merge census data into birth registry by tract                        #
 # Input: birth_w_geoid`year`.csv and census (.csv) files                      #
-# Output: "birth_SES.csv" birth data with merged SES variables                #
+# Output: "birth_SES.csv" SES dats which could be merged into MA birth data   #
 # Author: Shuxin Dong                                                         #
 # Date: Oct 21, 2020                                                          #
 ###############################################################################
@@ -16,7 +16,7 @@ library(dplyr)
 
 dir_input_birth <- "/Users/shuxind/Desktop/BC_birthweight_data/MAbirth_w_geoid/"
 dir_input_census <- "/Users/shuxind/Desktop/census/"
-dir_output_birth <- "/Users/shuxind/Desktop/BC_birthweight_data/MAbirth_w_SES/"
+dir_output_birth <- "/Users/shuxind/Desktop/BC_birthweight_data/MAbirth_SES/"
 
 ######################### 1. Load and check birth data #########################
 ## load data
@@ -412,5 +412,6 @@ birth15 <- fread(file = paste0(dir_output_birth, "birth15_SES.csv"),
                  colClasses = c(NA, "character", rep(NA,4)),
                  drop = "V1")
 birth_SES <- rbind(birth00, birth0109, birth10, birth11, birth12, birth13, birth14, birth15)
-write.csv(birth_SES, file = paste0(dir_output_birth, "birth_SES.csv"))
+setDT(birth_SES)
+fwrite(birth_SES, file = paste0(dir_output_birth, "birth_SES.csv"))
 
