@@ -1,70 +1,66 @@
 ###############################################################################
-# Project: Causal black carbon on birth weight in MA                          #
+# Project: Causal black carbon and NO2 on birth weight in MA                  #
 # Code: Table one and normality                                               #
-# Input: "mabirths_02NOV18.csv" original birth data                           #
-# Input: "birth_SES.csv" birth data with merged SES variables                 #
-# Output: "birth_final.csv" for future analyses                               #
+# Input: "MAbirth_merged.csv"                                                 #
+# Output: "MAbirth_for_analyses.csv" for future analyses                      #
 # Author: Shuxin Dong                                                         #
-# Date: Oct 28, 2020                                                          #
+# Date: 2021-01-21.                                                           #
 ###############################################################################
 
 ############################# 0. Setup ########################################
 rm(list = ls())
 gc()
 
-library(dplyr)
 library(data.table)
 library(fastDummies)
 library(tableone)
 library(rtf)
 
-dir_input_birth <- "/Users/shuxind/Desktop/BC_birthweight_data/"
-dir_output_table1 <- "/Users/shuxind/Desktop/BC_birthweight_analysis/"
+setwd("/media/gate/Shuxin/")
+dir_input_birth <- "/media/gate/Shuxin/MAbirth/"
+dir_output_table1 <- "/media/gate/Shuxin/MAbirth/results/"
 
-birth <- fread(paste0(dir_input_birth, "birth_complt.csv"), drop = "V1")
-birth$lbw <- 0
+birth <- fread(paste0(dir_input_birth, "MAbirth_merged.csv"))
+birth[, lbw:=0][]
 birth$lbw[birth$bwg<2500] <- 1
-names(birth)
 # > names(birth)
 # [1] "uniqueid_yr"    "year"           "sex"            "married"        "mage"          
 # [6] "mrace"          "m_edu"          "cigdpp"         "cigddp"         "parit"         
 # [11] "clinega"        "kotck"          "pncgov"         "bwg"            "rf_db_gest"    
 # [16] "rf_db_other"    "rf_hbp_chronic" "rf_hbp_pregn"   "rf_cervix"      "rf_prev_4kg"   
 # [21] "rf_prev_sga"    "m_wg"           "mhincome"       "mhvalue"        "percentPoverty"
-# [26] "bc_30d"         "bc_90d"         "bc_280d"        "lbw"  
+# [26] "bc_30d"         "bc_3090d"       "bc_90280d"      "no2_30d"        "no2_3090d"     
+# [31] "no2_90280d"     "lbw"
 
 ######################## 1. Prepare for table one #############################
 ## Transform continuous to categorical
 ## `parity` to `firstborn`, because of some extreme large unexplained value.
+birth[, firstborn := parit][]
+birth$firstborn[birth$parit>1] <- 0
+birth[, parit := NULL]
 ## `m_wg` to `m_wg_cat` based on reference. Extreme large unexplained values exist.
-birth$firstborn <- birth$parit
-birth$firstborn[birth$parit>1 & !is.na(birth$parit)] <- 0
 plot(density(birth$m_wg, bw=1))
 hist(birth$m_wg)
-birth$m_wg_cat <- 0
+birth[, m_wg_cat := 0][]
 birth$m_wg_cat[birth$m_wg<0] <- 1
 birth$m_wg_cat[birth$m_wg>=0 & birth$m_wg<15] <- 2
 birth$m_wg_cat[birth$m_wg>=15 & birth$m_wg<25] <- 3
 birth$m_wg_cat[birth$m_wg>=25 & birth$m_wg<36] <- 4
 birth$m_wg_cat[birth$m_wg>=36] <- 5
-birth <- birth %>% select(-parit, -m_wg)
-summary(birth)
+birth[, m_wg :=NULL]
+# summary(birth)
 ## get categorical and dummy variables
-data <- birth
-data$mrace[data$mrace==5] <- 4
-data$year <- as.factor(data$year)
-data$sex <- data$sex - 1 # 1 is girl; 0 is boy
-data$m_edu <- as.factor(data$m_edu)
-data$kotck <- as.factor(data$kotck)
-data$m_wg_cat <- as.factor(data$m_wg_cat)
-data <- fastDummies::dummy_cols(data, select_columns = "mrace")
-data$bc_3090d <- with(data, (bc_90d*90-bc_30d*30)/(90-30))
-data$bc_90280d <- with(data, (bc_280d*280-bc_90d*90)/(280-90))
-
+birth$mrace[birth$mrace==5] <- 4
+birth$year <- as.factor(birth$year)
+birth$sex <- birth$sex - 1 # 1 is girl; 0 is boy
+birth$m_edu <- as.factor(birth$m_edu)
+birth$kotck <- as.factor(birth$kotck)
+birth$m_wg_cat <- as.factor(birth$m_wg_cat)
+birth <- fastDummies::dummy_cols(birth, select_columns = "mrace")
 ######################## 2. Export table 1 ####################################
-listVars <- c("bwg","bc_30d",
-              "bc_90d","bc_280d",
-              "bc_3090d", "bc_90280d",
+listVars <- c("bwg",
+              "bc_30d","bc_3090d", "bc_90280d",
+              "no2_30d", "no2_3090d", "no2_90280d",
               "year",
               "mage","sex","married", "mrace","m_edu", "pncgov",
               "mhincome", "mhvalue", "percentPoverty",
@@ -74,82 +70,77 @@ listVars <- c("bwg","bc_30d",
 catVars <- c("year","sex","married","mrace","m_edu","pncgov","firstborn",
              "kotck", "m_wg_cat", "rf_db_gest", "rf_db_other", "rf_hbp_pregn", "rf_hbp_chronic", 
              "rf_cervix", "rf_prev_4kg", "rf_prev_sga")
-bcVars <- c("bc_30d",
-            "bc_90d","bc_280d",
-            "bc_3090d", "bc_90280d")
+bcVars <- c("bc_30d", "bc_3090d", "bc_90280d")
+no2Vars <- c("no2_30d", "no2_3090d", "no2_90280d")
 
 rawtable1 <- CreateTableOne(vars = listVars, factorVars = catVars, 
                             strata = "lbw", addOverall = TRUE, test = FALSE,
-                            data = data)
-table1 <- print(rawtable1, nonnormal = bcVars,
-                formatOption = list(decimal.mark = ".",  big.mark = ",", scientific = FALSE), contDigits = 3)
+                            data = birth)
+print(rawtable1, nonnormal = c(bcVars, no2Vars),
+      formatOption = list(decimal.mark = ".",  big.mark = ",", scientific = FALSE),
+      contDigits = 2)
+table1 <- print(rawtable1, nonnormal = c(bcVars, no2Vars),
+                formatOption = list(decimal.mark = ".",  big.mark = ",", scientific = FALSE),
+                contDigits = 2)
 
 rtffile <- RTF(file = paste0(dir_output_table1, "table1.doc"))  # this can be an .rtf or a .doc
 addParagraph(rtffile, "Table")
 addTable(rtffile, cbind(rownames(table1), table1))
 done(rtffile)
+
 ## revise the output of smoking variable
-cigddp_smoker <- data$cigddp[data$cigddp!=0]
-cigdpp_smoker <- data$cigdpp[data$cigdpp!=0]
-length(cigddp_smoker)
-# [1] 63658
-length(cigdpp_smoker)
-# [1] 116740
-mean(cigddp_smoker)
-# [1] 7.615199
-mean(cigdpp_smoker)
-# [1] 12.2793
-sd(cigddp_smoker)
-# [1] 6.392116
-sd(cigdpp_smoker)
-# [1] 10.62188
-cigddp_smoker_nbw <- data$cigddp[data$cigddp!=0 & data$lbw==0]
-cigdpp_smoker_nbw <- data$cigdpp[data$cigdpp!=0 & data$lbw==0]
-length(cigddp_smoker_nbw)
-# [1] 60416
-length(cigdpp_smoker_nbw)
-# [1] 112538
-mean(cigddp_smoker_nbw)
-# [1] 7.556944
-mean(cigdpp_smoker_nbw)
-# [1] 12.22052
-sd(cigddp_smoker_nbw)
-# [1] 6.104632
-sd(cigdpp_smoker_nbw)
-# [1] 10.68288
-cigddp_smoker_lbw <- data$cigddp[data$cigddp!=0 & data$lbw==1]
-cigdpp_smoker_lbw <- data$cigdpp[data$cigdpp!=0 & data$lbw==1]
-length(cigddp_smoker_lbw)
-# [1] 3242
-length(cigdpp_smoker_lbw)
-# [1] 4202
-mean(cigddp_smoker_lbw)
-# [1] 8.700802
-mean(cigdpp_smoker_lbw)
-# [1] 13.85364
-sd(cigddp_smoker_lbw)
-# [1] 10.32468
-sd(cigdpp_smoker_lbw)
-# [1] 8.687039
+cigddp_smoker <- birth$cigddp[birth$cigddp!=0]
+cigdpp_smoker <- birth$cigdpp[birth$cigdpp!=0]
+cigddp_smoker_nbw <- birth$cigddp[birth$cigddp!=0 & birth$lbw==0]
+cigdpp_smoker_nbw <- birth$cigdpp[birth$cigdpp!=0 & birth$lbw==0]
+cigddp_smoker_lbw <- birth$cigddp[birth$cigddp!=0 & birth$lbw==1]
+cigdpp_smoker_lbw <- birth$cigdpp[birth$cigdpp!=0 & birth$lbw==1]
+
+num_smoker <- c(length(cigddp_smoker), length(cigdpp_smoker),
+                length(cigddp_smoker_nbw), length(cigdpp_smoker_nbw),
+                length(cigddp_smoker_lbw), length(cigdpp_smoker_lbw))
+mean_cig <- c(mean(cigddp_smoker), mean(cigdpp_smoker),
+              mean(cigddp_smoker_nbw), mean(cigdpp_smoker_nbw),
+              mean(cigddp_smoker_lbw), mean(cigdpp_smoker_lbw))
+sd_cig <- c(sd(cigddp_smoker), sd(cigdpp_smoker),
+            sd(cigddp_smoker_nbw), sd(cigdpp_smoker_nbw),
+            sd(cigddp_smoker_lbw), sd(cigdpp_smoker_lbw))
+smokerInfo <- cbind(num_smoker,mean_cig,sd_cig)
+rownames(smokerInfo) <- c("during pregnancy", "before pregnancy",
+                          "during pregnancy with NBW", "before preganncy with NBW",
+                          "during pregnancy with LBW", "before preganncy with LBW")
+smokerInfo
+# > smokerInfo
+# num_smoker  mean_cig    sd_cig
+# during pregnancy               61703  7.625480  6.407072
+# before pregnancy              113588 12.260846 10.664387
+# during pregnancy with NBW      58565  7.569310  6.111859
+# before preganncy with NBW     109511 12.203359 10.727577
+# during pregnancy with LBW       3138  8.673784 10.435547
+# before preganncy with LBW       4077 13.805004  8.658270
+write.csv(smokerInfo, paste0(dir_output_table1, "table1_smokerInfo.csv"))
 ######################## 3. Check variables ###################################
 ## check categorical variables with multiple levels
 ## check normality on continuous variables: take log for those skewed variables
-attach(data)
+attach(birth)
 
 par(mfrow=c(2,3))
 plot(year, main="year")
-plot(mrace, main="mrace")
+plot(as.factor(mrace), main="mrace")
 plot(m_edu, main="m_edu")
 plot(kotck, main="kotck")
 plot(m_wg_cat, main="maternal weight change")
 
-par(mfrow=c(3,2))
+par(mfrow = c(1,1))
 hist(bwg)
+
+par(mfrow=c(3,2))
 hist(bc_30d)
-hist(bc_90d)
-hist(bc_280d)
 hist(bc_3090d)
 hist(bc_90280d)
+hist(no2_30d)
+hist(no2_3090d)
+hist(no2_90280d)
 
 par(mfrow=c(1,2))
 plot(density(mage,  bw=2), main = "mage")
@@ -173,16 +164,15 @@ par(mfrow=c(2,2))
 plot(density(mhincome, bw=1))
 hist(log(mhincome))
 plot(density(log(mhincome),  bw=0.5))
-data$log_mhincome <- log(birth$mhincome)
+birth[, log_mhincome:= log(mhincome)][]
 summary(mhincome)
 
 par(mfrow=c(2,2))
 plot(density(mhvalue, bw=1))
 hist(log(mhvalue))
 plot(density(log(mhvalue),  bw=0.5))
-data$log_mhvalue <- log(birth$mhvalue)
+birth[, log_mhvalue:= log(mhvalue)][]
 summary(mhvalue)
 
-detach(data)
-
-fwrite(data, "/Users/shuxind/Desktop/BC_birthweight_data/birth_final.csv")
+detach(birth)
+fwrite(birth, paste0(dir_input_birth, "MAbirth_for_analyses.csv"))
