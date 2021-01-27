@@ -609,7 +609,7 @@ independent <- c("year","sex","married","mage","m_edu", "cigdpp","cigddp",
 model.num = lm(T~1, data = dt) 
 ps.num <- dnorm((dt$T-model.num$fitted)/(summary(model.num))$sigma,0,1)
 
-h2o.init(nthreads = n_cores, min_mem_size = "400G", port = 54345)
+h2o.init(nthreads = n_cores, min_mem_size = "410G", port = 54345)
 
 ##### depth 6 ######
 opt_aac_depth6_no2_3090d <- NULL
@@ -729,7 +729,7 @@ independent <- c("year","sex","married","mage","m_edu", "cigdpp","cigddp",
 model.num = lm(T~1, data = dt) 
 ps.num <- dnorm((dt$T-model.num$fitted)/(summary(model.num))$sigma,0,1)
 
-h2o.init(nthreads = n_cores, min_mem_size = "400G", port = 54345)
+h2o.init(nthreads = n_cores, min_mem_size = "410G", port = 54345)
 
 ##### depth 6 ######
 opt_aac_depth6_no2_90280d <- NULL
