@@ -24,6 +24,7 @@ n_cores <- detectCores() - 1
 # dir_input <- "/Users/shuxind/Desktop/BC_birthweight_data/"
 setwd("/media/gate/Shuxin/")
 dir_input <- "/media/gate/Shuxin/MAbirth/"
+dir_output_results <- "/media/gate/Shuxin/MAbirth/results/"
 
 ## set parameters for h2o.gbm model
 min.rows <- 10
@@ -876,9 +877,8 @@ results <- rbindlist(list(result_bc_30d, result_bc_3090d, result_bc_90280d,
 
 colnames(results) <- c("optimal_ntrees", "AAC", "depth", "col_rate", "label")
 setDT(results)
+results
 
-write.csv(result_30d, "gridSearch_30d.csv")
-write.csv(result_3090d, "gridSearch_3090d.csv")
-write.csv(result_90280d, "gridSearch_90280d.csv")
+fwrite(results, paste0(dir_output_results, "GridSearchResults.csv"))
 
 gc()

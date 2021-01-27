@@ -18,7 +18,7 @@ library(rtf)
 
 setwd("/media/gate/Shuxin/")
 dir_input_birth <- "/media/gate/Shuxin/MAbirth/"
-dir_output_table1 <- "/media/gate/Shuxin/MAbirth/results/"
+dir_descrp <- "/media/gate/Shuxin/MAbirth/results/0TableOne_checkVarDistribution/"
 
 birth <- fread(paste0(dir_input_birth, "MAbirth_merged.csv"))
 birth[, lbw:=0][]
@@ -71,16 +71,21 @@ birth <- fastDummies::dummy_cols(birth, select_columns = "mrace")
 ## check extreme values
 attach(birth)
 
+pdf(paste0(dir_descrp,"check1.pdf"))
 par(mfrow=c(2,3))
 plot(year, main="year")
 plot(as.factor(mrace), main="mrace")
 plot(m_edu, main="m_edu")
 plot(kotck, main="kotck")
 plot(m_wg_cat, main="maternal weight change")
+dev.off()
 
+pdf(paste0(dir_descrp,"check2.pdf"))
 par(mfrow = c(1,1))
 hist(bwg)
+dev.off()
 
+pdf(paste0(dir_descrp,"check3.pdf"))
 par(mfrow=c(3,2))
 hist(bc_30d)
 hist(bc_3090d)
@@ -88,38 +93,49 @@ hist(bc_90280d)
 hist(no2_30d)
 hist(no2_3090d)
 hist(no2_90280d)
+dev.off()
 
+pdf(paste0(dir_descrp,"check4.pdf"))
 par(mfrow=c(1,2))
 plot(density(mage,  bw=2), main = "mage")
 hist(clinega)
+dev.off()
 
 # cigdpp %>% sort(decreasing = TRUE) %>% head(30)
+pdf(paste0(dir_descrp,"check5.pdf"))
 par(mfrow=c(2,2))
 plot(density(cigdpp,  bw=0.5))
 hist(log(cigdpp))
 plot(density(log(cigdpp),  bw=0.5))
+dev.off()
 # max_cigdpp <- quantile(cigdpp, 0.99995)
 summary(cigdpp)
 
+pdf(paste0(dir_descrp,"check6.pdf"))
 par(mfrow=c(2,2))
 plot(density(cigddp,  bw=0.5))
 hist(log(cigddp))
 plot(density(log(cigddp),  bw=0.5))
+dev.off()
 # max_cigddp <- quantile(cigddp, 0.99995)
 summary(cigddp)
 
 # med_hs_inc %>% sort(decreasing = TRUE) %>% head(30)
+pdf(paste0(dir_descrp,"check7.pdf"))
 par(mfrow=c(2,2))
 plot(density(mhincome, bw=1))
 hist(log(mhincome))
 plot(density(log(mhincome),  bw=0.5))
 birth[, log_mhincome:= log(mhincome)][]
+dev.off()
 summary(mhincome)
 
+pdf(paste0(dir_descrp,"check8.pdf"))
 par(mfrow=c(2,2))
 plot(density(mhvalue, bw=1))
 hist(log(mhvalue))
 plot(density(log(mhvalue),  bw=0.5))
+dev.off()
 birth[, log_mhvalue:= log(mhvalue)][]
 summary(mhvalue)
 
@@ -173,7 +189,7 @@ table1 <- print(rawtable1, nonnormal = c(bcVars, no2Vars),
                 formatOption = list(decimal.mark = ".",  big.mark = ",", scientific = FALSE),
                 contDigits = 2)
 
-rtffile <- RTF(file = paste0(dir_output_table1, "table1.doc"))  # this can be an .rtf or a .doc
+rtffile <- RTF(file = paste0(dir_descrp, "table1.doc"))  # this can be an .rtf or a .doc
 addParagraph(rtffile, "Table")
 addTable(rtffile, cbind(rownames(table1), table1))
 done(rtffile)
@@ -208,6 +224,6 @@ smokerInfo
 # before preganncy with NBW     109511 12.133674 8.174378
 # during pregnancy with LBW       3138  8.481198 5.883473
 # before preganncy with LBW       4077 13.794076 8.448792
-write.csv(smokerInfo, paste0(dir_output_table1, "table1_smokerInfo.csv"))
+write.csv(smokerInfo, paste0(dir_descrp, "table1_smokerInfo.csv"))
 
 fwrite(birth, paste0(dir_input_birth, "MAbirth_for_analyses.csv"))
