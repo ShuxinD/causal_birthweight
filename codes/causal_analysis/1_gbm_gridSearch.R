@@ -24,7 +24,7 @@ n_cores <- detectCores() - 1
 # dir_input <- "/Users/shuxind/Desktop/BC_birthweight_data/"
 setwd("/media/gate/Shuxin/")
 dir_input <- "/media/gate/Shuxin/MAbirth/"
-dir_output_results <- "/media/gate/Shuxin/MAbirth/results/"
+dir_gridsearch <- "/media/gate/Shuxin/MAbirth/results/1GridSearchResults/"
 
 ## set parameters for h2o.gbm model
 min.rows <- 10
@@ -879,6 +879,12 @@ colnames(results) <- c("optimal_ntrees", "AAC", "depth", "col_rate", "label")
 setDT(results)
 results
 
-fwrite(results, paste0(dir_output_results, "GridSearchResults.csv"))
+fwrite(results, paste0(dir_gridsearch, "GridSearchResults.csv"))
+
+results <- fread(paste0(dir_gridsearch, "GridSearchResults.csv"))
+best <- results[, .(bestAAC = min(AAC)), by = label]
+best <- merge(best, results, by.x = c("label", "bestAAC"), by.y = c("label", "AAC"))
+best[, optimal_ntrees := round(optimal_ntrees)][]
+fwrite(best, paste0(dir_gridsearch, "BestCombinations_gbm.csv"))
 
 gc()
