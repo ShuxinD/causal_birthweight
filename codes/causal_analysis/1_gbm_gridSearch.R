@@ -3,8 +3,8 @@
 # Code: GBM to estimate GPS with balance stopping rule                        #
 # Code : from three non-overlapping periods                                   #
 # Input: "MAbirth_for_analyses.csv"                                           #
-# Output: best hyperpamater combination for three time periods                #
-# Output: 
+# Output: "GridSearchResults.csv"
+# Output: "BestCombinations_gbm.csv"
 # Author: Shuxin Dong                                                         #
 # Date: 2021-01-21.                                                           #
 ###############################################################################
