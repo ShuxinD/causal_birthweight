@@ -3,8 +3,8 @@
 # Code: (sensAnalysis) GBM to estimate GPS with balance stopping rule         #
 # Code : from three non-overlapping periods                                   #
 # Input: "MAbirth_for_analyses.csv"                                           #
-# Output: best hyperpamater combination for three time periods                #
-# Output: 
+# Output: "GridSearchResults_sens.csv"
+# Output: "BestCombinations_gbm_sens.csv"
 # Author: Shuxin Dong                                                         #
 # Date: 2021-02-02.                                                           #
 ###############################################################################
@@ -914,12 +914,12 @@ colnames(results) <- c("optimal_ntrees", "AAC", "depth", "col_rate", "label")
 setDT(results)
 results
 
-fwrite(results, paste0(dir_gridsearch, "GridSearchResults.csv"))
+fwrite(results, paste0(dir_gridsearch, "GridSearchResults_sens.csv"))
 
-results <- fread(paste0(dir_gridsearch, "GridSearchResults.csv"))
+results <- fread(paste0(dir_gridsearch, "GridSearchResults_sens.csv"))
 best <- results[, .(bestAAC = min(AAC)), by = label]
 best <- merge(best, results, by.x = c("label", "bestAAC"), by.y = c("label", "AAC"))
 best[, optimal_ntrees := round(optimal_ntrees)][]
-fwrite(best, paste0(dir_gridsearch, "BestCombinations_gbm.csv"))
+fwrite(best, paste0(dir_gridsearch, "BestCombinations_gbm_sens.csv"))
 
 gc()
