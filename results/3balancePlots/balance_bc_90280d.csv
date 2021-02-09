@@ -1,0 +1,59 @@
+name.x,corr,weighted,description
+bc_3090d,0.856446649525244,unweighted,Average of daily BC exposure levels over 31-90 days prior to the delivery date
+bc_3090d,0.526281455820933,weighted,Average of daily BC exposure levels over 31-90 days prior to the delivery date
+bc_30d,0.804954956755355,unweighted,Average of daily BC exposure levels over 0-30 days prior to the delivery date
+bc_30d,0.48248794873168,weighted,Average of daily BC exposure levels over 0-30 days prior to the delivery date
+cigddp,0.0182720399177963,unweighted,# of daily cigarettes smoking during pregnancy
+cigddp,0.0176150910225289,weighted,# of daily cigarettes smoking during pregnancy
+cigdpp,0.0107542907826035,unweighted,# of daily cigarettes smoking before pregnancy
+cigdpp,0.016614965353433,weighted,# of daily cigarettes smoking before pregnancy
+clinega,0.0172574794691203,unweighted,Clinical gestational age
+clinega,0.0108672645144575,weighted,Clinical gestational age
+firstborn,0.0290343203176422,unweighted,First-born child
+firstborn,0.0137756347223205,weighted,First-born child
+log_mhincome,-0.20980785865596,unweighted,Log. median household income (census-tract level)
+log_mhincome,-0.113781669932574,weighted,Log. median household income (census-tract level)
+log_mhvalue,-0.0886903762008585,unweighted,Log. median value of house (census-tract level)
+log_mhvalue,-0.0947038501717286,weighted,Log. median value of house (census-tract level)
+mage,-0.0797317525902522,unweighted,Mother's age
+mage,-0.0587167822549572,weighted,Mother's age
+married,-0.0816591273188683,unweighted,Married
+married,-0.0485855106546646,weighted,Married
+mrace_1,-0.118658749749025,unweighted,Maternal race = white
+mrace_1,-0.042136535209102,weighted,Maternal race = white
+mrace_2,0.0394018092446068,unweighted,Maternal race = black
+mrace_2,0.00479499663629915,weighted,Maternal race = black
+mrace_3,0.0444457314651321,unweighted,Maternal race = Asian/Pacific Islander
+mrace_3,0.0122055439165915,weighted,Maternal race = Asian/Pacific Islander
+mrace_4,0.0957098097194108,unweighted,Maternal race = others
+mrace_4,0.044242894793551,weighted,Maternal race = others
+no2_3090d,0.207818105433622,unweighted,Average of daily NO[2] exposure levels over 31-90 days prior to the delivery date
+no2_3090d,0.0605344251674703,weighted,Average of daily NO[2] exposure levels over 31-90 days prior to the delivery date
+no2_30d,0.17380642633499,unweighted,Average of daily NO[2] exposure levels over 0-30 days prior to the delivery date
+no2_30d,0.0266755628550622,weighted,Average of daily NO[2] exposure levels over 0-30 days prior to the delivery date
+no2_90280d,0.174437499986919,unweighted,Average of daily NO[2] exposure levels over 91-280 days prior to the delivery date
+no2_90280d,0.0660329367198815,weighted,Average of daily NO[2] exposure levels over 91-280 days prior to the delivery date
+percentPoverty,0.204856798229366,unweighted,% Poverty (census-tract level)
+percentPoverty,0.0870504641628861,weighted,% Poverty (census-tract level)
+pncgov,0.101104514026923,unweighted,Government support for prenatal care
+pncgov,0.0595194028509867,weighted,Government support for prenatal care
+rf_cervix,0.00178190419025622,unweighted,Maternal incompetent cervix
+rf_cervix,-0.00819267719953769,weighted,Maternal incompetent cervix
+rf_db_gest,-0.00229797461829289,unweighted,Gestational diabetes
+rf_db_gest,0.00189425986366755,weighted,Gestational diabetes
+rf_db_other,0.00569045078677101,unweighted,Maternal diabetes
+rf_db_other,-0.000326704775434105,weighted,Maternal diabetes
+rf_hbp_chronic,0.00215629790012025,unweighted,Maternal chronic hypertension
+rf_hbp_chronic,-0.00128743509633244,weighted,Maternal chronic hypertension
+rf_hbp_pregn,-0.00357878365898637,unweighted,Gestational hypertention
+rf_hbp_pregn,-0.00910142768884559,weighted,Gestational hypertention
+rf_prev_4kg,-0.00302292795052068,unweighted,Mother with previous infant over 4000 g
+rf_prev_4kg,0.00722348031324727,weighted,Mother with previous infant over 4000 g
+rf_prev_sga,0.00260141888922134,unweighted,Mother with previous small-for-gestational-age infant
+rf_prev_sga,-0.00101833789121148,weighted,Mother with previous small-for-gestational-age infant
+sex,-0.00147222308315009,unweighted,New-born sex = Female
+sex,-0.00307359688940617,weighted,New-born sex = Female
+smoker_ddp,0.0186662491760809,unweighted,Smoking during pregnancy
+smoker_ddp,0.0170274965227979,weighted,Smoking during pregnancy
+smoker_dpp,0.0110561098426963,unweighted,Smoking before pregnancy
+smoker_dpp,0.0185702241283467,weighted,Smoking before pregnancy
