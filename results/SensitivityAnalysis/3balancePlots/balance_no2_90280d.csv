@@ -1,0 +1,55 @@
+name.x,corr,weighted,description
+bc_3090d,0.141524159420997,unweighted,Average of daily BC exposure levels over 31-90 days prior to the delivery date
+bc_3090d,0.0610790046555974,weighted,Average of daily BC exposure levels over 31-90 days prior to the delivery date
+bc_30d,0.17548081662149,unweighted,Average of daily BC exposure levels over 0-30 days prior to the delivery date
+bc_30d,0.0997681215839346,weighted,Average of daily BC exposure levels over 0-30 days prior to the delivery date
+bc_90280d,0.174437499986919,unweighted,Average of daily BC exposure levels over 91-280 days prior to the delivery date
+bc_90280d,0.0995148867246806,weighted,Average of daily BC exposure levels over 91-280 days prior to the delivery date
+cigddp,-0.0323676301102257,unweighted,# of daily cigarettes smoking during pregnancy
+cigddp,-0.0177004812238106,weighted,# of daily cigarettes smoking during pregnancy
+cigdpp,-0.0560995896209573,unweighted,# of daily cigarettes smoking before pregnancy
+cigdpp,-0.0283435879635804,weighted,# of daily cigarettes smoking before pregnancy
+clinega,0.030366703164418,unweighted,Clinical gestational age
+clinega,0.00654903571444357,weighted,Clinical gestational age
+firstborn,0.0422336409793826,unweighted,First-born child
+firstborn,0.0132830786659593,weighted,First-born child
+log_mhincome,-0.16389431770674,unweighted,Log. median household income (census-tract level)
+log_mhincome,-0.0597434332669907,weighted,Log. median household income (census-tract level)
+log_mhvalue,0.00713787621894211,unweighted,Log. median value of house (census-tract level)
+log_mhvalue,0.00626848946591416,weighted,Log. median value of house (census-tract level)
+mage,0.00476199630952086,unweighted,Mother's age
+mage,-0.000103947285914137,weighted,Mother's age
+married,-0.00506189978042522,unweighted,Married
+married,-0.0138362293616689,weighted,Married
+mrace_1,-0.184944600493555,unweighted,Maternal race = white
+mrace_1,-0.0721896798958918,weighted,Maternal race = white
+mrace_2,0.0935238114384408,unweighted,Maternal race = black
+mrace_2,0.035913295953361,weighted,Maternal race = black
+mrace_3,0.0719786187639275,unweighted,Maternal race = Asian/Pacific Islander
+mrace_3,0.0283490879152116,weighted,Maternal race = Asian/Pacific Islander
+mrace_4,0.11819309536236,unweighted,Maternal race = others
+mrace_4,0.0480468311498702,weighted,Maternal race = others
+no2_3090d,0.582544655513532,unweighted,Average of daily NO[2] exposure levels over 31-90 days prior to the delivery date
+no2_3090d,0.219698412819874,weighted,Average of daily NO[2] exposure levels over 31-90 days prior to the delivery date
+no2_30d,0.453542219429272,unweighted,Average of daily NO[2] exposure levels over 0-30 days prior to the delivery date
+no2_30d,0.15613735803909,weighted,Average of daily NO[2] exposure levels over 0-30 days prior to the delivery date
+percentPoverty,0.176695777110794,unweighted,% Poverty (census-tract level)
+percentPoverty,0.0906847241361445,weighted,% Poverty (census-tract level)
+pncgov,0.01862726081417,unweighted,Government support for prenatal care
+pncgov,0.0142381614889566,weighted,Government support for prenatal care
+rf_cervix,0.0150335171719058,unweighted,Maternal incompetent cervix
+rf_cervix,0.0112082394068973,weighted,Maternal incompetent cervix
+rf_db_other,0.0170975785412975,unweighted,Maternal diabetes
+rf_db_other,0.00884178182020805,weighted,Maternal diabetes
+rf_hbp_chronic,0.00346881697553695,unweighted,Maternal chronic hypertension
+rf_hbp_chronic,0.00742391214250889,weighted,Maternal chronic hypertension
+rf_prev_4kg,-0.0180127473350313,unweighted,Mother with previous infant over 4000 g
+rf_prev_4kg,-0.00969041743148495,weighted,Mother with previous infant over 4000 g
+rf_prev_sga,-0.0170218984758212,unweighted,Mother with previous small-for-gestational-age infant
+rf_prev_sga,-0.00805337453397284,weighted,Mother with previous small-for-gestational-age infant
+sex,0.002907562057644,unweighted,New-born sex = Female
+sex,0.0013921987951176,weighted,New-born sex = Female
+smoker_ddp,-0.0423760233122495,unweighted,Smoking during pregnancy
+smoker_ddp,-0.0196400481144703,weighted,Smoking during pregnancy
+smoker_dpp,-0.0616912712176881,unweighted,Smoking before pregnancy
+smoker_dpp,-0.0313981896352915,weighted,Smoking before pregnancy
