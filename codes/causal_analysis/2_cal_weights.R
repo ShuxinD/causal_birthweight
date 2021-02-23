@@ -313,15 +313,17 @@ gc()
 ############################# 3. Calculate Weights ############################
 ## bc_30d
 model.num_bc_30d = lm(bc_30d ~ 1, data = birth) 
-
 ps.num_bc_30d <- dnorm((birth$bc_30d - model.num_bc_30d$fitted)/(summary(model.num_bc_30d))$sigma,0,1)
+# scale.res <- scale(residuals(model.num_bc_30d))
+# df <- approxfun(density(scale.res, kernel = "gaussian", n = dim(birth)[1]))
+# ps.num_bc_30d <- df(res)
 ps.den_bc_30d <- dnorm((birth$bc_30d - GBM.fitted_bc_30d)/sd(birth$bc_30d - GBM.fitted_bc_30d),0,1)
 
 bc_30d.wt <- ps.num_bc_30d/ps.den_bc_30d
 summary(bc_30d.wt)
 
-max.wt <- quantile(bc_30d.wt, 0.99)
-min.wt <- quantile(bc_30d.wt, 0.01)
+max.wt <- quantile(bc_30d.wt, 0.975)
+min.wt <- quantile(bc_30d.wt, 0.025)
 bc_30d.wt <- fifelse(bc_30d.wt>max.wt, max.wt, bc_30d.wt) # truncate
 bc_30d.wt <- fifelse(bc_30d.wt<min.wt, min.wt, bc_30d.wt) # truncate
 summary(bc_30d.wt)
@@ -330,13 +332,15 @@ summary(bc_30d.wt)
 model.num_bc_3090d = lm(bc_3090d ~ 1, data = birth) 
 
 ps.num_bc_3090d <- dnorm((birth$bc_3090d - model.num_bc_3090d$fitted)/(summary(model.num_bc_3090d))$sigma,0,1)
+#df <- approxfun(density(birth[, bc_3090d], kernel = "gaussian", n = dim(birth)[1]))
+#ps.num_bc_3090d <- df(birth[,bc_3090d])
 ps.den_bc_3090d <- dnorm((birth$bc_3090d - GBM.fitted_bc_3090d)/sd(birth$bc_3090d - GBM.fitted_bc_3090d),0,1)
 
 bc_3090d.wt <- ps.num_bc_3090d/ps.den_bc_3090d
 summary(bc_3090d.wt)
 
-max.wt <- quantile(bc_3090d.wt, 0.99)
-min.wt <- quantile(bc_3090d.wt, 0.01)
+max.wt <- quantile(bc_3090d.wt, 0.975)
+min.wt <- quantile(bc_3090d.wt, 0.025)
 bc_3090d.wt <- fifelse(bc_3090d.wt>max.wt, max.wt, bc_3090d.wt) # truncate
 bc_3090d.wt <- fifelse(bc_3090d.wt<min.wt, min.wt, bc_3090d.wt) # truncate
 summary(bc_3090d.wt)
@@ -345,28 +349,34 @@ summary(bc_3090d.wt)
 model.num_bc_90280d = lm(bc_90280d ~ 1, data = birth) 
 
 ps.num_bc_90280d <- dnorm((birth$bc_90280d - model.num_bc_90280d$fitted)/(summary(model.num_bc_90280d))$sigma,0,1)
+# df <- approxfun(density(birth[, bc_90280d], kernel = "gaussian", n = dim(birth)[1]))
+# ps.num_bc_90280d <- df(birth[,bc_90280d])
 ps.den_bc_90280d <- dnorm((birth$bc_90280d - GBM.fitted_bc_90280d)/sd(birth$bc_90280d - GBM.fitted_bc_90280d),0,1)
 
 bc_90280d.wt <- ps.num_bc_90280d/ps.den_bc_90280d
 summary(bc_90280d.wt)
 
-max.wt <- quantile(bc_90280d.wt, 0.99)
-min.wt <- quantile(bc_90280d.wt, 0.01)
+max.wt <- quantile(bc_90280d.wt, 0.975)
+min.wt <- quantile(bc_90280d.wt, 0.025)
 bc_90280d.wt <- fifelse(bc_90280d.wt>max.wt, max.wt, bc_90280d.wt) # truncate
 bc_90280d.wt <- fifelse(bc_90280d.wt<min.wt, min.wt, bc_90280d.wt) # truncate
 summary(bc_90280d.wt)
+# sd(bc_90280d.wt)/sqrt(dim(birth)[1])
 
 ## no2_30d
 model.num_no2_30d = lm(no2_30d ~ 1, data = birth) 
-
+hist(birth[,no2_30d])
+hist((birth$no2_30d - model.num_no2_30d$fitted)/(summary(model.num_no2_30d))$sigma)
 ps.num_no2_30d <- dnorm((birth$no2_30d - model.num_no2_30d$fitted)/(summary(model.num_no2_30d))$sigma,0,1)
+# df <- approxfun(density(birth[, no2_30d], kernel = "gaussian", n = dim(birth)[1]))
+# ps.num_no2_30d <- df(birth[,no2_30d])
 ps.den_no2_30d <- dnorm((birth$no2_30d - GBM.fitted_no2_30d)/sd(birth$no2_30d - GBM.fitted_no2_30d),0,1)
 
 no2_30d.wt <- ps.num_no2_30d/ps.den_no2_30d
 summary(no2_30d.wt)
 
-max.wt <- quantile(no2_30d.wt, 0.99)
-min.wt <- quantile(no2_30d.wt, 0.01)
+max.wt <- quantile(no2_30d.wt, 0.975)
+min.wt <- quantile(no2_30d.wt, 0.025)
 no2_30d.wt <- fifelse(no2_30d.wt>max.wt, max.wt, no2_30d.wt) # truncate
 no2_30d.wt <- fifelse(no2_30d.wt<min.wt, min.wt, no2_30d.wt) # truncate
 summary(no2_30d.wt)
@@ -375,13 +385,15 @@ summary(no2_30d.wt)
 model.num_no2_3090d = lm(no2_3090d ~ 1, data = birth) 
 
 ps.num_no2_3090d <- dnorm((birth$no2_3090d - model.num_no2_3090d$fitted)/(summary(model.num_no2_3090d))$sigma,0,1)
+# df <- approxfun(density(birth[, no2_3090d], kernel = "gaussian", n = floor(sqrt(dim(birth)[1]))))
+# ps.num_no2_3090d <- df(birth[,no2_3090d])
 ps.den_no2_3090d <- dnorm((birth$no2_3090d - GBM.fitted_no2_3090d)/sd(birth$no2_3090d - GBM.fitted_no2_3090d),0,1)
 
 no2_3090d.wt <- ps.num_no2_3090d/ps.den_no2_3090d
 summary(no2_3090d.wt)
 
-max.wt <- quantile(no2_3090d.wt, 0.99)
-min.wt <- quantile(no2_3090d.wt, 0.01)
+max.wt <- quantile(no2_3090d.wt, 0.975)
+min.wt <- quantile(no2_3090d.wt, 0.025)
 no2_3090d.wt <- fifelse(no2_3090d.wt>max.wt, max.wt, no2_3090d.wt) # truncate
 no2_3090d.wt <- fifelse(no2_3090d.wt<min.wt, min.wt, no2_3090d.wt) # truncate
 summary(no2_3090d.wt)
@@ -390,43 +402,45 @@ summary(no2_3090d.wt)
 model.num_no2_90280d = lm(no2_90280d ~ 1, data = birth) 
 
 ps.num_no2_90280d <- dnorm((birth$no2_90280d - model.num_no2_90280d$fitted)/(summary(model.num_no2_90280d))$sigma,0,1)
+# df <- approxfun(density(birth[, no2_90280d], kernel = "gaussian", n = floor(sqrt(dim(birth)[1]))))
+# ps.num_no2_90280d <- df(birth[,no2_90280d])
 ps.den_no2_90280d <- dnorm((birth$no2_90280d - GBM.fitted_no2_90280d)/sd(birth$no2_90280d - GBM.fitted_no2_90280d),0,1)
 
 no2_90280d.wt <- ps.num_no2_90280d/ps.den_no2_90280d
 summary(no2_90280d.wt)
 
-max.wt <- quantile(no2_90280d.wt, 0.99)
-min.wt <- quantile(no2_90280d.wt, 0.01)
+max.wt <- quantile(no2_90280d.wt, 0.975)
+min.wt <- quantile(no2_90280d.wt, 0.025)
 no2_90280d.wt <- fifelse(no2_90280d.wt>max.wt, max.wt, no2_90280d.wt) # truncate
 no2_90280d.wt <- fifelse(no2_90280d.wt<min.wt, min.wt, no2_90280d.wt) # truncate
 summary(no2_90280d.wt)
 
 ######################### check ipw distribution ##############################
-pdf(paste0(dir_output_ipwplots,"hist_stdBC.pdf"))
-par(mfrow = c(2,2))
-hist((birth$bc_30d - model.num_bc_30d$fitted)/(summary(model.num_bc_30d))$sigma, 
-     main = "Histogram of standardized bc_30d",
-     xlab = NULL)
-hist((birth$bc_3090d - model.num_bc_3090d$fitted)/(summary(model.num_bc_3090d))$sigma, 
-     main = "Histogram of standardized bc_3090d",
-     xlab = NULL)
-hist((birth$bc_90280d - model.num_bc_90280d$fitted)/(summary(model.num_bc_90280d))$sigma, 
-     main = "Histogram of standardized bc_90280d",
-     xlab = NULL)
-dev.off()
-
-pdf(paste0(dir_output_ipwplots,"hist_stdNO2.pdf"))
-par(mfrow = c(2,2))
-hist((birth$no2_30d - model.num_no2_30d$fitted)/(summary(model.num_no2_30d))$sigma, 
-     main = "Histogram of standardized no2_30d",
-     xlab = NULL)
-hist((birth$no2_3090d - model.num_no2_3090d$fitted)/(summary(model.num_no2_3090d))$sigma, 
-     main = "Histogram of standardized no2_3090d",
-     xlab = NULL)
-hist((birth$no2_90280d - model.num_no2_90280d$fitted)/(summary(model.num_no2_90280d))$sigma, 
-     main = "Histogram of standardized no2_90280d",
-     xlab = NULL)
-dev.off()
+# pdf(paste0(dir_output_ipwplots,"hist_stdBC.pdf"))
+# par(mfrow = c(2,2))
+# hist((birth$bc_30d - model.num_bc_30d$fitted)/(summary(model.num_bc_30d))$sigma, 
+#      main = "Histogram of standardized bc_30d",
+#      xlab = NULL)
+# hist((birth$bc_3090d - model.num_bc_3090d$fitted)/(summary(model.num_bc_3090d))$sigma, 
+#      main = "Histogram of standardized bc_3090d",
+#      xlab = NULL)
+# hist((birth$bc_90280d - model.num_bc_90280d$fitted)/(summary(model.num_bc_90280d))$sigma, 
+#      main = "Histogram of standardized bc_90280d",
+#      xlab = NULL)
+# dev.off()
+# 
+# pdf(paste0(dir_output_ipwplots,"hist_stdNO2.pdf"))
+# par(mfrow = c(2,2))
+# hist((birth$no2_30d - model.num_no2_30d$fitted)/(summary(model.num_no2_30d))$sigma, 
+#      main = "Histogram of standardized no2_30d",
+#      xlab = NULL)
+# hist((birth$no2_3090d - model.num_no2_3090d$fitted)/(summary(model.num_no2_3090d))$sigma, 
+#      main = "Histogram of standardized no2_3090d",
+#      xlab = NULL)
+# hist((birth$no2_90280d - model.num_no2_90280d$fitted)/(summary(model.num_no2_90280d))$sigma, 
+#      main = "Histogram of standardized no2_90280d",
+#      xlab = NULL)
+# dev.off()
 
 pdf(paste0(dir_output_ipwplots, file="hist_stdfitBCres.pdf"))
 par(mfrow = c(2,2))
