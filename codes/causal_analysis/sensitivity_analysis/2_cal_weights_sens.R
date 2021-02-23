@@ -327,8 +327,8 @@ ps.den_bc_30d <- dnorm((birth$bc_30d - GBM.fitted_bc_30d)/sd(birth$bc_30d - GBM.
 bc_30d.wt <- ps.num_bc_30d/ps.den_bc_30d
 summary(bc_30d.wt)
 
-max.wt <- quantile(bc_30d.wt, 0.99)
-min.wt <- quantile(bc_30d.wt, 0.01)
+max.wt <- quantile(bc_30d.wt, 0.975)
+min.wt <- quantile(bc_30d.wt, 0.025)
 bc_30d.wt <- fifelse(bc_30d.wt>max.wt, max.wt, bc_30d.wt) # truncate
 bc_30d.wt <- fifelse(bc_30d.wt<min.wt, min.wt, bc_30d.wt) # truncate
 summary(bc_30d.wt)
@@ -342,8 +342,8 @@ ps.den_bc_3090d <- dnorm((birth$bc_3090d - GBM.fitted_bc_3090d)/sd(birth$bc_3090
 bc_3090d.wt <- ps.num_bc_3090d/ps.den_bc_3090d
 summary(bc_3090d.wt)
 
-max.wt <- quantile(bc_3090d.wt, 0.99)
-min.wt <- quantile(bc_3090d.wt, 0.01)
+max.wt <- quantile(bc_3090d.wt, 0.975)
+min.wt <- quantile(bc_3090d.wt, 0.025)
 bc_3090d.wt <- fifelse(bc_3090d.wt>max.wt, max.wt, bc_3090d.wt) # truncate
 bc_3090d.wt <- fifelse(bc_3090d.wt<min.wt, min.wt, bc_3090d.wt) # truncate
 summary(bc_3090d.wt)
@@ -357,8 +357,8 @@ ps.den_bc_90280d <- dnorm((birth$bc_90280d - GBM.fitted_bc_90280d)/sd(birth$bc_9
 bc_90280d.wt <- ps.num_bc_90280d/ps.den_bc_90280d
 summary(bc_90280d.wt)
 
-max.wt <- quantile(bc_90280d.wt, 0.99)
-min.wt <- quantile(bc_90280d.wt, 0.01)
+max.wt <- quantile(bc_90280d.wt, 0.975)
+min.wt <- quantile(bc_90280d.wt, 0.025)
 bc_90280d.wt <- fifelse(bc_90280d.wt>max.wt, max.wt, bc_90280d.wt) # truncate
 bc_90280d.wt <- fifelse(bc_90280d.wt<min.wt, min.wt, bc_90280d.wt) # truncate
 summary(bc_90280d.wt)
@@ -372,8 +372,8 @@ ps.den_no2_30d <- dnorm((birth$no2_30d - GBM.fitted_no2_30d)/sd(birth$no2_30d - 
 no2_30d.wt <- ps.num_no2_30d/ps.den_no2_30d
 summary(no2_30d.wt)
 
-max.wt <- quantile(no2_30d.wt, 0.99)
-min.wt <- quantile(no2_30d.wt, 0.01)
+max.wt <- quantile(no2_30d.wt, 0.975)
+min.wt <- quantile(no2_30d.wt, 0.025)
 no2_30d.wt <- fifelse(no2_30d.wt>max.wt, max.wt, no2_30d.wt) # truncate
 no2_30d.wt <- fifelse(no2_30d.wt<min.wt, min.wt, no2_30d.wt) # truncate
 summary(no2_30d.wt)
@@ -387,8 +387,8 @@ ps.den_no2_3090d <- dnorm((birth$no2_3090d - GBM.fitted_no2_3090d)/sd(birth$no2_
 no2_3090d.wt <- ps.num_no2_3090d/ps.den_no2_3090d
 summary(no2_3090d.wt)
 
-max.wt <- quantile(no2_3090d.wt, 0.99)
-min.wt <- quantile(no2_3090d.wt, 0.01)
+max.wt <- quantile(no2_3090d.wt, 0.975)
+min.wt <- quantile(no2_3090d.wt, 0.025)
 no2_3090d.wt <- fifelse(no2_3090d.wt>max.wt, max.wt, no2_3090d.wt) # truncate
 no2_3090d.wt <- fifelse(no2_3090d.wt<min.wt, min.wt, no2_3090d.wt) # truncate
 summary(no2_3090d.wt)
@@ -402,8 +402,8 @@ ps.den_no2_90280d <- dnorm((birth$no2_90280d - GBM.fitted_no2_90280d)/sd(birth$n
 no2_90280d.wt <- ps.num_no2_90280d/ps.den_no2_90280d
 summary(no2_90280d.wt)
 
-max.wt <- quantile(no2_90280d.wt, 0.99)
-min.wt <- quantile(no2_90280d.wt, 0.01)
+max.wt <- quantile(no2_90280d.wt, 0.975)
+min.wt <- quantile(no2_90280d.wt, 0.025)
 no2_90280d.wt <- fifelse(no2_90280d.wt>max.wt, max.wt, no2_90280d.wt) # truncate
 no2_90280d.wt <- fifelse(no2_90280d.wt<min.wt, min.wt, no2_90280d.wt) # truncate
 summary(no2_90280d.wt)
