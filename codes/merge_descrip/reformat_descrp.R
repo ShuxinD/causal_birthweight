@@ -139,8 +139,6 @@ dev.off()
 birth[, log_mhvalue:= log(mhvalue)][]
 summary(mhvalue)
 
-detach(birth)
-
 ## truncate the extreme values for smoking
 max_cigdpp <- quantile(cigdpp, 0.99995)
 max_cigddp <- quantile(cigddp, 0.99995)
@@ -148,6 +146,8 @@ birth$cigdpp <- fifelse(cigdpp > max_cigdpp, max_cigdpp, cigdpp)
 birth$cigddp <- fifelse(cigddp > max_cigddp, max_cigddp, cigddp)
 summary(birth$cigdpp)
 summary(birth$cigddp)
+
+detach(birth)
 
 names(birth)
 # > names(birth)
@@ -225,5 +225,29 @@ smokerInfo
 # during pregnancy with LBW       3138  8.481198 5.883473
 # before preganncy with LBW       4077 13.794076 8.448792
 write.csv(smokerInfo, paste0(dir_descrp, "table1_smokerInfo.csv"))
+
+mean_bc <- rbind(c(mean(birth[,bc_30d]), mean(birth[lbw==0, bc_30d]),mean(birth[lbw==1, bc_30d])),
+             c(mean(birth[,bc_3090d]), mean(birth[lbw==0, bc_3090d]),mean(birth[lbw==1, bc_3090d])),
+             c(mean(birth[,bc_90280d]), mean(birth[lbw==0, bc_90280d]),mean(birth[lbw==1, bc_90280d])))
+rownames(mean_bc) <- c("bc_30d", "bc_3090d", "bc_90280d")
+colnames(mean_bc) <- c("overall", "nbw", "lbw")
+mean_bc
+# > mean_bc
+# overall       nbw       lbw
+# bc_30d    0.4770028 0.4767743 0.4875047
+# bc_3090d  0.4775469 0.4773306 0.4874869
+# bc_90280d 0.4798614 0.4796608 0.4890775
+
+mean_no2 <- rbind(c(mean(birth[,no2_30d]), mean(birth[lbw==0, no2_30d]),mean(birth[lbw==1, no2_30d])),
+                 c(mean(birth[,no2_3090d]), mean(birth[lbw==0, no2_3090d]),mean(birth[lbw==1, no2_3090d])),
+                 c(mean(birth[,no2_90280d]), mean(birth[lbw==0, no2_90280d]),mean(birth[lbw==1, no2_90280d])))
+rownames(mean_no2) <- c("no2_30d", "no2_3090d", "no2_90280d")
+colnames(mean_no2) <- c("overall", "nbw", "lbw")
+mean_no2
+# > mean_no2
+# overall      nbw      lbw
+# no2_30d    22.74911 22.73950 23.19087
+# no2_3090d  22.93494 22.92671 23.31304
+# no2_90280d 23.06401 23.05510 23.47348
 
 fwrite(birth, paste0(dir_input_birth, "MAbirth_for_analyses.csv"))
