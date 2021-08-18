@@ -1,5 +1,5 @@
 ###############################################################################
-# Project: Black Carbon and MA birth                                          #
+# Project: causal birthweight
 # Analysis: Link 1km grid NO2                                                 # 
 # Machine: 164 RStudio Server                                                 #
 # Input: "mabirths_02NOV18.csv" (from Anna)                                   #
