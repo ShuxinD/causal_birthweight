@@ -23,8 +23,8 @@ n_cores <- detectCores() - 1
 
 # dir_input <- "/Users/shuxind/Desktop/BC_birthweight_data/"
 setwd("/media/gate/Shuxin/")
-dir_input <- "/media/gate/Shuxin/MAbirth/"
-dir_gridsearch <- "/media/gate/Shuxin/MAbirth/results/1GridSearchResults/"
+dir_input <- "/media/qnap3/Shuxin/airPollution_MAbirth/"
+dir_gridsearch <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/1GridSearchResults/"
 
 ## set parameters for h2o.gbm model
 min.rows <- 10
@@ -78,19 +78,56 @@ F.aac.iter <- function(i, data, data.hex, ps.num, ps.model.pred, rep) {
   return(aac)
 }
 
+F.mac.iter <- function(i, data, data.hex, ps.num, ps.model.pred, rep) {
+  # i: number of iterations (number of trees) 
+  # data: dataset containing the treatment and the covariates not in h2o structure.
+  # data.hex: dataset containing the treatment and the covariates in h2o env.
+  # ps.model.pred: the staged prediction results of boosting model to estimate (p(T_iX_i)) 
+  # ps.num: the estimated p(T_i) 
+  # rep: number of replications in bootstrap 
+  GBM.fitted <- as.vector(ps.model.pred[, floor(i)])
+  ps.den <- dnorm((data$T - GBM.fitted)/sd(data$T - GBM.fitted), 0, 1)
+  wt <- ps.num/ps.den
+  upper <- quantile(wt, 0.99)
+  lower <- quantile(wt, 0.01)
+  wt <- fifelse(wt>upper, upper, wt)
+  wt <- fifelse(wt<lower, lower, wt)
+  mac_iter <- rep(NA,rep) 
+  for (i in 1:rep){
+    # set.seed(i)
+    bo <- sample(1:dim(data)[1], size = floor((dim(data)[1])^0.7), 
+                 replace = TRUE, prob = wt) # change
+    newsample <- data[bo,]
+    newsample <- Filter(function(x)(length(funique(x))>1), newsample)
+    # j.drop <- match(c("T"), names(data))
+    # j.drop <- j.drop[!is.na(j.drop)]
+    x <- newsample %>% select(-T)
+    ac <- matrix(NA,dim(x)[2],1)
+    x <- as.data.frame(x)
+    for (j in 1:dim(x)[2]){
+      ac[j] = ifelse (!is.factor(x[,j]), stats::cor(newsample$T, x[,j],
+                                                    method = "pearson"),
+                      polyserial(newsample$T, x[,j]))
+    }
+    mac_iter[i] <- max(abs(ac), na.rm = TRUE)
+  }
+  mac <- mean(mac_iter)
+  return(mac)
+}
+
 ############################# 2. data manipulation ############################
 ## load data
 birth <- fread(paste0(dir_input, "MAbirth_for_analyses.csv"))
 names(birth)
-# > names(birth)
 # [1] "uniqueid_yr"    "year"           "sex"            "married"        "mage"          
 # [6] "mrace"          "m_edu"          "cigdpp"         "cigddp"         "clinega"       
 # [11] "kotck"          "pncgov"         "bwg"            "rf_db_gest"     "rf_db_other"   
 # [16] "rf_hbp_chronic" "rf_hbp_pregn"   "rf_cervix"      "rf_prev_4kg"    "rf_prev_sga"   
 # [21] "mhincome"       "mhvalue"        "percentPoverty" "bc_30d"         "bc_3090d"      
-# [26] "bc_90280d"      "no2_30d"        "no2_3090d"      "no2_90280d"     "lbw"           
-# [31] "firstborn"      "m_wg_cat"       "smoker_ddp"     "smoker_dpp"     "mrace_1"       
-# [36] "mrace_2"        "mrace_3"        "mrace_4"        "log_mhincome"   "log_mhvalue"   
+# [26] "bc_90280d"      "no2_30d"        "no2_3090d"      "no2_90280d"     "bc_all"        
+# [31] "no2_all"        "lbw"            "firstborn"      "m_wg_cat"       "smoker_ddp"    
+# [36] "smoker_dpp"     "mrace_1"        "mrace_2"        "mrace_3"        "mrace_4"       
+# [41] "log_mhincome"   "log_mhvalue"   
 summary(birth)
 birth$year <- as.factor(birth$year)
 birth$m_edu <- as.factor(birth$m_edu)
@@ -102,15 +139,487 @@ var <- c("year","sex","married","mage","m_edu", "cigdpp","cigddp",
          "clinega", "kotck","pncgov", "rf_db_gest","rf_db_other",
          "rf_hbp_chronic", "rf_hbp_pregn","rf_cervix","rf_prev_4kg",
          "rf_prev_sga", "percentPoverty",
-         "bc_30d","bc_3090d", "bc_90280d", 
-         "no2_30d", "no2_3090d", "no2_90280d",
+         "bc_all","bc_30d","bc_3090d", "bc_90280d", 
+         "no2_all","no2_30d", "no2_3090d", "no2_90280d",
          "firstborn","m_wg_cat", "smoker_ddp", "smoker_dpp",
          "mrace_1", "mrace_2", "mrace_3", "mrace_4",
          "log_mhincome", "log_mhvalue")
 
-############################## 3. do h2o.gbm ###################################
+############################## 3. do h2o.gbm ##################################
 
-############################## 3.1 bc_30d ######################################
+## 3.00 bc_all ------
+## construct data
+dt <- birth[ , var, with = F]
+dt[, T := bc_all]
+dt[, bc_all := NULL]
+
+independent <- c("year","sex","married","mage","m_edu", "cigdpp","cigddp",
+                 "clinega", "kotck","pncgov", "rf_db_gest","rf_db_other",
+                 "rf_hbp_chronic", "rf_hbp_pregn","rf_cervix","rf_prev_4kg",
+                 "rf_prev_sga", "percentPoverty",
+                 "no2_all",
+                 "firstborn","m_wg_cat", "smoker_ddp", "smoker_dpp",
+                 "mrace_1", "mrace_2", "mrace_3", "mrace_4",
+                 "log_mhincome", "log_mhvalue")
+## model
+model.num = lm(T~1, data = dt) 
+ps.num <- dnorm((dt$T-model.num$fitted)/(summary(model.num))$sigma,0,1)
+
+h2o.init(nthreads = n_cores, min_mem_size = "400G", port = 54345)
+##### depth 6 ######
+opt_aac_depth6_bc_all <- NULL
+for (rate in col.sample.rate){
+  birth.hex <- as.h2o(dt, destination_frame = "birth.hex")
+  gbm_bc_all <- h2o.gbm(y = "T",
+                     x = independent,
+                     training_frame = birth.hex,
+                     ntrees = n.trees, 
+                     max_depth = max.depth[1], # change
+                     min_rows = min.rows,
+                     learn_rate = learn.rate, 
+                     col_sample_rate = rate,
+                     distribution = "gaussian")
+  cat(paste0("predicting... with rate of ", rate, "\n"))
+  pred.gbm_bc_all <- h2o.staged_predict_proba(object = gbm_bc_all, newdata = birth.hex)
+  h2o:::.h2o.garbageCollect()
+  h2o:::.h2o.garbageCollect()
+  h2o:::.h2o.garbageCollect()
+  cat(paste0("optimizing... with rate of ", rate, "\n"))
+  opt_aac_i  <- optimize(F.aac.iter, interval = c(1, n.trees), data = dt,
+                         data.hex = birth.hex,
+                         ps.num = ps.num, 
+                         ps.model.pred = pred.gbm_bc_all, # change
+                         rep = rep.bootstrap)
+  opt_aac_i <- as.data.frame(opt_aac_i)
+  opt_aac_depth6_bc_all <- rbind(opt_aac_depth6_bc_all, opt_aac_i)
+  rm(opt_aac_i)
+  h2o.removeAll()
+  gc()
+}
+row.names(opt_aac_depth6_bc_all) <- col.sample.rate
+
+##### depth 8 ######
+opt_aac_depth8_bc_all <- NULL
+# h2o.init(nthreads = n_cores, min_mem_size = "460G")
+for (rate in col.sample.rate){
+  birth.hex <- as.h2o(dt, destination_frame = "birth.hex")
+  gbm_bc_all <- h2o.gbm(y = "T",
+                     x = independent,
+                     training_frame = birth.hex,
+                     ntrees = n.trees, 
+                     max_depth = max.depth[2], # change
+                     min_rows = min.rows,
+                     learn_rate = learn.rate, 
+                     col_sample_rate = rate,
+                     distribution = "gaussian")
+  cat(paste0("predicting... with rate of ", rate, "\n"))
+  pred.gbm_bc_all <- h2o.staged_predict_proba(object = gbm_bc_all, newdata = birth.hex)
+  h2o:::.h2o.garbageCollect()
+  h2o:::.h2o.garbageCollect()
+  h2o:::.h2o.garbageCollect()
+  cat(paste0("optimizing... with rate of ", rate, "\n"))
+  opt_aac_i  <- optimize(F.aac.iter, interval = c(1, n.trees), data = dt,
+                         data.hex = birth.hex,
+                         ps.num = ps.num, 
+                         ps.model.pred = pred.gbm_bc_all, # change
+                         rep = rep.bootstrap)
+  opt_aac_i <- as.data.frame(opt_aac_i)
+  opt_aac_depth8_bc_all <- rbind(opt_aac_depth8_bc_all, opt_aac_i)
+  rm(opt_aac_i)
+  h2o.removeAll()
+  gc()
+}
+row.names(opt_aac_depth8_bc_all) <- col.sample.rate
+
+##### depth 10 #####
+opt_aac_depth10_bc_all <- NULL
+for (rate in col.sample.rate){
+  birth.hex <- as.h2o(dt, destination_frame = "birth.hex")
+  gbm_bc_all <- h2o.gbm(y = "T",
+                     x = independent,
+                     training_frame = birth.hex,
+                     ntrees = n.trees, 
+                     max_depth = max.depth[3], # change
+                     min_rows = min.rows,
+                     learn_rate = learn.rate, 
+                     col_sample_rate = rate,
+                     distribution = "gaussian")
+  cat(paste0("predicting... with rate of ", rate, "\n"))
+  pred.gbm_bc_all <- h2o.staged_predict_proba(object = gbm_bc_all, newdata = birth.hex)
+  h2o:::.h2o.garbageCollect()
+  h2o:::.h2o.garbageCollect()
+  h2o:::.h2o.garbageCollect()
+  cat(paste0("optimizing... with rate of ", rate, "\n"))
+  opt_aac_i  <- optimize(F.aac.iter, interval = c(1, n.trees), data = dt,
+                         data.hex = birth.hex,
+                         ps.num = ps.num, 
+                         ps.model.pred = pred.gbm_bc_all, # change
+                         rep = rep.bootstrap)
+  opt_aac_i <- as.data.frame(opt_aac_i)
+  opt_aac_depth10_bc_all <- rbind(opt_aac_depth10_bc_all, opt_aac_i)
+  rm(opt_aac_i)
+  h2o.removeAll()
+  gc()
+}
+row.names(opt_aac_depth10_bc_all) <- col.sample.rate
+h2o.shutdown(prompt = FALSE)
+
+## 3.01 no2_all ------
+## construct data
+dt <- birth[ , var, with = F]
+dt[, T := no2_all]
+dt[, no2_all := NULL]
+
+independent <- c("year","sex","married","mage","m_edu", "cigdpp","cigddp",
+                 "clinega", "kotck","pncgov", "rf_db_gest","rf_db_other",
+                 "rf_hbp_chronic", "rf_hbp_pregn","rf_cervix","rf_prev_4kg",
+                 "rf_prev_sga", "percentPoverty",
+                 "bc_all",
+                 #"no2_all",
+                 "firstborn","m_wg_cat", "smoker_ddp", "smoker_dpp",
+                 "mrace_1", "mrace_2", "mrace_3", "mrace_4",
+                 "log_mhincome", "log_mhvalue")
+## model
+model.num = lm(T~1, data = dt) 
+ps.num <- dnorm((dt$T-model.num$fitted)/(summary(model.num))$sigma,0,1)
+
+h2o.init(nthreads = n_cores, min_mem_size = "400G", port = 54345)
+##### depth 6 ######
+opt_aac_depth6_no2_all <- NULL
+for (rate in col.sample.rate){
+  birth.hex <- as.h2o(dt, destination_frame = "birth.hex")
+  gbm_no2_all <- h2o.gbm(y = "T",
+                        x = independent,
+                        training_frame = birth.hex,
+                        ntrees = n.trees, 
+                        max_depth = max.depth[1], # change
+                        min_rows = min.rows,
+                        learn_rate = learn.rate, 
+                        col_sample_rate = rate,
+                        distribution = "gaussian")
+  cat(paste0("predicting... with rate of ", rate, "\n"))
+  pred.gbm_no2_all <- h2o.staged_predict_proba(object = gbm_no2_all, newdata = birth.hex)
+  h2o:::.h2o.garbageCollect()
+  h2o:::.h2o.garbageCollect()
+  h2o:::.h2o.garbageCollect()
+  cat(paste0("optimizing... with rate of ", rate, "\n"))
+  opt_aac_i  <- optimize(F.aac.iter, interval = c(1, n.trees), data = dt,
+                         data.hex = birth.hex,
+                         ps.num = ps.num, 
+                         ps.model.pred = pred.gbm_no2_all, # change
+                         rep = rep.bootstrap)
+  opt_aac_i <- as.data.frame(opt_aac_i)
+  opt_aac_depth6_no2_all <- rbind(opt_aac_depth6_no2_all, opt_aac_i)
+  rm(opt_aac_i)
+  h2o.removeAll()
+  gc()
+}
+row.names(opt_aac_depth6_no2_all) <- col.sample.rate
+
+##### depth 8 ######
+opt_aac_depth8_no2_all <- NULL
+# h2o.init(nthreads = n_cores, min_mem_size = "460G")
+for (rate in col.sample.rate){
+  birth.hex <- as.h2o(dt, destination_frame = "birth.hex")
+  gbm_no2_all <- h2o.gbm(y = "T",
+                        x = independent,
+                        training_frame = birth.hex,
+                        ntrees = n.trees, 
+                        max_depth = max.depth[2], # change
+                        min_rows = min.rows,
+                        learn_rate = learn.rate, 
+                        col_sample_rate = rate,
+                        distribution = "gaussian")
+  cat(paste0("predicting... with rate of ", rate, "\n"))
+  pred.gbm_no2_all <- h2o.staged_predict_proba(object = gbm_no2_all, newdata = birth.hex)
+  h2o:::.h2o.garbageCollect()
+  h2o:::.h2o.garbageCollect()
+  h2o:::.h2o.garbageCollect()
+  cat(paste0("optimizing... with rate of ", rate, "\n"))
+  opt_aac_i  <- optimize(F.aac.iter, interval = c(1, n.trees), data = dt,
+                         data.hex = birth.hex,
+                         ps.num = ps.num, 
+                         ps.model.pred = pred.gbm_no2_all, # change
+                         rep = rep.bootstrap)
+  opt_aac_i <- as.data.frame(opt_aac_i)
+  opt_aac_depth8_no2_all <- rbind(opt_aac_depth8_no2_all, opt_aac_i)
+  rm(opt_aac_i)
+  h2o.removeAll()
+  gc()
+}
+row.names(opt_aac_depth8_no2_all) <- col.sample.rate
+
+##### depth 10 #####
+opt_aac_depth10_no2_all <- NULL
+for (rate in col.sample.rate){
+  birth.hex <- as.h2o(dt, destination_frame = "birth.hex")
+  gbm_no2_all <- h2o.gbm(y = "T",
+                        x = independent,
+                        training_frame = birth.hex,
+                        ntrees = n.trees, 
+                        max_depth = max.depth[3], # change
+                        min_rows = min.rows,
+                        learn_rate = learn.rate, 
+                        col_sample_rate = rate,
+                        distribution = "gaussian")
+  cat(paste0("predicting... with rate of ", rate, "\n"))
+  pred.gbm_no2_all <- h2o.staged_predict_proba(object = gbm_no2_all, newdata = birth.hex)
+  h2o:::.h2o.garbageCollect()
+  h2o:::.h2o.garbageCollect()
+  h2o:::.h2o.garbageCollect()
+  cat(paste0("optimizing... with rate of ", rate, "\n"))
+  opt_aac_i  <- optimize(F.aac.iter, interval = c(1, n.trees), data = dt,
+                         data.hex = birth.hex,
+                         ps.num = ps.num, 
+                         ps.model.pred = pred.gbm_no2_all, # change
+                         rep = rep.bootstrap)
+  opt_aac_i <- as.data.frame(opt_aac_i)
+  opt_aac_depth10_no2_all <- rbind(opt_aac_depth10_no2_all, opt_aac_i)
+  rm(opt_aac_i)
+  h2o.removeAll()
+  gc()
+}
+row.names(opt_aac_depth10_no2_all) <- col.sample.rate
+h2o.shutdown(prompt = FALSE)
+
+## 3.011 bc_all mac ------
+## construct data
+dt <- birth[ , var, with = F]
+dt[, T := bc_all]
+dt[, bc_all := NULL]
+
+independent <- c("year","sex","married","mage","m_edu", "cigdpp","cigddp",
+                 "clinega", "kotck","pncgov", "rf_db_gest","rf_db_other",
+                 "rf_hbp_chronic", "rf_hbp_pregn","rf_cervix","rf_prev_4kg",
+                 "rf_prev_sga", "percentPoverty",
+                 "no2_all",
+                 "firstborn","m_wg_cat", "smoker_ddp", "smoker_dpp",
+                 "mrace_1", "mrace_2", "mrace_3", "mrace_4",
+                 "log_mhincome", "log_mhvalue")
+## model
+model.num = lm(T~1, data = dt) 
+ps.num <- dnorm((dt$T-model.num$fitted)/(summary(model.num))$sigma,0,1)
+
+h2o.init(nthreads = n_cores, min_mem_size = "400G", port = 54345)
+##### depth 6 ######
+opt_mac_depth6_bc_all <- NULL
+for (rate in col.sample.rate){
+  birth.hex <- as.h2o(dt, destination_frame = "birth.hex")
+  gbm_bc_all <- h2o.gbm(y = "T",
+                        x = independent,
+                        training_frame = birth.hex,
+                        ntrees = n.trees, 
+                        max_depth = max.depth[1], # change
+                        min_rows = min.rows,
+                        learn_rate = learn.rate, 
+                        col_sample_rate = rate,
+                        distribution = "gaussian")
+  cat(paste0("predicting... with rate of ", rate, "\n"))
+  pred.gbm_bc_all <- h2o.staged_predict_proba(object = gbm_bc_all, newdata = birth.hex)
+  h2o:::.h2o.garbageCollect()
+  h2o:::.h2o.garbageCollect()
+  h2o:::.h2o.garbageCollect()
+  cat(paste0("optimizing... with rate of ", rate, "\n"))
+  opt_mac_i  <- optimize(F.mac.iter, interval = c(1, n.trees), data = dt,
+                         data.hex = birth.hex,
+                         ps.num = ps.num, 
+                         ps.model.pred = pred.gbm_bc_all, # change
+                         rep = rep.bootstrap)
+  opt_mac_i <- as.data.frame(opt_mac_i)
+  opt_mac_depth6_bc_all <- rbind(opt_mac_depth6_bc_all, opt_mac_i)
+  rm(opt_mac_i)
+  h2o.removeAll()
+  gc()
+}
+row.names(opt_mac_depth6_bc_all) <- col.sample.rate
+
+##### depth 8 ######
+opt_mac_depth8_bc_all <- NULL
+# h2o.init(nthreads = n_cores, min_mem_size = "460G")
+for (rate in col.sample.rate){
+  birth.hex <- as.h2o(dt, destination_frame = "birth.hex")
+  gbm_bc_all <- h2o.gbm(y = "T",
+                        x = independent,
+                        training_frame = birth.hex,
+                        ntrees = n.trees, 
+                        max_depth = max.depth[2], # change
+                        min_rows = min.rows,
+                        learn_rate = learn.rate, 
+                        col_sample_rate = rate,
+                        distribution = "gaussian")
+  cat(paste0("predicting... with rate of ", rate, "\n"))
+  pred.gbm_bc_all <- h2o.staged_predict_proba(object = gbm_bc_all, newdata = birth.hex)
+  h2o:::.h2o.garbageCollect()
+  h2o:::.h2o.garbageCollect()
+  h2o:::.h2o.garbageCollect()
+  cat(paste0("optimizing... with rate of ", rate, "\n"))
+  opt_mac_i  <- optimize(F.mac.iter, interval = c(1, n.trees), data = dt,
+                         data.hex = birth.hex,
+                         ps.num = ps.num, 
+                         ps.model.pred = pred.gbm_bc_all, # change
+                         rep = rep.bootstrap)
+  opt_mac_i <- as.data.frame(opt_mac_i)
+  opt_mac_depth8_bc_all <- rbind(opt_mac_depth8_bc_all, opt_mac_i)
+  rm(opt_mac_i)
+  h2o.removeAll()
+  gc()
+}
+row.names(opt_mac_depth8_bc_all) <- col.sample.rate
+
+##### depth 10 #####
+opt_mac_depth10_bc_all <- NULL
+for (rate in col.sample.rate){
+  birth.hex <- as.h2o(dt, destination_frame = "birth.hex")
+  gbm_bc_all <- h2o.gbm(y = "T",
+                        x = independent,
+                        training_frame = birth.hex,
+                        ntrees = n.trees, 
+                        max_depth = max.depth[3], # change
+                        min_rows = min.rows,
+                        learn_rate = learn.rate, 
+                        col_sample_rate = rate,
+                        distribution = "gaussian")
+  cat(paste0("predicting... with rate of ", rate, "\n"))
+  pred.gbm_bc_all <- h2o.staged_predict_proba(object = gbm_bc_all, newdata = birth.hex)
+  h2o:::.h2o.garbageCollect()
+  h2o:::.h2o.garbageCollect()
+  h2o:::.h2o.garbageCollect()
+  cat(paste0("optimizing... with rate of ", rate, "\n"))
+  opt_mac_i  <- optimize(F.mac.iter, interval = c(1, n.trees), data = dt,
+                         data.hex = birth.hex,
+                         ps.num = ps.num, 
+                         ps.model.pred = pred.gbm_bc_all, # change
+                         rep = rep.bootstrap)
+  opt_mac_i <- as.data.frame(opt_mac_i)
+  opt_mac_depth10_bc_all <- rbind(opt_mac_depth10_bc_all, opt_mac_i)
+  rm(opt_mac_i)
+  h2o.removeAll()
+  gc()
+}
+row.names(opt_mac_depth10_bc_all) <- col.sample.rate
+h2o.shutdown(prompt = FALSE)
+
+## 3.011 no2_all mac------
+## construct data
+dt <- birth[ , var, with = F]
+dt[, T := no2_all]
+dt[, no2_all := NULL]
+
+independent <- c("year","sex","married","mage","m_edu", "cigdpp","cigddp",
+                 "clinega", "kotck","pncgov", "rf_db_gest","rf_db_other",
+                 "rf_hbp_chronic", "rf_hbp_pregn","rf_cervix","rf_prev_4kg",
+                 "rf_prev_sga", "percentPoverty",
+                 "bc_all",
+                 #"no2_all",
+                 "firstborn","m_wg_cat", "smoker_ddp", "smoker_dpp",
+                 "mrace_1", "mrace_2", "mrace_3", "mrace_4",
+                 "log_mhincome", "log_mhvalue")
+## model
+model.num = lm(T~1, data = dt) 
+ps.num <- dnorm((dt$T-model.num$fitted)/(summary(model.num))$sigma,0,1)
+
+h2o.init(nthreads = n_cores, min_mem_size = "400G", port = 54345)
+##### depth 6 ######
+opt_mac_depth6_no2_all <- NULL
+for (rate in col.sample.rate){
+  birth.hex <- as.h2o(dt, destination_frame = "birth.hex")
+  gbm_no2_all <- h2o.gbm(y = "T",
+                         x = independent,
+                         training_frame = birth.hex,
+                         ntrees = n.trees, 
+                         max_depth = max.depth[1], # change
+                         min_rows = min.rows,
+                         learn_rate = learn.rate, 
+                         col_sample_rate = rate,
+                         distribution = "gaussian")
+  cat(paste0("predicting... with rate of ", rate, "\n"))
+  pred.gbm_no2_all <- h2o.staged_predict_proba(object = gbm_no2_all, newdata = birth.hex)
+  h2o:::.h2o.garbageCollect()
+  h2o:::.h2o.garbageCollect()
+  h2o:::.h2o.garbageCollect()
+  cat(paste0("optimizing... with rate of ", rate, "\n"))
+  opt_mac_i  <- optimize(F.mac.iter, interval = c(1, n.trees), data = dt,
+                         data.hex = birth.hex,
+                         ps.num = ps.num, 
+                         ps.model.pred = pred.gbm_no2_all, # change
+                         rep = rep.bootstrap)
+  opt_mac_i <- as.data.frame(opt_mac_i)
+  opt_mac_depth6_no2_all <- rbind(opt_mac_depth6_no2_all, opt_mac_i)
+  rm(opt_mac_i)
+  h2o.removeAll()
+  gc()
+}
+row.names(opt_mac_depth6_no2_all) <- col.sample.rate
+
+##### depth 8 ######
+opt_mac_depth8_no2_all <- NULL
+# h2o.init(nthreads = n_cores, min_mem_size = "460G")
+for (rate in col.sample.rate){
+  birth.hex <- as.h2o(dt, destination_frame = "birth.hex")
+  gbm_no2_all <- h2o.gbm(y = "T",
+                         x = independent,
+                         training_frame = birth.hex,
+                         ntrees = n.trees, 
+                         max_depth = max.depth[2], # change
+                         min_rows = min.rows,
+                         learn_rate = learn.rate, 
+                         col_sample_rate = rate,
+                         distribution = "gaussian")
+  cat(paste0("predicting... with rate of ", rate, "\n"))
+  pred.gbm_no2_all <- h2o.staged_predict_proba(object = gbm_no2_all, newdata = birth.hex)
+  h2o:::.h2o.garbageCollect()
+  h2o:::.h2o.garbageCollect()
+  h2o:::.h2o.garbageCollect()
+  cat(paste0("optimizing... with rate of ", rate, "\n"))
+  opt_mac_i  <- optimize(F.mac.iter, interval = c(1, n.trees), data = dt,
+                         data.hex = birth.hex,
+                         ps.num = ps.num, 
+                         ps.model.pred = pred.gbm_no2_all, # change
+                         rep = rep.bootstrap)
+  opt_mac_i <- as.data.frame(opt_mac_i)
+  opt_mac_depth8_no2_all <- rbind(opt_mac_depth8_no2_all, opt_mac_i)
+  rm(opt_mac_i)
+  h2o.removeAll()
+  gc()
+}
+row.names(opt_mac_depth8_no2_all) <- col.sample.rate
+
+##### depth 10 #####
+opt_mac_depth10_no2_all <- NULL
+for (rate in col.sample.rate){
+  birth.hex <- as.h2o(dt, destination_frame = "birth.hex")
+  gbm_no2_all <- h2o.gbm(y = "T",
+                         x = independent,
+                         training_frame = birth.hex,
+                         ntrees = n.trees, 
+                         max_depth = max.depth[3], # change
+                         min_rows = min.rows,
+                         learn_rate = learn.rate, 
+                         col_sample_rate = rate,
+                         distribution = "gaussian")
+  cat(paste0("predicting... with rate of ", rate, "\n"))
+  pred.gbm_no2_all <- h2o.staged_predict_proba(object = gbm_no2_all, newdata = birth.hex)
+  h2o:::.h2o.garbageCollect()
+  h2o:::.h2o.garbageCollect()
+  h2o:::.h2o.garbageCollect()
+  cat(paste0("optimizing... with rate of ", rate, "\n"))
+  opt_mac_i  <- optimize(F.mac.iter, interval = c(1, n.trees), data = dt,
+                         data.hex = birth.hex,
+                         ps.num = ps.num, 
+                         ps.model.pred = pred.gbm_no2_all, # change
+                         rep = rep.bootstrap)
+  opt_mac_i <- as.data.frame(opt_mac_i)
+  opt_mac_depth10_no2_all <- rbind(opt_mac_depth10_no2_all, opt_mac_i)
+  rm(opt_mac_i)
+  h2o.removeAll()
+  gc()
+}
+row.names(opt_mac_depth10_no2_all) <- col.sample.rate
+h2o.shutdown(prompt = FALSE)
+
+
+
+############################## 3.1 bc_30d #####################################
 ## construct data
 dt <- birth[ , var, with = F]
 dt[, T := bc_30d]
