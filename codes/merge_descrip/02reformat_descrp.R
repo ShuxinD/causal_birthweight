@@ -17,20 +17,20 @@ library(tableone)
 library(rtf)
 
 setwd("/media/gate/Shuxin/")
-dir_input_birth <- "/media/gate/Shuxin/MAbirth/"
-dir_descrp <- "/media/gate/Shuxin/MAbirth/results/0TableOne_checkVarDistribution/"
+dir_input_birth <- "/media/qnap3/Shuxin/airPollution_MAbirth/"
+dir_descrp <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/0TableOne_checkVarDistribution/"
 
 birth <- fread(paste0(dir_input_birth, "MAbirth_merged.csv"))
 birth[, lbw:=0][]
 birth$lbw[birth$bwg<2500] <- 1
-# > names(birth)
+names(birth)
 # [1] "uniqueid_yr"    "year"           "sex"            "married"        "mage"          
 # [6] "mrace"          "m_edu"          "cigdpp"         "cigddp"         "parit"         
 # [11] "clinega"        "kotck"          "pncgov"         "bwg"            "rf_db_gest"    
 # [16] "rf_db_other"    "rf_hbp_chronic" "rf_hbp_pregn"   "rf_cervix"      "rf_prev_4kg"   
 # [21] "rf_prev_sga"    "m_wg"           "mhincome"       "mhvalue"        "percentPoverty"
 # [26] "bc_30d"         "bc_3090d"       "bc_90280d"      "no2_30d"        "no2_3090d"     
-# [31] "no2_90280d"     "lbw"
+# [31] "no2_90280d"     "bc_all"         "no2_all"        "lbw"
 
 ######################## 1. Prepare for table one #############################
 ## Transform continuous to categorical
@@ -126,9 +126,10 @@ par(mfrow=c(2,2))
 plot(density(mhincome, bw=1))
 hist(log(mhincome))
 plot(density(log(mhincome),  bw=0.5))
-birth[, log_mhincome:= log(mhincome)][]
 dev.off()
+
 summary(mhincome)
+birth[, log_mhincome:= log(mhincome)][]
 
 pdf(paste0(dir_descrp,"check8.pdf"))
 par(mfrow=c(2,2))
@@ -136,6 +137,7 @@ plot(density(mhvalue, bw=1))
 hist(log(mhvalue))
 plot(density(log(mhvalue),  bw=0.5))
 dev.off()
+
 birth[, log_mhvalue:= log(mhvalue)][]
 summary(mhvalue)
 
@@ -162,8 +164,8 @@ names(birth)
 summary(birth)
 ######################## 3. Export table 1 ####################################
 listVars <- c("bwg",
-              "bc_30d","bc_3090d", "bc_90280d",
-              "no2_30d", "no2_3090d", "no2_90280d",
+              "bc_all","bc_30d","bc_3090d", "bc_90280d",
+              "no2_all","no2_30d", "no2_3090d", "no2_90280d",
               "year",
               "mage","sex","married", "mrace","m_edu", "pncgov",
               "mhincome", "mhvalue", "percentPoverty",
@@ -176,8 +178,8 @@ catVars <- c("year","sex","married","mrace","m_edu","pncgov",
              "firstborn", "kotck", "m_wg_cat", 
              "rf_db_gest", "rf_db_other", "rf_hbp_pregn", "rf_hbp_chronic", 
              "rf_cervix", "rf_prev_4kg", "rf_prev_sga")
-bcVars <- c("bc_30d", "bc_3090d", "bc_90280d")
-no2Vars <- c("no2_30d", "no2_3090d", "no2_90280d")
+bcVars <- c("bc_all", "bc_30d", "bc_3090d", "bc_90280d")
+no2Vars <- c("no2_all", "no2_30d", "no2_3090d", "no2_90280d")
 
 rawtable1 <- CreateTableOne(vars = listVars, factorVars = catVars, 
                             strata = "lbw", addOverall = TRUE, test = FALSE,
@@ -226,117 +228,77 @@ smokerInfo
 # before preganncy with LBW       4077 13.794076 8.448792
 write.csv(smokerInfo, paste0(dir_descrp, "table1_smokerInfo.csv"))
 
-mean_bc <- rbind(c(mean(birth[,bc_30d]), mean(birth[lbw==0, bc_30d]),mean(birth[lbw==1, bc_30d])),
-             c(mean(birth[,bc_3090d]), mean(birth[lbw==0, bc_3090d]),mean(birth[lbw==1, bc_3090d])),
-             c(mean(birth[,bc_90280d]), mean(birth[lbw==0, bc_90280d]),mean(birth[lbw==1, bc_90280d])))
-rownames(mean_bc) <- c("bc_30d", "bc_3090d", "bc_90280d")
+mean_bc <- rbind(c(mean(birth[,bc_all]), mean(birth[lbw==0, bc_all]),mean(birth[lbw==1, bc_all])),
+                 c(mean(birth[,bc_30d]), mean(birth[lbw==0, bc_30d]),mean(birth[lbw==1, bc_30d])),
+                 c(mean(birth[,bc_3090d]), mean(birth[lbw==0, bc_3090d]),mean(birth[lbw==1, bc_3090d])),
+                 c(mean(birth[,bc_90280d]), mean(birth[lbw==0, bc_90280d]),mean(birth[lbw==1, bc_90280d])))
+rownames(mean_bc) <- c("bc_all","bc_30d", "bc_3090d", "bc_90280d")
 colnames(mean_bc) <- c("overall", "nbw", "lbw")
 mean_bc
 # > mean_bc
-# overall       nbw       lbw
+#           overall       nbw       lbw
+# bc_all    0.4790591 0.4788522 0.4885682
 # bc_30d    0.4770028 0.4767743 0.4875047
 # bc_3090d  0.4775469 0.4773306 0.4874869
 # bc_90280d 0.4798614 0.4796608 0.4890775
 
-IQR_bc <- rbind(quantile(birth[,bc_30d]), quantile(birth[lbw==0, bc_30d]),quantile(birth[lbw==1, bc_30d]),
+IQR_bc <- rbind(quantile(birth[,bc_all]), quantile(birth[lbw==0, bc_all]),quantile(birth[lbw==1, bc_all]),
+                quantile(birth[,bc_30d]), quantile(birth[lbw==0, bc_30d]),quantile(birth[lbw==1, bc_30d]),
                  quantile(birth[,bc_3090d]), quantile(birth[lbw==0, bc_3090d]),quantile(birth[lbw==1, bc_3090d]),
                  quantile(birth[,bc_90280d]), quantile(birth[lbw==0, bc_90280d]),quantile(birth[lbw==1, bc_90280d]))
 IQR_bc
-# 0%       25%       50%       75%     100%
-# [1,] 0.1630848 0.3807746 0.4480162 0.5445652 1.826903
-# [2,] 0.1630848 0.3806807 0.4478211 0.5442752 1.826903
-# [3,] 0.1866778 0.3853661 0.4580873 0.5599305 1.473415
-# [4,] 0.1788135 0.3840173 0.4498046 0.5424744 1.776729
-# [5,] 0.1788135 0.3839377 0.4496089 0.5421738 1.776729
-# [6,] 0.1994498 0.3879015 0.4602769 0.5570112 1.354540
-# [7,] 0.1968862 0.3917479 0.4540661 0.5386503 1.642583
-# [8,] 0.1968862 0.3917036 0.4539207 0.5383319 1.642583
-# [9,] 0.2221745 0.3937925 0.4616684 0.5540890 1.401050
+rownames(IQR_bc) <- paste0(rep(c("overall", "nbw", "lbw"),4), 
+                           c(rep("_bc_all",3), rep("_bc_30d",3), rep("_bc_3090d",3), rep("_bc_90280d",3)))
+IQR_bc
+#                         0%       25%       50%       75%     100%
+# overall_bc_all    0.1997006 0.3918021 0.4538842 0.5364093 1.612341
+# nbw_bc_all        0.1997006 0.3917655 0.4536912 0.5360798 1.612341
+# lbw_bc_all        0.2231169 0.3934087 0.4631700 0.5516666 1.351354
+# overall_bc_30d    0.1630848 0.3807746 0.4480162 0.5445652 1.826903
+# nbw_bc_30d        0.1630848 0.3806807 0.4478211 0.5442752 1.826903
+# lbw_bc_30d        0.1866778 0.3853661 0.4580873 0.5599305 1.473415
+# overall_bc_3090d  0.1788135 0.3840173 0.4498046 0.5424744 1.776729
+# nbw_bc_3090d      0.1788135 0.3839377 0.4496089 0.5421738 1.776729
+# lbw_bc_3090d      0.1994498 0.3879015 0.4602769 0.5570112 1.354540
+# overall_bc_90280d 0.1968862 0.3917479 0.4540661 0.5386503 1.642583
+# nbw_bc_90280d     0.1968862 0.3917036 0.4539207 0.5383319 1.642583
+# lbw_bc_90280d     0.2221745 0.3937925 0.4616684 0.5540890 1.401050
 
-mean_no2 <- rbind(c(mean(birth[,no2_30d]), mean(birth[lbw==0, no2_30d]),mean(birth[lbw==1, no2_30d])),
+mean_no2 <- rbind(c(mean(birth[,no2_all]), mean(birth[lbw==0, no2_all]),mean(birth[lbw==1, no2_all])),
+                 c(mean(birth[,no2_30d]), mean(birth[lbw==0, no2_30d]),mean(birth[lbw==1, no2_30d])),
                  c(mean(birth[,no2_3090d]), mean(birth[lbw==0, no2_3090d]),mean(birth[lbw==1, no2_3090d])),
                  c(mean(birth[,no2_90280d]), mean(birth[lbw==0, no2_90280d]),mean(birth[lbw==1, no2_90280d])))
-rownames(mean_no2) <- c("no2_30d", "no2_3090d", "no2_90280d")
+rownames(mean_no2) <- c("no2_all","no2_30d", "no2_3090d", "no2_90280d")
 colnames(mean_no2) <- c("overall", "nbw", "lbw")
 mean_no2
-# > mean_no2
-# overall      nbw      lbw
+#             overall      nbw      lbw
+# no2_all    23.00261 22.99377 23.40882
 # no2_30d    22.74911 22.73950 23.19087
 # no2_3090d  22.93494 22.92671 23.31304
 # no2_90280d 23.06401 23.05510 23.47348
 
-IQR_no2 <- rbind(quantile(birth[,no2_30d]), quantile(birth[lbw==0, no2_30d]),quantile(birth[lbw==1, no2_30d]),
+IQR_no2 <- rbind(quantile(birth[,no2_all]), quantile(birth[lbw==0, no2_all]),quantile(birth[lbw==1, no2_all]),
+                quantile(birth[,no2_30d]), quantile(birth[lbw==0, no2_30d]),quantile(birth[lbw==1, no2_30d]),
                 quantile(birth[,no2_3090d]), quantile(birth[lbw==0, no2_3090d]),quantile(birth[lbw==1, no2_3090d]),
                 quantile(birth[,no2_90280d]), quantile(birth[lbw==0, no2_90280d]),quantile(birth[lbw==1, no2_90280d]))
 IQR_no2
-# > IQR_no2
-# 0%      25%      50%      75%     100%
-# [1,] 0.8735659 16.09391 22.58374 28.88830 75.22628
-# [2,] 0.8735659 16.08221 22.56944 28.88265 75.22628
-# [3,] 1.4735506 16.68021 23.22411 29.16093 62.31848
-# [4,] 1.0452284 16.53250 22.92165 28.97721 83.84932
-# [5,] 1.0842349 16.52219 22.91188 28.96856 83.84932
-# [6,] 1.0452284 16.99337 23.35559 29.29263 62.30313
-# [7,] 1.4542685 17.66789 23.02038 28.41093 64.61834
-# [8,] 1.4542685 17.65838 23.01136 28.40323 64.61834
-# [9,] 3.4550755 18.14295 23.43051 28.75076 63.98316
+rownames(IQR_no2) <- paste0(rep(c("overall", "nbw", "lbw"),4), 
+                           c(rep("_no2_all",3), rep("_no2_30d",3), rep("_no2_3090d",3), rep("_no2_90280d",3)))
+IQR_no2
+#                         0%      25%      50%      75%     100%
+# overall_no2_all    2.1801237 18.02544 22.86641 27.82676 62.59741
+# nbw_no2_all        2.1801237 18.01744 22.85781 27.81661 62.59741
+# lbw_no2_all        3.3845054 18.40268 23.28793 28.29211 58.75638
+# overall_no2_30d    0.8735659 16.09391 22.58374 28.88830 75.22628
+# nbw_no2_30d        0.8735659 16.08221 22.56944 28.88265 75.22628
+# lbw_no2_30d        1.4735506 16.68021 23.22411 29.16093 62.31848
+# overall_no2_3090d  1.0452284 16.53250 22.92165 28.97721 83.84932
+# nbw_no2_3090d      1.0842349 16.52219 22.91188 28.96856 83.84932
+# lbw_no2_3090d      1.0452284 16.99337 23.35559 29.29263 62.30313
+# overall_no2_90280d 1.4542685 17.66789 23.02038 28.41093 64.61834
+# nbw_no2_90280d     1.4542685 17.65838 23.01136 28.40323 64.61834
+# lbw_no2_90280d     3.4550755 18.14295 23.43051 28.75076 63.98316
 
 summary(birth)
-# > summary(birth)
-# uniqueid_yr             year             sex            married           mage           mrace      
-# Length:844554      2001   : 69464   Min.   :0.0000   Min.   :0.000   Min.   :12.00   Min.   :1.000  
-# Class :character   2002   : 68659   1st Qu.:0.0000   1st Qu.:0.000   1st Qu.:26.00   1st Qu.:1.000  
-# Mode  :character   2003   : 67866   Median :0.0000   Median :1.000   Median :30.58   Median :1.000  
-# 2004   : 64118   Mean   :0.4901   Mean   :0.687   Mean   :30.10   Mean   :1.571  
-# 2006   : 64025   3rd Qu.:1.0000   3rd Qu.:1.000   3rd Qu.:34.33   3rd Qu.:2.000  
-# 2008   : 63703   Max.   :1.0000   Max.   :1.000   Max.   :58.08   Max.   :4.000  
-# (Other):446719                                                                   
-# m_edu          cigdpp           cigddp           clinega      kotck          pncgov            bwg      
-# 1: 88944   Min.   :  0.00   Min.   : 0.0000   Min.   :37.00   1: 72056   Min.   :0.0000   Min.   : 505  
-# 2:197554   1st Qu.:  0.00   1st Qu.: 0.0000   1st Qu.:39.00   2: 66124   1st Qu.:0.0000   1st Qu.:3120  
-# 3:192470   Median :  0.00   Median : 0.0000   Median :39.00   3:412321   Median :0.0000   Median :3430  
-# 4:220839   Mean   :  1.64   Mean   : 0.5543   Mean   :39.32   4:294053   Mean   :0.3324   Mean   :3441  
-# 5:144747   3rd Qu.:  0.00   3rd Qu.: 0.0000   3rd Qu.:40.00              3rd Qu.:1.0000   3rd Qu.:3742  
-# Max.   :155.45   Max.   :45.0000   Max.   :42.00              Max.   :1.0000   Max.   :5982  
-# 
-# rf_db_gest       rf_db_other       rf_hbp_chronic    rf_hbp_pregn       rf_cervix         rf_prev_4kg      
-# Min.   :0.00000   Min.   :0.000000   Min.   :0.0000   Min.   :0.00000   Min.   :0.000000   Min.   :0.000000  
-# 1st Qu.:0.00000   1st Qu.:0.000000   1st Qu.:0.0000   1st Qu.:0.00000   1st Qu.:0.000000   1st Qu.:0.000000  
-# Median :0.00000   Median :0.000000   Median :0.0000   Median :0.00000   Median :0.000000   Median :0.000000  
-# Mean   :0.04156   Mean   :0.008305   Mean   :0.0119   Mean   :0.03368   Mean   :0.003594   Mean   :0.006714  
-# 3rd Qu.:0.00000   3rd Qu.:0.000000   3rd Qu.:0.0000   3rd Qu.:0.00000   3rd Qu.:0.000000   3rd Qu.:0.000000  
-# Max.   :1.00000   Max.   :1.000000   Max.   :1.0000   Max.   :1.00000   Max.   :1.000000   Max.   :1.000000  
-# 
-# rf_prev_sga         mhincome         mhvalue        percentPoverty       bc_30d          bc_3090d     
-# Min.   :0.00000   Min.   : 10706   Min.   :  51840   Min.   : 0.000   Min.   :0.1631   Min.   :0.1788  
-# 1st Qu.:0.00000   1st Qu.: 43653   1st Qu.: 204480   1st Qu.: 4.125   1st Qu.:0.3808   1st Qu.:0.3840  
-# Median :0.00000   Median : 59452   Median : 269600   Median : 7.599   Median :0.4480   Median :0.4498  
-# Mean   :0.00783   Mean   : 61956   Mean   : 293825   Mean   :11.610   Mean   :0.4770   Mean   :0.4775  
-# 3rd Qu.:0.00000   3rd Qu.: 76389   3rd Qu.: 349350   3rd Qu.:15.963   3rd Qu.:0.5446   3rd Qu.:0.5425  
-# Max.   :1.00000   Max.   :217583   Max.   :1294600   Max.   :70.176   Max.   :1.8269   Max.   :1.7767  
-# 
-# bc_90280d         no2_30d          no2_3090d        no2_90280d          lbw           firstborn     
-# Min.   :0.1969   Min.   : 0.8736   Min.   : 1.045   Min.   : 1.454   Min.   :0.0000   Min.   :0.0000  
-# 1st Qu.:0.3917   1st Qu.:16.0939   1st Qu.:16.532   1st Qu.:17.668   1st Qu.:0.0000   1st Qu.:0.0000  
-# Median :0.4541   Median :22.5837   Median :22.922   Median :23.020   Median :0.0000   Median :0.0000  
-# Mean   :0.4799   Mean   :22.7491   Mean   :22.935   Mean   :23.064   Mean   :0.0213   Mean   :0.4526  
-# 3rd Qu.:0.5387   3rd Qu.:28.8883   3rd Qu.:28.977   3rd Qu.:28.411   3rd Qu.:0.0000   3rd Qu.:1.0000  
-# Max.   :1.6426   Max.   :75.2263   Max.   :83.849   Max.   :64.618   Max.   :1.0000   Max.   :1.0000  
-# 
-# m_wg_cat     smoker_ddp        smoker_dpp        mrace_1          mrace_2          mrace_3       
-# 1:  2766   Min.   :0.00000   Min.   :0.0000   Min.   :0.0000   Min.   :0.0000   Min.   :0.00000  
-# 2: 70462   1st Qu.:0.00000   1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.00000  
-# 3:185464   Median :0.00000   Median :0.0000   Median :1.0000   Median :0.0000   Median :0.00000  
-# 4:359019   Mean   :0.07306   Mean   :0.1345   Mean   :0.7269   Mean   :0.0856   Mean   :0.07721  
-# 5:226843   3rd Qu.:0.00000   3rd Qu.:0.0000   3rd Qu.:1.0000   3rd Qu.:0.0000   3rd Qu.:0.00000  
-# Max.   :1.00000   Max.   :1.0000   Max.   :1.0000   Max.   :1.0000   Max.   :1.00000  
-# 
-# mrace_4        log_mhincome     log_mhvalue   
-# Min.   :0.0000   Min.   : 9.279   Min.   :10.86  
-# 1st Qu.:0.0000   1st Qu.:10.684   1st Qu.:12.23  
-# Median :0.0000   Median :10.993   Median :12.50  
-# Mean   :0.1103   Mean   :10.942   Mean   :12.50  
-# 3rd Qu.:0.0000   3rd Qu.:11.244   3rd Qu.:12.76  
-# Max.   :1.0000   Max.   :12.290   Max.   :14.07  
-
-fwrite(birth, paste0(dir_input_birth, "MAbirth_for_analyses.csv"))
+dir_output <- "/media/qnap3/Shuxin/airPollution_MAbirth/"
+fwrite(birth, paste0(dir_output, "MAbirth_for_analyses.csv"))

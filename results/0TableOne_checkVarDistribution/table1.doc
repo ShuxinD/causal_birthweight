@@ -49,6 +49,15 @@ Table\par}
 \clvertalt\clshdrawnil\clwWidth2319\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
 \clvertalt\clshdrawnil\clwWidth2319\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
 \clvertalt\clshdrawnil\clwWidth2319\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\ql\widctlpar\intbl\fi0\f2\fs20 bc_all (median [IQR])\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20       0.45 [0.39, 0.54]\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20       0.45 [0.39, 0.54]\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20       0.46 [0.39, 0.55]\cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2404\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2319\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2319\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2319\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
 \pard\ql\widctlpar\intbl\fi0\f2\fs20 bc_30d (median [IQR])\cell
 \pard\ql\widctlpar\intbl\fi0\f2\fs20       0.45 [0.38, 0.54]\cell
 \pard\ql\widctlpar\intbl\fi0\f2\fs20       0.45 [0.38, 0.54]\cell
@@ -71,6 +80,15 @@ Table\par}
 \pard\ql\widctlpar\intbl\fi0\f2\fs20       0.45 [0.39, 0.54]\cell
 \pard\ql\widctlpar\intbl\fi0\f2\fs20       0.45 [0.39, 0.54]\cell
 \pard\ql\widctlpar\intbl\fi0\f2\fs20       0.46 [0.39, 0.55]\cell
+\widctlpar\intbl\row
+\trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2404\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
+\clvertalt\clshdrawnil\clwWidth2319\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
+\clvertalt\clshdrawnil\clwWidth2319\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx3
+\clvertalt\clshdrawnil\clwWidth2319\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx4
+\pard\ql\widctlpar\intbl\fi0\f2\fs20 no2_all (median [IQR])\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      22.87 [18.03, 27.83]\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      22.86 [18.02, 27.82]\cell
+\pard\ql\widctlpar\intbl\fi0\f2\fs20      23.29 [18.40, 28.29]\cell
 \widctlpar\intbl\row
 \trowd\trgaph100\trleft0\clvertalt\clshdrawnil\clwWidth2404\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx1
 \clvertalt\clshdrawnil\clwWidth2319\clftsWidth3\clheight260\clpadl100\clpadr100\gaph\cellx2
