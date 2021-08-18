@@ -254,3 +254,11 @@ birth_for_analysis <- na.omit(birth_inout)
 fwrite(birth_for_analysis, paste0(dir_input, "MAbirth_merged.csv"))
 print(paste("Final Sample Size is", dim(birth_for_analysis)[1]))
 # [1] "Final Sample Size is 844554"
+
+## 8. add all-period average -----
+birth_for_analysis <- fread(paste0(dir_input, "MAbirth_merged.csv"))
+class(birth_for_analysis)
+birth_for_analysis[, `:=`(bc_all = (bc_30d*30+bc_3090d*60+bc_90280d*190)/280,
+                          no2_all = (no2_30d*30+no2_3090d*60+no2_90280d*190)/280)][]
+dir_results <- "/media/qnap3/Shuxin/airPollution_MAbirth/"
+fwrite(birth_for_analysis, paste0(dir_results, "MAbirth_merged.csv"))
