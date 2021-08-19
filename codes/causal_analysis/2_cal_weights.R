@@ -2,7 +2,7 @@
 # Project: Causal black carbon and NO2 on birth weight in MA                  #
 # Code: Estimate IPW with hyperparameter we set                               #
 # Input: "MAbirth_for_analyses.csv" birth data                                #
-# Input: "BestCombinations_gbm.csv" grid search results                       #                                        
+# Input: "BestCombinations_gbm.csv" grid search results                       #
 # Output: weights dataset "MAbirth_ipw.csv" with ID and weights               #
 # Author: Shuxin Dong                                                         #
 # Date: 2021-01-27                                                            #
@@ -18,11 +18,10 @@ library(h2o)
 library(parallel)
 n_cores <- detectCores() - 1 
 
-# dir_input <- "/Users/shuxind/Desktop/BC_birthweight_data/"
 setwd("/media/gate/Shuxin")
-dir_birthdata <- "/media/gate/Shuxin/MAbirth/"
-dir_gridsearch <- "/media/gate/Shuxin/MAbirth/results/1GridSearchResults/"
-dir_output_ipwplots <- "/media/gate/Shuxin/MAbirth/results/2ipwPlots/"
+dir_birthdata <- "/media/qnap3/Shuxin/airPollution_MAbirth/"
+dir_gridsearch <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/1GridSearchResults/"
+dir_output_ipwplots <- "/media/gate/Shuxin/airPollution_MAbirth/causal_birthweight/results/2ipwPlots/"
 
 ## set default parameters for H2O
 min.rows <- 10
@@ -35,20 +34,28 @@ colnames(best)[3] <- "n.trees"
 names(best)
 # [1] "label"    "bestAAC"  "n.trees"  "depth"    "col_rate"
 
+## read bc_all and no2_all grid search results
+best <- data.frame(label = c("bc_all", "bc_all_mac", "no2_all", "no2_all_mac"),
+           bestAC = c(0.095428055, 0.988065078, 0.092660732, 0.947540067),
+           n.trees = c(8283, 6101, 9156, 14513),
+           depth = c(6, 6, 10, 6),
+           col_rate = c(0.8, 0.9, 0.9, 0.9))
+setDT(best)
+
 ########################## 1. Load birth data #################################
 ## load data
 birth <- fread(paste0(dir_birthdata, "MAbirth_for_analyses.csv"))
 names(birth)
-# > names(birth)
 # [1] "uniqueid_yr"    "year"           "sex"            "married"        "mage"          
 # [6] "mrace"          "m_edu"          "cigdpp"         "cigddp"         "clinega"       
 # [11] "kotck"          "pncgov"         "bwg"            "rf_db_gest"     "rf_db_other"   
 # [16] "rf_hbp_chronic" "rf_hbp_pregn"   "rf_cervix"      "rf_prev_4kg"    "rf_prev_sga"   
 # [21] "mhincome"       "mhvalue"        "percentPoverty" "bc_30d"         "bc_3090d"      
-# [26] "bc_90280d"      "no2_30d"        "no2_3090d"      "no2_90280d"     "lbw"           
-# [31] "firstborn"      "m_wg_cat"       "smoker_ddp"     "smoker_dpp"     "mrace_1"       
-# [36] "mrace_2"        "mrace_3"        "mrace_4"        "log_mhincome"   "log_mhvalue"   
-summary(birth)
+# [26] "bc_90280d"      "no2_30d"        "no2_3090d"      "no2_90280d"     "bc_all"        
+# [31] "no2_all"        "lbw"            "firstborn"      "m_wg_cat"       "smoker_ddp"    
+# [36] "smoker_dpp"     "mrace_1"        "mrace_2"        "mrace_3"        "mrace_4"       
+# [41] "log_mhincome"   "log_mhvalue" 
+# summary(birth)
 birth$year <- as.factor(birth$year)
 birth$m_edu <- as.factor(birth$m_edu)
 birth$kotck <- as.factor(birth$kotck)
@@ -59,16 +66,168 @@ var <- c("year","sex","married","mage","m_edu", "cigdpp","cigddp",
          "clinega", "kotck","pncgov", "rf_db_gest","rf_db_other",
          "rf_hbp_chronic", "rf_hbp_pregn","rf_cervix","rf_prev_4kg",
          "rf_prev_sga", "percentPoverty",
-         "bc_30d","bc_3090d", "bc_90280d", 
-         "no2_30d", "no2_3090d", "no2_90280d",
+         "bc_all","bc_30d","bc_3090d", "bc_90280d", 
+         "no2_all","no2_30d", "no2_3090d", "no2_90280d",
          "firstborn","m_wg_cat", "smoker_ddp", "smoker_dpp",
          "mrace_1", "mrace_2", "mrace_3", "mrace_4",
          "log_mhincome", "log_mhvalue")
 
 ############################# 2. Fit GBM ######################################
-
 h2o.init(nthreads = n_cores, min_mem_size = "200G", port = 54345)
 
+## 2.011 bc_all ----
+## construct data
+dt <- birth[ , var, with = F]
+dt[, T := bc_all] # change
+dt[, bc_all := NULL] # change
+
+independent <- c("year","sex","married","mage","m_edu", "cigdpp","cigddp",
+                 "clinega", "kotck","pncgov", "rf_db_gest","rf_db_other",
+                 "rf_hbp_chronic", "rf_hbp_pregn","rf_cervix","rf_prev_4kg",
+                 "rf_prev_sga", "percentPoverty",
+                 # "bc_all",
+                 "no2_all",
+                 "firstborn","m_wg_cat", "smoker_ddp", "smoker_dpp",
+                 "mrace_1", "mrace_2", "mrace_3", "mrace_4",
+                 "log_mhincome", "log_mhvalue") # change
+
+model_best <- best[label=="bc_all",] #change
+
+## fit GBM
+birth.hex <- as.h2o(dt, destination_frame = "birth.hex")
+cat("fitting..bc_all...")
+gbm <- h2o.gbm(y = "T",
+               x = independent,
+               training_frame = birth.hex,
+               ntrees = model_best$n.trees,
+               max_depth = model_best$depth,
+               col_sample_rate = model_best$col_rate,
+               min_rows = min.rows,
+               learn_rate = learn.rate, 
+               distribution = "gaussian")
+cat("predicting...bc_all...")
+pred_gbm <- h2o.predict(object = gbm, newdata = birth.hex)
+GBM.fitted_bc_all <- as.vector(pred_gbm) # GBM.fitted_30d
+h2o.removeAll()
+h2o:::.h2o.garbageCollect()
+h2o:::.h2o.garbageCollect()
+h2o:::.h2o.garbageCollect()
+
+## 2.012 no2_all ----
+## construct data
+dt <- birth[ , var, with = F]
+dt[, T := no2_all] # change
+dt[, no2_all := NULL] # change
+
+independent <- c("year","sex","married","mage","m_edu", "cigdpp","cigddp",
+                 "clinega", "kotck","pncgov", "rf_db_gest","rf_db_other",
+                 "rf_hbp_chronic", "rf_hbp_pregn","rf_cervix","rf_prev_4kg",
+                 "rf_prev_sga", "percentPoverty",
+                 "bc_all",
+                 # "no2_all",
+                 "firstborn","m_wg_cat", "smoker_ddp", "smoker_dpp",
+                 "mrace_1", "mrace_2", "mrace_3", "mrace_4",
+                 "log_mhincome", "log_mhvalue") # change
+
+model_best <- best[label=="no2_all",] #change
+
+## fit GBM
+birth.hex <- as.h2o(dt, destination_frame = "birth.hex")
+cat("fitting..no2_all...")
+gbm <- h2o.gbm(y = "T",
+               x = independent,
+               training_frame = birth.hex,
+               ntrees = model_best$n.trees,
+               max_depth = model_best$depth,
+               col_sample_rate = model_best$col_rate,
+               min_rows = min.rows,
+               learn_rate = learn.rate, 
+               distribution = "gaussian")
+cat("predicting...no2_all...")
+pred_gbm <- h2o.predict(object = gbm, newdata = birth.hex)
+GBM.fitted_no2_all <- as.vector(pred_gbm) # GBM.fitted_30d
+h2o.removeAll()
+h2o:::.h2o.garbageCollect()
+h2o:::.h2o.garbageCollect()
+h2o:::.h2o.garbageCollect()
+
+## 2.021 bc_all_mac ----
+## construct data
+dt <- birth[ , var, with = F]
+dt[, T := bc_all] # change
+dt[, bc_all := NULL] # change
+
+independent <- c("year","sex","married","mage","m_edu", "cigdpp","cigddp",
+                 "clinega", "kotck","pncgov", "rf_db_gest","rf_db_other",
+                 "rf_hbp_chronic", "rf_hbp_pregn","rf_cervix","rf_prev_4kg",
+                 "rf_prev_sga", "percentPoverty",
+                 # "bc_all",
+                 "no2_all",
+                 "firstborn","m_wg_cat", "smoker_ddp", "smoker_dpp",
+                 "mrace_1", "mrace_2", "mrace_3", "mrace_4",
+                 "log_mhincome", "log_mhvalue") # change
+
+model_best <- best[label=="bc_all_mac",] #change
+
+## fit GBM
+birth.hex <- as.h2o(dt, destination_frame = "birth.hex")
+cat("fitting..bc_all_mac...")
+gbm <- h2o.gbm(y = "T",
+               x = independent,
+               training_frame = birth.hex,
+               ntrees = model_best$n.trees,
+               max_depth = model_best$depth,
+               col_sample_rate = model_best$col_rate,
+               min_rows = min.rows,
+               learn_rate = learn.rate, 
+               distribution = "gaussian")
+cat("predicting...bc_all_mac...")
+pred_gbm <- h2o.predict(object = gbm, newdata = birth.hex)
+GBM.fitted_bc_all_mac <- as.vector(pred_gbm) # GBM.fitted_30d
+h2o.removeAll()
+h2o:::.h2o.garbageCollect()
+h2o:::.h2o.garbageCollect()
+h2o:::.h2o.garbageCollect()
+
+## 2.012 no2_all_mac ----
+## construct data
+dt <- birth[ , var, with = F]
+dt[, T := no2_all] # change
+dt[, no2_all := NULL] # change
+
+independent <- c("year","sex","married","mage","m_edu", "cigdpp","cigddp",
+                 "clinega", "kotck","pncgov", "rf_db_gest","rf_db_other",
+                 "rf_hbp_chronic", "rf_hbp_pregn","rf_cervix","rf_prev_4kg",
+                 "rf_prev_sga", "percentPoverty",
+                 "bc_all",
+                 # "no2_all",
+                 "firstborn","m_wg_cat", "smoker_ddp", "smoker_dpp",
+                 "mrace_1", "mrace_2", "mrace_3", "mrace_4",
+                 "log_mhincome", "log_mhvalue") # change
+
+model_best <- best[label=="no2_all_mac",] #change
+
+## fit GBM
+birth.hex <- as.h2o(dt, destination_frame = "birth.hex")
+cat("fitting..no2_all_mac...")
+gbm <- h2o.gbm(y = "T",
+               x = independent,
+               training_frame = birth.hex,
+               ntrees = model_best$n.trees,
+               max_depth = model_best$depth,
+               col_sample_rate = model_best$col_rate,
+               min_rows = min.rows,
+               learn_rate = learn.rate, 
+               distribution = "gaussian")
+cat("predicting...no2_all_mac...")
+pred_gbm <- h2o.predict(object = gbm, newdata = birth.hex)
+GBM.fitted_no2_all_mac <- as.vector(pred_gbm) # GBM.fitted_30d
+h2o.removeAll()
+h2o:::.h2o.garbageCollect()
+h2o:::.h2o.garbageCollect()
+h2o:::.h2o.garbageCollect()
+
+h2o.shutdown(prompt = FALSE)
 ############################## 2.1 bc_30d ######################################
 ## construct data
 dt <- birth[ , var, with = F]
@@ -311,6 +470,74 @@ h2o.shutdown(prompt = FALSE)
 gc()
 
 ############################# 3. Calculate Weights ############################
+## bc_all
+model.num_bc_all = lm(bc_all ~ 1, data = birth) 
+ps.num_bc_all <- dnorm((birth$bc_all - model.num_bc_all$fitted)/(summary(model.num_bc_all))$sigma,0,1)
+# scale.res <- scale(residuals(model.num_bc_all))
+# df <- approxfun(density(scale.res, kernel = "gaussian", n = dim(birth)[1]))
+# ps.num_bc_all <- df(res)
+ps.den_bc_all <- dnorm((birth$bc_all - GBM.fitted_bc_all)/sd(birth$bc_all - GBM.fitted_bc_all),0,1)
+
+bc_all.wt <- ps.num_bc_all/ps.den_bc_all
+summary(bc_all.wt)
+
+max.wt <- quantile(bc_all.wt, 0.975)
+min.wt <- quantile(bc_all.wt, 0.025)
+bc_all.wt <- fifelse(bc_all.wt>max.wt, max.wt, bc_all.wt) # truncate
+bc_all.wt <- fifelse(bc_all.wt<min.wt, min.wt, bc_all.wt) # truncate
+summary(bc_all.wt)
+
+## no2_all
+model.num_no2_all = lm(no2_all ~ 1, data = birth) 
+ps.num_no2_all <- dnorm((birth$no2_all - model.num_no2_all$fitted)/(summary(model.num_no2_all))$sigma,0,1)
+# scale.res <- scale(residuals(model.num_no2_all))
+# df <- approxfun(density(scale.res, kernel = "gaussian", n = dim(birth)[1]))
+# ps.num_no2_all <- df(res)
+ps.den_no2_all <- dnorm((birth$no2_all - GBM.fitted_no2_all)/sd(birth$no2_all - GBM.fitted_no2_all),0,1)
+
+no2_all.wt <- ps.num_no2_all/ps.den_no2_all
+summary(no2_all.wt)
+
+max.wt <- quantile(no2_all.wt, 0.975)
+min.wt <- quantile(no2_all.wt, 0.025)
+no2_all.wt <- fifelse(no2_all.wt>max.wt, max.wt, no2_all.wt) # truncate
+no2_all.wt <- fifelse(no2_all.wt<min.wt, min.wt, no2_all.wt) # truncate
+summary(no2_all.wt)
+
+## bc_all_mac
+model.num_bc_all = lm(bc_all ~ 1, data = birth) 
+ps.num_bc_all <- dnorm((birth$bc_all - model.num_bc_all$fitted)/(summary(model.num_bc_all))$sigma,0,1)
+# scale.res <- scale(residuals(model.num_bc_all))
+# df <- approxfun(density(scale.res, kernel = "gaussian", n = dim(birth)[1]))
+# ps.num_bc_all <- df(res)
+ps.den_bc_all_mac <- dnorm((birth$bc_all - GBM.fitted_bc_all_mac)/sd(birth$bc_all - GBM.fitted_bc_all_mac),0,1)
+
+bc_all_mac.wt <- ps.num_bc_all/ps.den_bc_all_mac
+summary(bc_all_mac.wt)
+
+max.wt <- quantile(bc_all_mac.wt, 0.975)
+min.wt <- quantile(bc_all_mac.wt, 0.025)
+bc_all_mac.wt <- fifelse(bc_all_mac.wt>max.wt, max.wt, bc_all_mac.wt) # truncate
+bc_all_mac.wt <- fifelse(bc_all_mac.wt<min.wt, min.wt, bc_all_mac.wt) # truncate
+summary(bc_all_mac.wt)
+
+## no2_all_mac
+model.num_no2_all = lm(no2_all ~ 1, data = birth) 
+ps.num_no2_all <- dnorm((birth$no2_all - model.num_no2_all$fitted)/(summary(model.num_no2_all))$sigma,0,1)
+# scale.res <- scale(residuals(model.num_no2_all))
+# df <- approxfun(density(scale.res, kernel = "gaussian", n = dim(birth)[1]))
+# ps.num_no2_all <- df(res)
+ps.den_no2_all_mac <- dnorm((birth$no2_all - GBM.fitted_no2_all_mac)/sd(birth$no2_all - GBM.fitted_no2_all_mac),0,1)
+
+no2_all_mac.wt <- ps.num_no2_all/ps.den_no2_all_mac
+summary(no2_all_mac.wt)
+
+max.wt <- quantile(no2_all_mac.wt, 0.975)
+min.wt <- quantile(no2_all_mac.wt, 0.025)
+no2_all_mac.wt <- fifelse(no2_all_mac.wt>max.wt, max.wt, no2_all_mac.wt) # truncate
+no2_all_mac.wt <- fifelse(no2_all_mac.wt<min.wt, min.wt, no2_all_mac.wt) # truncate
+summary(no2_all_mac.wt)
+
 ## bc_30d
 model.num_bc_30d = lm(bc_30d ~ 1, data = birth) 
 ps.num_bc_30d <- dnorm((birth$bc_30d - model.num_bc_30d$fitted)/(summary(model.num_bc_30d))$sigma,0,1)
@@ -492,3 +719,11 @@ colnames(birth_ipw)[1] <- "uniqueid_yr"
 head(birth_ipw)
 fwrite(birth_ipw, paste0(dir_birthdata, "MAbirth_ipw.csv"))
 
+## bc and no2 all-period average
+birth_ipw_2 <- data.table(birth[,uniqueid_yr],
+                        bc_all.wt, bc_all_mac.wt,
+                        no2_all.wt, no2_all_mac.wt)
+colnames(birth_ipw_2)[1] <- "uniqueid_yr"
+head(birth_ipw_2)
+dir_birthdata <- "/media/qnap3/Shuxin/airPollution_MAbirth/"
+fwrite(birth_ipw_2, paste0(dir_birthdata, "MAbirth_ipw_2.csv"))
