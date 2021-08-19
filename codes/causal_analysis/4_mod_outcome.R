@@ -17,38 +17,34 @@ library(mgcv)
 library(sandwich)
 
 setwd("/media/gate/Shuxin")
-dir_data <- "/media/gate/Shuxin/MAbirth/"
-dir_output_mod <- "/media/gate/Shuxin/MAbirth/results/4mainEffects/"
+dir_data <- "/media/qnap3/Shuxin/airPollution_MAbirth/"
+dir_output_mod <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/4mainEffects/"
 
 ############################ 1. Load data #####################################
 ## birth data
 birth <- fread(paste0(dir_data, "MAbirth_for_analyses.csv"))
-names(birth)
-# > names(birth)
-# [1] "uniqueid_yr"    "year"           "sex"            "married"        "mage"          
-# [6] "mrace"          "m_edu"          "cigdpp"         "cigddp"         "clinega"       
-# [11] "kotck"          "pncgov"         "bwg"            "rf_db_gest"     "rf_db_other"   
-# [16] "rf_hbp_chronic" "rf_hbp_pregn"   "rf_cervix"      "rf_prev_4kg"    "rf_prev_sga"   
-# [21] "mhincome"       "mhvalue"        "percentPoverty" "bc_30d"         "bc_3090d"      
-# [26] "bc_90280d"      "no2_30d"        "no2_3090d"      "no2_90280d"     "lbw"           
-# [31] "firstborn"      "m_wg_cat"       "smoker_ddp"     "smoker_dpp"     "mrace_1"       
-# [36] "mrace_2"        "mrace_3"        "mrace_4"        "log_mhincome"   "log_mhvalue"   
 birth[,':='(year = as.factor(year),
             m_edu = as.factor(m_edu),
             kotck = as.factor(kotck),
             m_wg_cat = as.factor(m_wg_cat))]
 
 var <- c("uniqueid_yr", "bwg", "lbw",
-         "bc_30d","bc_3090d", "bc_90280d", 
-         "no2_30d", "no2_3090d", "no2_90280d")
+         "bc_all", "no2_all")
+         # "bc_30d","bc_3090d", "bc_90280d", 
+         # "no2_30d", "no2_3090d", "no2_90280d")
 sub_birth <- birth[ , var, with = F]
 head(sub_birth)
 
 ## inverse-prob weights
-ipw <- fread(paste0(dir_data, "MAbirth_ipw.csv"),
+# ipw <- fread(paste0(dir_data, "MAbirth_ipw.csv"),
+#              select = c("uniqueid_yr",
+#                         "bc_30d.wt", "bc_3090d.wt", "bc_90280d.wt",
+#                         "no2_30d.wt", "no2_3090d.wt", "no2_90280d.wt"))
+# head(ipw)
+ipw <- fread(paste0(dir_data, "MAbirth_ipw_2.csv"),
              select = c("uniqueid_yr",
-                        "bc_30d.wt", "bc_3090d.wt", "bc_90280d.wt",
-                        "no2_30d.wt", "no2_3090d.wt", "no2_90280d.wt"))
+                        "bc_all.wt", "bc_all_mac.wt",
+                        "no2_all.wt", "no2_all_mac.wt"))
 head(ipw)
 
 ## merge together
@@ -151,6 +147,20 @@ bwg_no2_90280d <- glm(bwg ~ no2_90280d, family = gaussian, data = dt,
                       weights = no2_90280d.wt)
 summary(bwg_no2_90280d)
 
+#####
+bwg_bc_all <- glm(bwg ~ bc_all, family = gaussian, data = dt, 
+                      weights = bc_all.wt)
+summary(bwg_bc_all)
+bwg_bc_all_mac <- glm(bwg ~ bc_all, family = gaussian, data = dt, 
+                  weights = bc_all_mac.wt)
+summary(bwg_bc_all_mac)
+bwg_no2_all <- glm(bwg ~ no2_all, family = gaussian, data = dt, 
+                  weights = bc_all.wt)
+summary(bwg_no2_all)
+bwg_no2_all_mac <- glm(bwg ~ no2_all, family = gaussian, data = dt, 
+                  weights = no2_all_mac.wt)
+summary(bwg_no2_all_mac)
+
 #################### 3.2 outcome as binary low birth weight ###########
 # lbw_bc_30d <- svyglm(formula = lbw ~ bc_30d, design = design_bc_30d,
 #                      family = quasibinomial(link = "logit"))
@@ -195,9 +205,65 @@ lbw_no2_90280d <- glm(lbw ~ no2_90280d, family = quasibinomial(link = "logit"), 
                       weights = no2_90280d.wt)
 summary(lbw_no2_90280d)
 
+#####
+lbw_bc_all <- glm(lbw ~ bc_all, family = quasibinomial(link = "logit"), data = dt, 
+                  weights = bc_all.wt)
+summary(lbw_bc_all)
+lbw_bc_all_mac <- glm(lbw ~ bc_all, family = quasibinomial(link = "logit"), data = dt, 
+                      weights = bc_all_mac.wt)
+summary(lbw_bc_all_mac)
+lbw_no2_all <- glm(lbw ~ no2_all, family = quasibinomial(link = "logit"), data = dt, 
+                   weights = bc_all.wt)
+summary(lbw_no2_all)
+lbw_no2_all_mac <- glm(lbw ~ no2_all, family = quasibinomial(link = "logit"), data = dt, 
+                   weights = no2_all_mac.wt)
+summary(lbw_no2_all_mac)
+
 ############################# 4. results & plots ##############################
 ############################# 4.1 results tables ##############################
 ################################# bwg as outcome ##############################
+## bc_all -----
+effect <- rbind(coef(bwg_bc_all)[2]*IQR(dt[,bc_all]),
+                coef(bwg_bc_all_mac)[2]*IQR(dt[,bc_all]))
+halfCI <- rbind(qnorm(0.975)*sqrt(vcovHC(bwg_bc_all)[2,2])*IQR(dt[,bc_all]),
+                qnorm(0.975)*sqrt(vcovHC(bwg_bc_all_mac)[2,2])*IQR(dt[,bc_all]))
+result_bwg_bc <- cbind(effect,effect-halfCI,effect+halfCI)
+colnames(result_bwg_bc) <- c("effect for IQR", "lower CI", "upper CI")
+rownames(result_bwg_bc) <- c("bc_all", "bc_all_mac")
+print(result_bwg_bc)
+write.csv(result_bwg_bc, paste0(dir_output_mod, "result_bwg_bc_all.csv"))
+## no2_all -----
+effect <- rbind(coef(bwg_no2_all)[2]*IQR(dt[,no2_all]),
+                coef(bwg_no2_all_mac)[2]*IQR(dt[,no2_all]))
+halfCI <- rbind(qnorm(0.975)*sqrt(vcovHC(bwg_no2_all)[2,2])*IQR(dt[,no2_all]),
+                qnorm(0.975)*sqrt(vcovHC(bwg_no2_all_mac)[2,2])*IQR(dt[,no2_all]))
+result_bwg_no2 <- cbind(effect,effect-halfCI,effect+halfCI)
+colnames(result_bwg_no2) <- c("effect for IQR", "lower CI", "upper CI")
+rownames(result_bwg_no2) <- c("no2_all", "no2_all_mac")
+print(result_bwg_no2)
+write.csv(result_bwg_no2, paste0(dir_output_mod, "result_bwg_no2_all.csv"))
+
+## bc_all_mac -----
+effect <- rbind(coef(bwg_bc_all_mac)[2]*IQR(dt[,bc_all]),
+                coef(bwg_bc_all_mac)[2]*IQR(dt[,bc_all]))
+halfCI <- rbind(qnorm(0.975)*sqrt(vcovHC(bwg_bc_all)[2,2])*IQR(dt[,bc_all]),
+                qnorm(0.975)*sqrt(vcovHC(bwg_bc_all_mac)[2,2])*IQR(dt[,bc_all]))
+result_bwg_bc <- cbind(effect,effect-halfCI,effect+halfCI)
+colnames(result_bwg_bc) <- c("effect for IQR", "lower CI", "upper CI")
+rownames(result_bwg_bc) <- c("bc_all", "bc_all_mac")
+print(result_bwg_bc)
+write.csv(result_bwg_bc, paste0(dir_output_mod, "result_bwg_bc_all.csv"))
+## no2_all -----
+effect <- rbind(coef(bwg_no2_all)[2]*IQR(dt[,no2_all]),
+                coef(bwg_no2_all_mac)[2]*IQR(dt[,no2_all]))
+halfCI <- rbind(qnorm(0.975)*sqrt(vcovHC(bwg_no2_all)[2,2])*IQR(dt[,no2_all]),
+                qnorm(0.975)*sqrt(vcovHC(bwg_no2_all_mac)[2,2])*IQR(dt[,no2_all]))
+result_bwg_no2 <- cbind(effect,effect-halfCI,effect+halfCI)
+colnames(result_bwg_no2) <- c("effect for IQR", "lower CI", "upper CI")
+rownames(result_bwg_no2) <- c("no2_all", "no2_all_mac")
+print(result_bwg_no2)
+write.csv(result_bwg_no2, paste0(dir_output_mod, "result_bwg_no2_all.csv"))
+
 ## bc
 effect <- rbind(coef(bwg_bc_30d)[2]*IQRs$bc_30d,
                 coef(bwg_bc_3090d)[2]*IQRs$bc_3090d,
