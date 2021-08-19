@@ -1436,3 +1436,42 @@ results_bc_all_mac <- rbind(opt_mac_depth6_bc_all, opt_mac_depth8_bc_all, opt_ma
 dir_gridsearch <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/1GridSearchResults/"
 setDT(results_bc_all_mac)
 fwrite(results_bc_all_mac, file = paste0(dir_gridsearch, "GridSearchResults_bc_all_mac.csv"))
+
+#######
+class(opt_aac_depth6_no2_all)
+opt_aac_depth6_no2_all$depth <- 6
+opt_aac_depth8_no2_all$depth <- 8
+opt_aac_depth10_no2_all$depth <- 10
+
+opt_aac_depth6_no2_all$col_rate <- rownames(opt_aac_depth6_no2_all)
+opt_aac_depth8_no2_all$col_rate <- rownames(opt_aac_depth8_no2_all)
+opt_aac_depth10_no2_all$col_rate <- rownames(opt_aac_depth10_no2_all)
+
+opt_aac_depth6_no2_all$label <- "no2_all"
+opt_aac_depth8_no2_all$label <- "no2_all"
+opt_aac_depth10_no2_all$label <- "no2_all"
+
+results_no2_all <- rbind(opt_aac_depth6_no2_all, opt_aac_depth8_no2_all, opt_aac_depth10_no2_all)
+
+dir_gridsearch <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/1GridSearchResults/"
+setDT(results_no2_all)
+fwrite(results_no2_all, file = paste0(dir_gridsearch, "GridSearchResults_no2_all.csv"))
+
+class(opt_mac_depth6_no2_all)
+opt_mac_depth6_no2_all$depth <- 6
+opt_mac_depth8_no2_all$depth <- 8
+opt_mac_depth10_no2_all$depth <- 10
+
+opt_mac_depth6_no2_all$col_rate <- rownames(opt_mac_depth6_no2_all)
+opt_mac_depth8_no2_all$col_rate <- rownames(opt_mac_depth8_no2_all)
+opt_mac_depth10_no2_all$col_rate <- rownames(opt_mac_depth10_no2_all)
+
+opt_mac_depth6_no2_all$label <- "no2_all"
+opt_mac_depth8_no2_all$label <- "no2_all"
+opt_mac_depth10_no2_all$label <- "no2_all"
+
+results_no2_all_mac <- rbind(opt_mac_depth6_no2_all, opt_mac_depth8_no2_all, opt_mac_depth10_no2_all)
+
+dir_gridsearch <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/1GridSearchResults/"
+setDT(results_no2_all_mac)
+fwrite(results_no2_all_mac, file = paste0(dir_gridsearch, "GridSearchResults_no2_all_mac.csv"))
