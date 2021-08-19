@@ -1397,3 +1397,42 @@ best[, optimal_ntrees := round(optimal_ntrees)][]
 fwrite(best, paste0(dir_gridsearch, "BestCombinations_gbm.csv"))
 
 gc()
+
+#######
+class(opt_aac_depth6_bc_all)
+opt_aac_depth6_bc_all$depth <- 6
+opt_aac_depth8_bc_all$depth <- 8
+opt_aac_depth10_bc_all$depth <- 10
+
+opt_aac_depth6_bc_all$col_rate <- rownames(opt_aac_depth6_bc_all)
+opt_aac_depth8_bc_all$col_rate <- rownames(opt_aac_depth8_bc_all)
+opt_aac_depth10_bc_all$col_rate <- rownames(opt_aac_depth10_bc_all)
+
+opt_aac_depth6_bc_all$label <- "bc_all"
+opt_aac_depth8_bc_all$label <- "bc_all"
+opt_aac_depth10_bc_all$label <- "bc_all"
+
+results_bc_all <- rbind(opt_aac_depth6_bc_all, opt_aac_depth8_bc_all, opt_aac_depth10_bc_all)
+
+dir_gridsearch <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/1GridSearchResults/"
+setDT(results_bc_all)
+fwrite(results_bc_all, file = paste0(dir_gridsearch, "GridSearchResults_bc_all.csv"))
+
+class(opt_mac_depth6_bc_all)
+opt_mac_depth6_bc_all$depth <- 6
+opt_mac_depth8_bc_all$depth <- 8
+opt_mac_depth10_bc_all$depth <- 10
+
+opt_mac_depth6_bc_all$col_rate <- rownames(opt_mac_depth6_bc_all)
+opt_mac_depth8_bc_all$col_rate <- rownames(opt_mac_depth8_bc_all)
+opt_mac_depth10_bc_all$col_rate <- rownames(opt_mac_depth10_bc_all)
+
+opt_mac_depth6_bc_all$label <- "bc_all"
+opt_mac_depth8_bc_all$label <- "bc_all"
+opt_mac_depth10_bc_all$label <- "bc_all"
+
+results_bc_all_mac <- rbind(opt_mac_depth6_bc_all, opt_mac_depth8_bc_all, opt_mac_depth10_bc_all)
+
+dir_gridsearch <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/1GridSearchResults/"
+setDT(results_bc_all_mac)
+fwrite(results_bc_all_mac, file = paste0(dir_gridsearch, "GridSearchResults_bc_all_mac.csv"))
