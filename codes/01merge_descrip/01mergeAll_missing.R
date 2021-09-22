@@ -1,24 +1,23 @@
-###############################################################################
-# Project: Causal black carbon and NO2 on birth weight in MA                  #
-# Code: merge datasets and detect missingness                                 #
-# Input: "mabirths_02NOV18.csv" original birth data                           #
-# Input: "birth_SES.csv", "no2_birth_average.csv", "bc_birth_average.csv"     #
-# Output: "MAbirth_merged.csv"                                                #
-# Author: Shuxin Dong                                                         #
-# Date: 2021-01-19                                                            #
-###############################################################################
+#' Project: Causal black carbon and NO2 on birth weight in MA
+#' Code: merge datasets and detect missingness
+#' Input: "mabirths_02NOV18.csv" original birth data
+#' Input: "birth_SES.csv", "no2_birth_average.csv", "bc_birth_average.csv"
+#' Output: "MAbirth_merged.csv"
+#' Author: Shuxin Dong
+#' Date: 2021-01-19
 
-############################# 0. Setup ########################################
+# 0. Setup ----
 rm(list = ls())
 gc()
 
 library(data.table)
 
 setwd("/media/gate/Shuxin/")
-dir_input <- "/media/gate/Shuxin/MAbirth/"
-dir_input_SES <- "/media/gate/Shuxin/MAbirth/MAbirth_SES/"
+dir_in <- "/media/gate/Shuxin/MAbirth/"
+dir_inSES <- "/media/gate/Shuxin/MAbirth/MAbirth_SES/"
+dir_out <- "/media/qnap3/Shuxin/airPollution_MAbirth/"
 
-birth0 <- fread(paste0(dir_input, "mabirths_02NOV18.csv"), header = TRUE)
+birth0 <- fread(paste0(dir_in, "mabirths_02NOV18.csv"), header = TRUE)
 setDT(birth0)
 
 ## only include those born between 2001 and 2015
@@ -26,34 +25,34 @@ birth0 <- birth0[year!=2000,]
 dim(birth0) # dimension after omitting 2000 born babies
 # > dim(birth0)
 # [1] 1119011      55
-######################## 1. read in bc, no2, SES ##############################
+## 1. read in bc, no2, SES -----
 ## read SES data
-SES <- fread(paste0(dir_input_SES, "birth_SES.csv"), drop = "year")
+SES <- fread(paste0(dir_inSES, "birth_SES.csv"), drop = "year")
 dim(SES) # SES variable dimension
 # > dim(SES) # SES variable dimension
 # [1] 1174107       4
 
 ## read BC data
-bc <- fread(paste0(dir_input, "bc_birth_average.csv"), drop = c("bc_90d", "bc_280d"))
+bc <- fread(paste0(dir_in, "bc_birth_average.csv"), drop = c("bc_90d", "bc_280d"))
 dim(bc)
 # > dim(bc)
 # [1] 1093528       4
 
 ## read NO2 data
-no2 <- fread(paste0(dir_input, "no2_birth_average.csv"))
+no2 <- fread(paste0(dir_in, "no2_birth_average.csv"))
 dim(no2)
 # > dim(no2)
 # [1] 1094520       4
-######################## 2. merge together ####################################
+## 2. merge together ----
 birth <- merge(birth0, SES, by = "uniqueid_yr", all.x = TRUE)
 birth <- merge(birth, bc, by = "uniqueid_yr", all.x = TRUE)
 birth <- merge(birth, no2, by = "uniqueid_yr", all.x = TRUE)
 remove(birth0)
 gc()
-################# 3. re-encoding to incorporate missingness ###################
+## 3. re-encoding to incorporate missingness ----
 birth$mrace[birth$mrace==6] <- NA # mrace==6 coded as missing
 birth$kotck[birth$kotck==0] <- NA # kotck==0 coded as missing
-##################### 4. Restrict to complete exposure history ################
+## 4. Restrict to complete exposure history ----
 ## exclude those with missing average exposures
 birth_compltE <- birth[!is.na(bc_30d) & !is.na(bc_3090d) & !is.na(bc_90280d) & !is.na(no2_30d)
       & !is.na(no2_3090d) & !is.na(no2_90280d),]
@@ -62,11 +61,10 @@ print(paste("1st: Number of observation with complete exposure history is", dim(
 print(paste("Exclude", dim(birth)[1] - dim(birth_compltE)[1], "from", dim(birth)[1], 
             "as",(dim(birth)[1] - dim(birth_compltE)[1])/dim(birth)[1]))
 # [1] "Exclude 78956 from 1119011 as 0.0705587344539062"
-
-###################### 5. Inclusion and Exclusion criteria ####################
-## include singleton and live birth
-## exclude those with birthweight less than 500g and larger than 6000g
-## include clinical gestational age between 37 and 42 weeks
+## 5. Inclusion and Exclusion criteria ----
+#' include singleton and live birth
+#' exclude those with birthweight less than 500g and larger than 6000g
+#' include clinical gestational age between 37 and 42 weeks
 birth_inout <- 
   birth_compltE[plurality==1 & baby_alive==1 & bwg>=500 & bwg<=6000 & clinega>=37 & clinega<=42,]
 print(paste("2nd: Number of observation after inclusion and exclusion is", dim(birth_inout)[1]))
@@ -75,7 +73,7 @@ print(paste("Exclude", dim(birth_compltE)[1] - dim(birth_inout)[1], "from", dim(
             "as",(dim(birth_compltE)[1] - dim(birth_inout)[1])/dim(birth_compltE)[1]))
 # [1] "Exclude 153162 from 1040055 as 0.147263365879689"
 
-############################# 6. Variable Selection ###########################
+## 6. Variable Selection ----
 ## PS model include all the variables could predict the outcomes 
 ## as long as they are not colliders
 names(birth_inout)
@@ -103,21 +101,19 @@ birth_inout[, ':=' (apgar1 = NULL, apgar5 = NULL, jaund = NULL, lbnl = NULL, lbn
 ## drop the variables with duplicated info:
 birth_inout[, ':=' (plurality = NULL, baby_alive = NULL, # drop the variables used in the criteria
                      kess = NULL, # choose Kotelchuck over Kessner index
-                     bdob = NULL, date_last_menses = NULL, # drop baby's date of birth and date of last menses for gestational age
+                     # bdob = NULL, 
+                    date_last_menses = NULL, # drop baby's date of birth and date of last menses for gestational age
                      gacalc = NULL)] # drop other gestational age variables
 
 ## drop uncommon predictors:
 birth_inout[, ':='( # drop some risk factors according to Joel
-                    rf_lung = NULL, rf_anem = NULL, rf_card = NULL, rf_prev_bd = NULL, 
-                    rf_renal = NULL, rf_rh_sens = NULL, rf_sickle = NULL, 
-                    rf_ut_bld = NULL, modvag = NULL, modfor = NULL, modvac = NULL, 
-                    modpcs = NULL, modrcs = NULL, modvbac = NULL,
+                    rf_lung = NULL, rf_anem = NULL, rf_card = NULL, rf_prev_bd = NULL, rf_renal = NULL, rf_rh_sens = NULL, rf_sickle = NULL, rf_ut_bld = NULL, modvag = NULL, modfor = NULL, modvac = NULL, modpcs = NULL, modrcs = NULL, modvbac = NULL,
                     # drop the mode of delivery
                     gravid = NULL)]
 dim(birth_inout)
 # > dim(birth_inout)
-# [1] 886893     31
-############################# 7. Summarize the current ########################
+# [1] 886893     32
+## 7. Summarize the current ----
 summary(birth_inout)
 # > summary(birth_inout)
 # uniqueid_yr             year           sex          married            mage           mrace      
@@ -167,9 +163,7 @@ summary(birth_inout)
 # Mean   :0.4813   Mean   :22.7929   Mean   :22.985   Mean   :23.127  
 # 3rd Qu.:0.5401   3rd Qu.:28.9280   3rd Qu.:29.037   3rd Qu.:28.484  
 # Max.   :1.6426   Max.   :78.8389   Max.   :83.849   Max.   :70.033 
-mod <- lm(bwg ~ ., data = subset(birth_inout, select = -c(uniqueid_yr, 
-                                                          bc_30d, bc_3090d, bc_90280d,
-                                                          no2_30d, no2_3090d, no2_90280d)))
+mod <- lm(bwg ~ ., data = subset(birth_inout, select = -c(uniqueid_yr, bc_30d, bc_3090d, bc_90280d, no2_30d, no2_3090d, no2_90280d, bdob)))
 summary(mod)
 # > summary(mod)
 # 
@@ -241,24 +235,23 @@ melt(birth_inout[, lapply(.SD, function(x) sum(is.na(x)))])[order(-value)][, fre
 # 22:           year     0 0.000000e+00
 # 23:            sex     0 0.000000e+00
 # 24:        clinega     0 0.000000e+00
-# 25:            bwg     0 0.000000e+00
-# 26:         bc_30d     0 0.000000e+00
-# 27:       bc_3090d     0 0.000000e+00
-# 28:      bc_90280d     0 0.000000e+00
-# 29:        no2_30d     0 0.000000e+00
-# 30:      no2_3090d     0 0.000000e+00
-# 31:     no2_90280d     0 0.000000e+00
+# 25:           bdob     0 0.000000e+00
+# 26:            bwg     0 0.000000e+00
+# 27:         bc_30d     0 0.000000e+00
+# 28:       bc_3090d     0 0.000000e+00
+# 29:      bc_90280d     0 0.000000e+00
+# 30:        no2_30d     0 0.000000e+00
+# 31:      no2_3090d     0 0.000000e+00
+# 32:     no2_90280d     0 0.000000e+00
 # variable value         freq
 
 birth_for_analysis <- na.omit(birth_inout)
-fwrite(birth_for_analysis, paste0(dir_input, "MAbirth_merged.csv"))
 print(paste("Final Sample Size is", dim(birth_for_analysis)[1]))
 # [1] "Final Sample Size is 844554"
 
 ## 8. add all-period average -----
-birth_for_analysis <- fread(paste0(dir_input, "MAbirth_merged.csv"))
 class(birth_for_analysis)
 birth_for_analysis[, `:=`(bc_all = (bc_30d*30+bc_3090d*60+bc_90280d*190)/280,
                           no2_all = (no2_30d*30+no2_3090d*60+no2_90280d*190)/280)][]
-dir_results <- "/media/qnap3/Shuxin/airPollution_MAbirth/"
-fwrite(birth_for_analysis, paste0(dir_results, "MAbirth_merged.csv"))
+dir_out <- "/media/qnap3/Shuxin/airPollution_MAbirth/"
+fwrite(birth_for_analysis, paste0(dir_out, "MAbirth_merged.csv"))

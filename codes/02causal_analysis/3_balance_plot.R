@@ -432,7 +432,7 @@ fwrite(balance, paste0(dir_balancePlots, "balance_no2_90280d.csv")) # change
 ############################# 4. plot balance #################################
 rm(list = ls())
 dir_data <- "/media/gate/Shuxin/MAbirth/"
-dir_balancePlots <- "/media/gate/Shuxin/MAbirth/results/3balancePlots/"
+dir_balancePlots <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/3balancePlots/"
 gc()
 
 ####################### codes for complete plot ###############################
@@ -450,11 +450,16 @@ gc()
 ## bc_all -----
 balance <- fread(paste0(dir_balancePlots, "balance_bc_all.csv"))
 # balance_display <- balance[ !name.x %in% c("no2_30d", "no2_3090d"),] # change?
-balance_display <- balance
+balance <- balance[-c(47:50),]
+balance$description[1:4] <- c(rep("Smoking during pregnancy",2), rep("Smoking before pregnancy",2))
+balance$description[9:12] <- c(rep("Median household income",2), rep("Median value of house",2))
+balance$description[25:26] <- rep("The other exposure",2)
+balance$description[27:28] <- rep("% poverty",2)
+balance$description[43:44] <- rep("Previous SGA infant")
+balance$description[41:42] <- rep("Previous infant over 4 kg")
+bc_balance <- balance
 
-pdf(file = paste0(dir_balancePlots,"balance_bc_all_display.pdf"),
-    width = 10, height = 8)
-ggplot(balance_display, aes(x = description, y = corr, group = weighted)) +
+bc_plot <- ggplot(bc_balance, aes(x = description, y = corr, group = weighted)) +
   # geom_line(aes(colour = weighted), size = 0.5, linetype = "dashed")+
   geom_point(aes(colour = weighted), size = 2) +
   geom_hline(yintercept=0, size=0.2) +
@@ -466,283 +471,30 @@ ggplot(balance_display, aes(x = description, y = corr, group = weighted)) +
         axis.title.x = element_blank(),
         axis.title.y = element_blank()) +
   coord_flip() +
-  theme(legend.position = "bottom", legend.title = element_blank())
-dev.off()
+  theme(legend.position = "bottom", legend.title = element_blank(),
+        text = element_text(size=16))
+bc_plot
 
-## bc_all_mac -----
-balance <- fread(paste0(dir_balancePlots, "balance_bc_all_mac.csv"))
-# balance_display <- balance[ !name.x %in% c("no2_30d", "no2_3090d"),] # change?
-balance_display <- balance
-
-pdf(file = paste0(dir_balancePlots,"balance_bc_all_mac_display.pdf"),
-    width = 10, height = 8)
-ggplot(balance_display, aes(x = description, y = corr, group = weighted)) +
-  # geom_line(aes(colour = weighted), size = 0.5, linetype = "dashed")+
-  geom_point(aes(colour = weighted), size = 2) +
-  geom_hline(yintercept=0, size=0.2) +
-  geom_hline(yintercept=-0.1, size=0.2, linetype = "dashed") +
-  geom_hline(yintercept=0.1, size=0.2, linetype = "dashed") +
-  geom_hline(yintercept=-0.2, size=0.1, linetype = "dashed") +
-  geom_hline(yintercept=0.2, size=0.1, linetype = "dashed") +
-  theme(plot.title = element_blank(),
-        axis.title.x = element_blank(),
-        axis.title.y = element_blank()) +
-  coord_flip() +
-  theme(legend.position = "bottom", legend.title = element_blank())
-dev.off()
-
-## no2_all -----
 balance <- fread(paste0(dir_balancePlots, "balance_no2_all.csv"))
 # balance_display <- balance[ !name.x %in% c("no2_30d", "no2_3090d"),] # change?
-balance_display <- balance
+View(balance)
+balance <- balance[-c(47:50),]
+balance$description[3:6] <- c(rep("Smoking during pregnancy",2), rep("Smoking before pregnancy",2))
+balance$description[11:14] <- c(rep("Median household income",2), rep("Median value of house",2))
+balance$description[1:2] <- rep("The other exposure",2)
+balance$description[27:28] <- rep("% poverty",2)
+balance$description[43:44] <- rep("Previous SGA infant")
+balance$description[41:42] <- rep("Previous infant over 4 kg")
+no2_balance <- balance
 
-pdf(file = paste0(dir_balancePlots,"balance_no2_all_display.pdf"),
-    width = 10, height = 8)
-ggplot(balance_display, aes(x = description, y = corr, group = weighted)) +
-  # geom_line(aes(colour = weighted), size = 0.5, linetype = "dashed")+
+no2_plot <- ggplot(no2_balance, aes(x = description, y = corr, group = weighted)) +
   geom_point(aes(colour = weighted), size = 2) +
+  coord_flip() +
   geom_hline(yintercept=0, size=0.2) +
   geom_hline(yintercept=-0.1, size=0.2, linetype = "dashed") +
   geom_hline(yintercept=0.1, size=0.2, linetype = "dashed") +
   geom_hline(yintercept=-0.2, size=0.1, linetype = "dashed") +
   geom_hline(yintercept=0.2, size=0.1, linetype = "dashed") +
   theme(plot.title = element_blank(),
-        axis.title.x = element_blank(),
-        axis.title.y = element_blank()) +
-  coord_flip() +
-  theme(legend.position = "bottom", legend.title = element_blank())
-dev.off()
-
-## no2_all_mac -----
-balance <- fread(paste0(dir_balancePlots, "balance_no2_all_mac.csv"))
-# balance_display <- balance[ !name.x %in% c("no2_30d", "no2_3090d"),] # change?
-balance_display <- balance
-
-pdf(file = paste0(dir_balancePlots,"balance_no2_all_mac_display.pdf"),
-    width = 10, height = 8)
-ggplot(balance_display, aes(x = description, y = corr, group = weighted)) +
-  # geom_line(aes(colour = weighted), size = 0.5, linetype = "dashed")+
-  geom_point(aes(colour = weighted), size = 2) +
-  geom_hline(yintercept=0, size=0.2) +
-  geom_hline(yintercept=-0.1, size=0.2, linetype = "dashed") +
-  geom_hline(yintercept=0.1, size=0.2, linetype = "dashed") +
-  geom_hline(yintercept=-0.2, size=0.1, linetype = "dashed") +
-  geom_hline(yintercept=0.2, size=0.1, linetype = "dashed") +
-  theme(plot.title = element_blank(),
-        axis.title.x = element_blank(),
-        axis.title.y = element_blank()) +
-  coord_flip() +
-  theme(legend.position = "bottom", legend.title = element_blank())
-dev.off()
-
-######
-balance <- fread(paste0(dir_balancePlots, "balance_bc_30d.csv"))
-pdf(file = paste0(dir_balancePlots,"balance_bc_30d.pdf"))
-ggplot(balance, aes(x = description, y = corr)) +
-  geom_point(aes(colour = weighted), size = 1) +
-  geom_hline(yintercept=0, size=0.2) +
-  geom_hline(yintercept=-0.1, size=0.1, linetype = "dashed") +
-  geom_hline(yintercept=0.1, size=0.1, linetype = "dashed") +
-  theme(plot.title = element_blank(),
-        axis.title.x = element_blank(),
-        axis.title.y = element_blank()) +
-  coord_flip() +
-  theme(legend.position = "top", legend.title = element_blank())
-dev.off()
-
-balance <- fread(paste0(dir_balancePlots, "balance_bc_3090d.csv"))
-pdf(file = paste0(dir_balancePlots,"balance_bc_3090d.pdf"))
-ggplot(balance, aes(x = description, y = corr)) +
-  geom_point(aes(colour = weighted), size = 1) +
-  geom_hline(yintercept=0, size=0.2) +
-  geom_hline(yintercept=-0.1, size=0.1, linetype = "dashed") +
-  geom_hline(yintercept=0.1, size=0.1, linetype = "dashed") +
-  theme(plot.title = element_blank(),
-        axis.title.x = element_blank(),
-        axis.title.y = element_blank()) +
-  coord_flip() +
-  theme(legend.position = "top", legend.title = element_blank())
-dev.off()
-
-balance <- fread(paste0(dir_balancePlots, "balance_bc_90280d.csv"))
-pdf(file = paste0(dir_balancePlots,"balance_bc_90280d.pdf"))
-ggplot(balance, aes(x = description, y = corr)) +
-  geom_point(aes(colour = weighted), size = 1) +
-  geom_hline(yintercept=0, size=0.2) +
-  geom_hline(yintercept=-0.1, size=0.1, linetype = "dashed") +
-  geom_hline(yintercept=0.1, size=0.1, linetype = "dashed") +
-  theme(plot.title = element_blank(),
-        axis.title.x = element_blank(),
-        axis.title.y = element_blank()) +
-  coord_flip() +
-  theme(legend.position = "top", legend.title = element_blank())
-dev.off()
-
-balance <- fread(paste0(dir_balancePlots, "balance_no2_30d.csv"))
-pdf(file = paste0(dir_balancePlots,"balance_no2_30d.pdf"))
-ggplot(balance, aes(x = description, y = corr)) +
-  geom_point(aes(colour = weighted), size = 1) +
-  geom_hline(yintercept=0, size=0.2) +
-  geom_hline(yintercept=-0.1, size=0.1, linetype = "dashed") +
-  geom_hline(yintercept=0.1, size=0.1, linetype = "dashed") +
-  theme(plot.title = element_blank(),
-        axis.title.x = element_blank(),
-        axis.title.y = element_blank()) +
-  coord_flip() +
-  theme(legend.position = "top", legend.title = element_blank())
-dev.off()
-
-balance <- fread(paste0(dir_balancePlots, "balance_no2_3090d.csv"))
-pdf(file = paste0(dir_balancePlots,"balance_no2_3090d.pdf"))
-ggplot(balance, aes(x = description, y = corr)) +
-  geom_point(aes(colour = weighted), size = 1) +
-  geom_hline(yintercept=0, size=0.2) +
-  geom_hline(yintercept=-0.1, size=0.1, linetype = "dashed") +
-  geom_hline(yintercept=0.1, size=0.1, linetype = "dashed") +
-  theme(plot.title = element_blank(),
-        axis.title.x = element_blank(),
-        axis.title.y = element_blank()) +
-  coord_flip() +
-  theme(legend.position = "top", legend.title = element_blank())
-dev.off()
-
-balance <- fread(paste0(dir_balancePlots, "balance_no2_90280d.csv"))
-pdf(file = paste0(dir_balancePlots,"balance_no2_90280d.pdf"))
-ggplot(balance, aes(x = description, y = corr)) +
-  geom_point(aes(colour = weighted), size = 1) +
-  geom_hline(yintercept=0, size=0.2) +
-  geom_hline(yintercept=-0.1, size=0.1, linetype = "dashed") +
-  geom_hline(yintercept=0.1, size=0.1, linetype = "dashed") +
-  theme(plot.title = element_blank(),
-        axis.title.x = element_blank(),
-        axis.title.y = element_blank()) +
-  coord_flip() +
-  theme(legend.position = "top", legend.title = element_blank())
-dev.off()
-
-############################## plots for display ##############################
-#### bc_3090d ######
-balance <- fread(paste0(dir_balancePlots, "balance_bc_3090d.csv"))
-balance_display <- balance[ !name.x %in% c("bc_30d", "bc_90280d"),] # change?
-
-pdf(file = paste0(dir_balancePlots,"balance_bc_3090d_display.pdf"),
-    width = 10, height = 8)
-ggplot(balance_display, aes(x = description, y = corr, group = weighted)) +
-  # geom_line(aes(colour = weighted), size = 0.5, linetype = "dashed")+
-  geom_point(aes(colour = weighted), size = 2) +
-  geom_hline(yintercept=0, size=0.2) +
-  geom_hline(yintercept=-0.1, size=0.2, linetype = "dashed") +
-  geom_hline(yintercept=0.1, size=0.2, linetype = "dashed") +
-  geom_hline(yintercept=-0.2, size=0.1, linetype = "dashed") +
-  geom_hline(yintercept=0.2, size=0.1, linetype = "dashed") +
-  theme(plot.title = element_blank(),
-        axis.title.x = element_blank(),
-        axis.title.y = element_blank()) +
-  coord_flip() +
-  theme(legend.position = "bottom", legend.title = element_blank())
-dev.off()
-
-#### bc_30d ######
-balance <- fread(paste0(dir_balancePlots, "balance_bc_30d.csv"))
-balance_display <- balance[ !name.x %in% c("bc_3090d", "bc_90280d"),] # change?
-
-pdf(file = paste0(dir_balancePlots,"balance_bc_30d_display.pdf"),
-    width = 10, height = 8)
-ggplot(balance_display, aes(x = description, y = corr, group = weighted)) +
-  # geom_line(aes(colour = weighted), size = 0.5, linetype = "dashed")+
-  geom_point(aes(colour = weighted), size = 2) +
-  geom_hline(yintercept=0, size=0.2) +
-  geom_hline(yintercept=-0.1, size=0.2, linetype = "dashed") +
-  geom_hline(yintercept=0.1, size=0.2, linetype = "dashed") +
-  geom_hline(yintercept=-0.2, size=0.1, linetype = "dashed") +
-  geom_hline(yintercept=0.2, size=0.1, linetype = "dashed") +
-  theme(plot.title = element_blank(),
-        axis.title.x = element_blank(),
-        axis.title.y = element_blank()) +
-  coord_flip() +
-  theme(legend.position = "bottom", legend.title = element_blank())
-dev.off()
-
-#### bc_90280d ######
-balance <- fread(paste0(dir_balancePlots, "balance_bc_90280d.csv"))
-balance_display <- balance[ !name.x %in% c("bc_30d", "bc_3090d"),] # change?
-
-pdf(file = paste0(dir_balancePlots,"balance_bc_90280d_display.pdf"),
-    width = 10, height = 8)
-ggplot(balance_display, aes(x = description, y = corr, group = weighted)) +
-  # geom_line(aes(colour = weighted), size = 0.5, linetype = "dashed")+
-  geom_point(aes(colour = weighted), size = 2) +
-  geom_hline(yintercept=0, size=0.2) +
-  geom_hline(yintercept=-0.1, size=0.2, linetype = "dashed") +
-  geom_hline(yintercept=0.1, size=0.2, linetype = "dashed") +
-  geom_hline(yintercept=-0.2, size=0.1, linetype = "dashed") +
-  geom_hline(yintercept=0.2, size=0.1, linetype = "dashed") +
-  theme(plot.title = element_blank(),
-        axis.title.x = element_blank(),
-        axis.title.y = element_blank()) +
-  coord_flip() +
-  theme(legend.position = "bottom", legend.title = element_blank())
-dev.off()
-
-#### no2_3090d ######
-balance <- fread(paste0(dir_balancePlots, "balance_no2_3090d.csv"))
-balance_display <- balance[ !name.x %in% c("no2_30d", "no2_90280d"),] # change?
-
-pdf(file = paste0(dir_balancePlots,"balance_no2_3090d_display.pdf"),
-    width = 10, height = 8)
-ggplot(balance_display, aes(x = description, y = corr, group = weighted)) +
-  # geom_line(aes(colour = weighted), size = 0.5, linetype = "dashed")+
-  geom_point(aes(colour = weighted), size = 2) +
-  geom_hline(yintercept=0, size=0.2) +
-  geom_hline(yintercept=-0.1, size=0.2, linetype = "dashed") +
-  geom_hline(yintercept=0.1, size=0.2, linetype = "dashed") +
-  geom_hline(yintercept=-0.2, size=0.1, linetype = "dashed") +
-  geom_hline(yintercept=0.2, size=0.1, linetype = "dashed") +
-  theme(plot.title = element_blank(),
-        axis.title.x = element_blank(),
-        axis.title.y = element_blank()) +
-  coord_flip() +
-  theme(legend.position = "bottom", legend.title = element_blank())
-dev.off()
-
-#### no2_30d ######
-balance <- fread(paste0(dir_balancePlots, "balance_no2_30d.csv"))
-balance_display <- balance[ !name.x %in% c("no2_3090d", "no2_90280d"),] # change?
-
-pdf(file = paste0(dir_balancePlots,"balance_no2_30d_display.pdf"),
-    width = 10, height = 8)
-ggplot(balance_display, aes(x = description, y = corr, group = weighted)) +
-  # geom_line(aes(colour = weighted), size = 0.5, linetype = "dashed")+
-  geom_point(aes(colour = weighted), size = 2) +
-  geom_hline(yintercept=0, size=0.2) +
-  geom_hline(yintercept=-0.1, size=0.2, linetype = "dashed") +
-  geom_hline(yintercept=0.1, size=0.2, linetype = "dashed") +
-  geom_hline(yintercept=-0.2, size=0.1, linetype = "dashed") +
-  geom_hline(yintercept=0.2, size=0.1, linetype = "dashed") +
-  theme(plot.title = element_blank(),
-        axis.title.x = element_blank(),
-        axis.title.y = element_blank()) +
-  coord_flip() +
-  theme(legend.position = "bottom", legend.title = element_blank())
-dev.off()
-
-#### no2_90280d ######
-balance <- fread(paste0(dir_balancePlots, "balance_no2_90280d.csv"))
-balance_display <- balance[ !name.x %in% c("no2_30d", "no2_3090d"),] # change?
-
-pdf(file = paste0(dir_balancePlots,"balance_no2_90280d_display.pdf"),
-    width = 10, height = 8)
-ggplot(balance_display, aes(x = description, y = corr, group = weighted)) +
-  # geom_line(aes(colour = weighted), size = 0.5, linetype = "dashed")+
-  geom_point(aes(colour = weighted), size = 2) +
-  geom_hline(yintercept=0, size=0.2) +
-  geom_hline(yintercept=-0.1, size=0.2, linetype = "dashed") +
-  geom_hline(yintercept=0.1, size=0.2, linetype = "dashed") +
-  geom_hline(yintercept=-0.2, size=0.1, linetype = "dashed") +
-  geom_hline(yintercept=0.2, size=0.1, linetype = "dashed") +
-  theme(plot.title = element_blank(),
-        axis.title.x = element_blank(),
-        axis.title.y = element_blank()) +
-  coord_flip() +
-  theme(legend.position = "bottom", legend.title = element_blank())
-dev.off()
+        # axis.text.y = element_blank(),
+        axis.title.x = e

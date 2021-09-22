@@ -297,6 +297,50 @@ print(result_bwg_no2)
 write.csv(result_bwg_no2, paste0(dir_output_mod, "result_bwg_no2.csv"))
 
 ################################# lbw as outcome ##############################
+
+## bc_all -----
+effect <- rbind(coef(lbw_bc_all)[2]*IQR(dt[,bc_all]),
+                coef(lbw_bc_all_mac)[2]*IQR(dt[,bc_all]))
+halfCI <- rbind(qnorm(0.975)*sqrt(vcovHC(lbw_bc_all)[2,2])*IQR(dt[,bc_all]),
+                qnorm(0.975)*sqrt(vcovHC(lbw_bc_all_mac)[2,2])*IQR(dt[,bc_all]))
+result_lbw_bc <- exp(cbind(effect,effect-halfCI,effect+halfCI))
+colnames(result_lbw_bc) <- c("effect for IQR", "lower CI", "upper CI")
+rownames(result_lbw_bc) <- c("bc_all", "bc_all_mac")
+print(result_lbw_bc)
+write.csv(result_lbw_bc, paste0(dir_output_mod, "result_lbw_bc_all.csv"))
+## no2_all -----
+effect <- rbind(coef(lbw_no2_all)[2]*IQR(dt[,no2_all]),
+                coef(lbw_no2_all_mac)[2]*IQR(dt[,no2_all]))
+halfCI <- rbind(qnorm(0.975)*sqrt(vcovHC(lbw_no2_all)[2,2])*IQR(dt[,no2_all]),
+                qnorm(0.975)*sqrt(vcovHC(lbw_no2_all_mac)[2,2])*IQR(dt[,no2_all]))
+result_lbw_no2 <- exp(cbind(effect,effect-halfCI,effect+halfCI))
+colnames(result_lbw_no2) <- c("effect for IQR", "lower CI", "upper CI")
+rownames(result_lbw_no2) <- c("no2_all", "no2_all_mac")
+print(result_lbw_no2)
+write.csv(result_lbw_no2, paste0(dir_output_mod, "result_lbw_no2_all.csv"))
+
+## bc_all_mac -----
+effect <- rbind(coef(lbw_bc_all_mac)[2]*IQR(dt[,bc_all]),
+                coef(lbw_bc_all_mac)[2]*IQR(dt[,bc_all]))
+halfCI <- rbind(qnorm(0.975)*sqrt(vcovHC(lbw_bc_all)[2,2])*IQR(dt[,bc_all]),
+                qnorm(0.975)*sqrt(vcovHC(lbw_bc_all_mac)[2,2])*IQR(dt[,bc_all]))
+result_lbw_bc <- exp(cbind(effect,effect-halfCI,effect+halfCI))
+colnames(result_lbw_bc) <- c("effect for IQR", "lower CI", "upper CI")
+rownames(result_lbw_bc) <- c("bc_all", "bc_all_mac")
+print(result_lbw_bc)
+write.csv(result_lbw_bc, paste0(dir_output_mod, "result_lbw_bc_all.csv"))
+## no2_all -----
+effect <- rbind(coef(lbw_no2_all)[2]*IQR(dt[,no2_all]),
+                coef(lbw_no2_all_mac)[2]*IQR(dt[,no2_all]))
+halfCI <- rbind(qnorm(0.975)*sqrt(vcovHC(lbw_no2_all)[2,2])*IQR(dt[,no2_all]),
+                qnorm(0.975)*sqrt(vcovHC(lbw_no2_all_mac)[2,2])*IQR(dt[,no2_all]))
+result_lbw_no2 <- exp(cbind(effect,effect-halfCI,effect+halfCI))
+colnames(result_lbw_no2) <- c("effect for IQR", "lower CI", "upper CI")
+rownames(result_lbw_no2) <- c("no2_all", "no2_all_mac")
+print(result_lbw_no2)
+write.csv(result_lbw_no2, paste0(dir_output_mod, "result_lbw_no2_all.csv"))
+
+
 ## bc
 effect <- rbind(coef(lbw_bc_30d)[2]*IQRs$bc_30d,
                 coef(lbw_bc_3090d)[2]*IQRs$bc_3090d,
