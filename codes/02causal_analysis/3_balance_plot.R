@@ -45,18 +45,15 @@ var <- c("uniqueid_yr",
          "rf_hbp_chronic", "rf_hbp_pregn","rf_cervix","rf_prev_4kg",
          "rf_prev_sga", "percentPoverty",
          "bc_all", "no2_all",
-         # "bc_30d","bc_3090d", "bc_90280d", 
-         # "no2_30d", "no2_3090d", "no2_90280d",
+         "bc_30d","bc_3090d", "bc_90280d", 
+         "no2_30d", "no2_3090d", "no2_90280d",
          "firstborn","m_wg_cat", "smoker_ddp", "smoker_dpp",
          "mrace_1", "mrace_2", "mrace_3", "mrace_4",
          "log_mhincome", "log_mhvalue")
 birth <- rawbirth[ , var, with = F]
 
 ## inverse-prob weights
-ipw <- fread(paste0(dir_data, "MAbirth_ipw_2.csv"),
-             select = c("uniqueid_yr",
-                        "bc_all.wt", "bc_all_mac.wt", 
-                        "no2_all.wt", "no2_all_mac.wt"))
+ipw <- fread(paste0(dir_data, "MAbirth_temp_bc.csv"))
 head(ipw)
 
 ## merge together
@@ -71,6 +68,18 @@ gc()
 ############################# 2. subset data ##################################
 ## only binary and continuous variables could be checked, ordinal cannot
 ## select columns including binary and continuous, and i-p weights
+var <- c("sex", "married", "mage",
+         "mrace_1", "mrace_2", "mrace_3", "mrace_4",
+         "smoker_dpp","smoker_ddp", "cigdpp", "cigddp",
+         "clinega", "firstborn",
+         "rf_db_gest","rf_db_other",
+         "rf_hbp_pregn","rf_hbp_chronic", "rf_cervix","rf_prev_4kg",
+         "rf_prev_sga",
+         "pncgov",
+         "log_mhincome", "log_mhvalue", "percentPoverty",
+         "bc_30d","bc_3090d", "bc_90280d",
+         "no2_30d", "no2_3090d", "no2_90280d",
+         "bc_30d.wt", "bc_3090d.wt", "bc_90280d.wt")
 # var <- c("sex", "married", "mage", 
 #          "mrace_1", "mrace_2", "mrace_3", "mrace_4",
 #          "smoker_dpp","smoker_ddp", "cigdpp", "cigddp",
@@ -80,22 +89,9 @@ gc()
 #          "rf_prev_sga", 
 #          "pncgov", 
 #          "log_mhincome", "log_mhvalue", "percentPoverty",
-#          "bc_30d","bc_3090d", "bc_90280d", 
-#          "no2_30d", "no2_3090d", "no2_90280d",
-#          "bc_30d.wt", "bc_3090d.wt", "bc_90280d.wt",
-#          "no2_30d.wt", "no2_3090d.wt", "no2_90280d.wt")
-var <- c("sex", "married", "mage", 
-         "mrace_1", "mrace_2", "mrace_3", "mrace_4",
-         "smoker_dpp","smoker_ddp", "cigdpp", "cigddp",
-         "clinega", "firstborn", 
-         "rf_db_gest","rf_db_other",
-         "rf_hbp_pregn","rf_hbp_chronic", "rf_cervix","rf_prev_4kg",
-         "rf_prev_sga", 
-         "pncgov", 
-         "log_mhincome", "log_mhvalue", "percentPoverty",
-         "bc_all", "no2_all",
-         "bc_all.wt", "bc_all_mac.wt",
-         "no2_all.wt", "no2_all_mac.wt")
+#          "bc_all", "no2_all",
+#          "bc_all.wt", "bc_all_mac.wt",
+#          "no2_all.wt", "no2_all_mac.wt")
 balanceALL <- birth_all[ , var, with = F]
 
 description <- c("New-born sex = Female","Married","Mother's age",
@@ -250,8 +246,7 @@ fwrite(balance, paste0(dir_balancePlots, "balance_no2_all_mac.csv")) # change
 
 ############################# 3.1 bc_30d ######################################
 x <- balanceALL %>% select(-bc_30d, # change
-                           -bc_30d.wt, -bc_3090d.wt, -bc_90280d.wt,
-                           -no2_30d.wt, -no2_3090d.wt, -no2_90280d.wt)
+                           -bc_30d.wt, -bc_3090d.wt, -bc_90280d.wt)
 name.x <- names(x)
 unweightedCor <- matrix(NA,dim(x)[2],1)
 weightedCor <- matrix(NA,dim(x)[2],1)
@@ -280,8 +275,7 @@ fwrite(balance, paste0(dir_balancePlots, "balance_bc_30d.csv")) # change
 
 ############################# 3.2 bc_3090d #####################################
 x <- balanceALL %>% select(-bc_3090d, # change
-                           -bc_30d.wt, -bc_3090d.wt, -bc_90280d.wt,
-                           -no2_30d.wt, -no2_3090d.wt, -no2_90280d.wt)
+                           -bc_30d.wt, -bc_3090d.wt, -bc_90280d.wt)
 name.x <- names(x)
 unweightedCor <- matrix(NA,dim(x)[2],1)
 weightedCor <- matrix(NA,dim(x)[2],1)
@@ -310,8 +304,7 @@ fwrite(balance, paste0(dir_balancePlots, "balance_bc_3090d.csv")) # change
 
 ############################# 3.3 bc_90280d ###################################
 x <- balanceALL %>% select(-bc_90280d, # change
-                           -bc_30d.wt, -bc_3090d.wt, -bc_90280d.wt,
-                           -no2_30d.wt, -no2_3090d.wt, -no2_90280d.wt)
+                           -bc_30d.wt, -bc_3090d.wt, -bc_90280d.wt)
 name.x <- names(x)
 unweightedCor <- matrix(NA,dim(x)[2],1)
 weightedCor <- matrix(NA,dim(x)[2],1)
@@ -459,7 +452,7 @@ balance$description[43:44] <- rep("Previous SGA infant")
 balance$description[41:42] <- rep("Previous infant over 4 kg")
 bc_balance <- balance
 
-bc_plot <- ggplot(bc_balance, aes(x = description, y = corr, group = weighted)) +
+bc_plot <- ggplot(balance, aes(x = name.x, y = corr, group = weighted)) +
   # geom_line(aes(colour = weighted), size = 0.5, linetype = "dashed")+
   geom_point(aes(colour = weighted), size = 2) +
   geom_hline(yintercept=0, size=0.2) +
