@@ -157,7 +157,7 @@ names(birth)
 # [31] "no2_all"        "lbw"            "firstborn"      "m_wg_cat"       "smoker_ddp"    
 # [36] "smoker_dpp"     "mrace_1"        "mrace_2"        "mrace_3"        "mrace_4"       
 # [41] "log_mhincome"   "log_mhvalue"  
-summary(birth)
+# summary(birth)
 
 ## 3. add the born season variable ----
 birth[, bdob:=as.Date(bdob, "%m/%d/%Y")]
@@ -305,3 +305,37 @@ IQR_no2
 summary(birth)
 dir_outdata <- "/media/qnap3/Shuxin/airPollution_MAbirth/"
 fwrite(birth, paste0(dir_outdata, "MAbirth_for_analyses.csv"))
+
+## 5. correlation plot ----
+#' for continuous variable
+M <- cor(na.omit(birth)[,.(sex, married, mage, mrace_1, mrace_2, mrace_3, mrace_4, smoker_ddp, smoker_dpp, cigdpp, cigddp, clinega, pncgov, log_mhincome, log_mhvalue, firstborn, rf_db_gest, rf_db_other,  rf_hbp_chronic, rf_hbp_pregn, rf_cervix, rf_prev_4kg, rf_prev_sga, percentPoverty, bc_30d, bc_3090d, bc_90280d, no2_30d, no2_3090d, no2_90280d, bc_all, no2_all)])
+
+cor.mtest <- function(mat, ...) {
+  mat <- as.matrix(mat)
+  n <- ncol(mat)
+  p.mat<- matrix(NA, n, n)
+  diag(p.mat) <- 0
+  for (i in 1:(n - 1)) {
+    for (j in (i + 1):n) {
+      tmp <- cor.test(mat[, i], mat[, j], ...)
+      p.mat[i, j] <- p.mat[j, i] <- tmp$p.value
+    }
+  }
+  colnames(p.mat) <- rownames(p.mat) <- colnames(mat)
+  p.mat
+}
+p.mat <- cor.mtest(na.omit(birth)[,.(sex, married, mage, mrace_1, mrace_2, mrace_3, mrace_4, smoker_ddp, smoker_dpp, cigdpp, cigddp, clinega, pncgov, log_mhincome, log_mhvalue, firstborn, rf_db_gest, rf_db_other,  rf_hbp_chronic, rf_hbp_pregn, rf_cervix, rf_prev_4kg, rf_prev_sga, percentPoverty, bc_30d, bc_3090d, bc_90280d, no2_30d, no2_3090d, no2_90280d, bc_all, no2_all)])
+# colnames(M) <- c("Particle radiation", "PM[2.5]", "Summer average temperature", "Winter average temperature", "Median household income", "Median value of house", "Percentage of Hispanic", "Percentage of black", "Pencentage below poverty line", "Percentage without high school diploma", "Population density", "Mean BMI", "Smoking rate")
+# rownames(M) <- c("Particle radiation", "PM[2.5]", "Summer average temperature", "Winter average temperature", "Median household income", "Median value of house", "Percentage of Hispanic", "Percentage of black", "Pencentage below poverty line", "Percentage without high school diploma", "Population density", "Mean BMI", "Smoking rate")
+par(mfrow=c(1,1))
+corrplot(M, method="number", type = "lower", p.mat = p.mat, sig.level = 0.05)
+
+pdf(paste0(dir_out,"corrTable.pdf"), width = 16, height = 16)
+corrplot(M, method="number", type = "lower", p.mat = p.mat, sig.level = 0.05)
+dev.off()
+
+gam.bc_30d <- gam(bc_30d ~ s(bc_3090d, bs="cr") + s(bc_90280d, bs="cr") +
+                    no2_30d + no2_3090d + no2_90280d + year + sex + married + mage + m_edu + cigdpp + cigddp + clinega + kotck + pncgov + rf_db_gest + rf_db_other + rf_hbp_chronic + rf_hbp_pregn + rf_cervix + rf_prev_4kg + rf_prev_sga + percentPoverty + firstborn + m_wg_cat + smoker_ddp + smoker_dpp + mrace_1 + mrace_2 + mrace_3 + mrace_4 + log_mhincome + log_mhvalue,
+                  family = gaussian(),
+                  data = birth)
+
