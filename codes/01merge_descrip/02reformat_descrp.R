@@ -306,7 +306,17 @@ summary(birth)
 dir_outdata <- "/media/qnap3/Shuxin/airPollution_MAbirth/"
 fwrite(birth, paste0(dir_outdata, "MAbirth_for_analyses.csv"))
 
+birth <- fread(paste0(dir_outdata, "MAbirth_for_analyses.csv"))
+# names(birth)
+birth$year <- as.factor(birth$year)
+birth$m_edu <- as.factor(birth$m_edu)
+birth$kotck <- as.factor(birth$kotck)
+birth$m_wg_cat <- as.factor(birth$m_wg_cat)
+birth <- fastDummies::dummy_cols(birth, select_columns = c("m_edu", "kotck","m_wg_cat"))
+fwrite(birth, paste0(dir_outdata, "MAbirth_for_analyses.csv"))
+
 ## 5. correlation plot ----
+birth <- fread(paste0(dir_in, "MAbirth_for_analyses.csv"))
 #' for continuous variable
 M <- cor(na.omit(birth)[,.(sex, married, mage, mrace_1, mrace_2, mrace_3, mrace_4, smoker_ddp, smoker_dpp, cigdpp, cigddp, clinega, pncgov, log_mhincome, log_mhvalue, firstborn, rf_db_gest, rf_db_other,  rf_hbp_chronic, rf_hbp_pregn, rf_cervix, rf_prev_4kg, rf_prev_sga, percentPoverty, bc_30d, bc_3090d, bc_90280d, no2_30d, no2_3090d, no2_90280d, bc_all, no2_all)])
 
@@ -334,8 +344,4 @@ pdf(paste0(dir_out,"corrTable.pdf"), width = 16, height = 16)
 corrplot(M, method="number", type = "lower", p.mat = p.mat, sig.level = 0.05)
 dev.off()
 
-gam.bc_30d <- gam(bc_30d ~ s(bc_3090d, bs="cr") + s(bc_90280d, bs="cr") +
-                    no2_30d + no2_3090d + no2_90280d + year + sex + married + mage + m_edu + cigdpp + cigddp + clinega + kotck + pncgov + rf_db_gest + rf_db_other + rf_hbp_chronic + rf_hbp_pregn + rf_cervix + rf_prev_4kg + rf_prev_sga + percentPoverty + firstborn + m_wg_cat + smoker_ddp + smoker_dpp + mrace_1 + mrace_2 + mrace_3 + mrace_4 + log_mhincome + log_mhvalue,
-                  family = gaussian(),
-                  data = birth)
 

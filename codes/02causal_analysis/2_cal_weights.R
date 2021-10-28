@@ -6,7 +6,7 @@
 #' Author: Shuxin Dong
 #' First create date: 2021-01-27
 
-## 0. setup ----
+## setup ----
 rm(list = ls())
 gc()
 
@@ -22,38 +22,38 @@ dir_in_gridsearch <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweigh
 dir_out_ipwplots <- "/media/gate/Shuxin/airPollution_MAbirth/causal_birthweight/results/2ipwPlots/"
 
 ## set default parameters for H2O
-min.rows <- 10
-learn.rate <- 0.005
+min.rows <- 10 
+learn.rate <- 0.01
 
 ## read grid search results
-gs_bc_all <- read.csv(paste0(dir_in_gridsearch, "GridSearchResults_bc_all.csv"))
-setDT(gs_bc_all)
-gs_bc_all[objective==min(objective),]
-best_bc_all <- data.table(depth = 5,
-                          col_rate = 0.9,
-                          n.trees = 19960)
+# gs_bc_all <- read.csv(paste0(dir_in_gridsearch, "GridSearchResults_bc_all.csv"))
+# setDT(gs_bc_all)
+# gs_bc_all[objective==min(objective),]
+# best_bc_all <- data.table(depth = 5,
+#                           col_rate = 0.9,
+#                           n.trees = 19960)
+# 
+# gs_no2_all <- read.csv(paste0(dir_in_gridsearch, "GridSearchResults_no2_all.csv"))
+# setDT(gs_no2_all)
+# gs_no2_all[objective==min(objective),]
+# best_no2_all <- data.table(depth = 8,
+#                           col_rate = 0.8,
+#                           n.trees = 13782)
 
-gs_no2_all <- read.csv(paste0(dir_in_gridsearch, "GridSearchResults_no2_all.csv"))
-setDT(gs_no2_all)
-gs_no2_all[objective==min(objective),]
-best_no2_all <- data.table(depth = 8,
-                          col_rate = 0.8,
-                          n.trees = 13782)
-
-gs_bc_tri <- read.csv(paste0(dir_in_gridsearch, "GridSearchResults_bc_tri.csv"))
-setDT(gs_bc_tri)
-gs_bc_tri[1:15, ][objective==min(objective),]
-best_bc_30d <- data.table(depth = 4,
-                          col_rate = 0.8,
-                          n.trees = 15450)
-gs_bc_tri[16:30, ][objective==min(objective),]
-best_bc_3090d <- data.table(depth = 8,
-                          col_rate = 1,
-                          n.trees = 11329)
-gs_bc_tri[31:45, ][objective==min(objective),]
-best_bc_90280d <- data.table(depth = 8,
-                            col_rate = 1,
-                            n.trees = 17105)
+# gs_bc_tri <- read.csv(paste0(dir_in_gridsearch, "GridSearchResults_bc_tri.csv"))
+# setDT(gs_bc_tri)
+# gs_bc_tri[1:15, ][objective==min(objective),]
+# best_bc_30d <- data.table(depth = 8,
+#                           col_rate = 1,
+#                           n.trees = 800)
+# gs_bc_tri[16:30, ][objective==min(objective),]
+# best_bc_3090d <- data.table(depth = 8,
+#                           col_rate = 1,
+#                           n.trees = 800)
+# gs_bc_tri[31:45, ][objective==min(objective),]
+# best_bc_90280d <- data.table(depth = 8,
+#                             col_rate = 1,
+#                             n.trees = 800)
 # [1]  "n.trees"  "depth"    "col_rate"
 
 # ## read bc_all and no2_all grid search results
@@ -64,7 +64,7 @@ best_bc_90280d <- data.table(depth = 8,
 #            col_rate = c(0.8, 0.9, 0.9, 0.9))
 # setDT(best)
 
-########################## 1. Load birth data #################################
+## load birth data ----
 ## load data
 birth <- fread(paste0(dir_in_birth, "MAbirth_for_analyses.csv"))
 names(birth)

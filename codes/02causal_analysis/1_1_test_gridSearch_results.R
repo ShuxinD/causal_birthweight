@@ -22,32 +22,44 @@ dir_out_ipwplots <- "/media/gate/Shuxin/airPollution_MAbirth/causal_birthweight/
 
 #' set default parameters for H2O
 min.rows <- 10
-learn.rate <- 0.005
+learn.rate <- 0.01
+
+#‘ hyperparameter search range
+n.trees <- 1000
+max.depth <- c(3,4,5,6,8)
+col.sample.rate <- c(0.8, 0.9, 1.0)
 
 ## 01. data related ----
 birth <- fread(paste0(dir_in_birth, "MAbirth_for_analyses.csv"))
-names(birth)
-# [1] "uniqueid_yr"    "year"           "sex"            "married"        "mage"           "mrace"         
-# [7] "m_edu"          "cigdpp"         "cigddp"         "clinega"        "kotck"          "pncgov"        
-# [13] "bdob"           "bwg"            "rf_db_gest"     "rf_db_other"    "rf_hbp_chronic" "rf_hbp_pregn"  
-# [19] "rf_cervix"      "rf_prev_4kg"    "rf_prev_sga"    "mhincome"       "mhvalue"        "percentPoverty"
-# [25] "bc_30d"         "bc_3090d"       "bc_90280d"      "no2_30d"        "no2_3090d"      "no2_90280d"    
-# [31] "bc_all"         "no2_all"        "lbw"            "firstborn"      "m_wg_cat"       "smoker_ddp"    
-# [37] "smoker_dpp"     "mrace_1"        "mrace_2"        "mrace_3"        "mrace_4"        "log_mhincome"  
-# [43] "log_mhvalue"    "b_spring"       "b_summer"       "b_autumn"       "b_winter" 
+# names(birth)
 birth$year <- as.factor(birth$year)
 birth$m_edu <- as.factor(birth$m_edu)
 birth$kotck <- as.factor(birth$kotck)
 birth$m_wg_cat <- as.factor(birth$m_wg_cat)
+
+birth <- fastDummies::dummy_cols(birth, select_columns = c("m_edu", "kotck","m_wg_cat"))
+names(birth)
+# [1] "uniqueid_yr"    "year"           "sex"            "married"        "mage"           "mrace"          "m_edu"          "cigdpp"        
+# [9] "cigddp"         "clinega"        "kotck"          "pncgov"         "bdob"           "bwg"            "rf_db_gest"     "rf_db_other"   
+# [17] "rf_hbp_chronic" "rf_hbp_pregn"   "rf_cervix"      "rf_prev_4kg"    "rf_prev_sga"    "mhincome"       "mhvalue"        "percentPoverty"
+# [25] "bc_30d"         "bc_3090d"       "bc_90280d"      "no2_30d"        "no2_3090d"      "no2_90280d"     "bc_all"         "no2_all"       
+# [33] "lbw"            "firstborn"      "m_wg_cat"       "smoker_ddp"     "smoker_dpp"     "mrace_1"        "mrace_2"        "mrace_3"       
+# [41] "mrace_4"        "log_mhincome"   "log_mhvalue"    "b_spring"       "b_summer"       "b_autumn"       "b_winter"       "m_edu_1"       
+# [49] "m_edu_2"        "m_edu_3"        "m_edu_4"        "m_edu_5"        "kotck_1"        "kotck_2"        "kotck_3"        "kotck_4"       
+# [57] "m_wg_cat_1"     "m_wg_cat_2"     "m_wg_cat_3"     "m_wg_cat_4"     "m_wg_cat_5"  
+
 ps_exposures <- c("bc_30d","bc_3090d", "bc_90280d", 
                   "no2_30d", "no2_3090d", "no2_90280d")
-ps_vars <- c("year","sex","married","mage","m_edu", "cigdpp","cigddp",
-             "clinega", "kotck","pncgov", "rf_db_gest","rf_db_other",
-             "rf_hbp_chronic", "rf_hbp_pregn","rf_cervix","rf_prev_4kg",
-             "rf_prev_sga", "percentPoverty",
-             "firstborn","m_wg_cat", "smoker_ddp", "smoker_dpp",
+ps_vars <- c("year","sex","married","mage", "cigdpp","cigddp",
+             "clinega","pncgov", 
+             # "rf_db_gest","rf_db_other", "rf_hbp_chronic", "rf_hbp_pregn","rf_cervix","rf_prev_4kg", "rf_prev_sga", 
+             # "smoker_ddp", "smoker_dpp",
              "mrace_1", "mrace_2", "mrace_3", "mrace_4",
-             "log_mhincome", "log_mhvalue")
+             "m_edu_1", "m_edu_2", "m_edu_3","m_edu_4", "m_edu_5",
+             "kotck_1","kotck_2","kotck_3","kotck_4",
+             "m_wg_cat_1","m_wg_cat_2","m_wg_cat_3","m_wg_cat_4","m_wg_cat_5",
+             # "log_mhvalue", "log_mhincome",
+             "percentPoverty", "firstborn")
 
 ## 02. specify response ----
 response <- "bc_30d" 
