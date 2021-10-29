@@ -160,12 +160,3 @@ par(mfrow=c(1,1))
 hist(coef_bootstrap)
 qnorm(0.975)*sd(coef_bootstrap)*sqrt(floor(dim(dt)[1]^0.7)/dim(dt)[1])
 
-
-
-glm.bwg <- glm(bwg ~ get(exposures_i) + as.factor(year), family = gaussian(link = "identity"), data = dt, weights = get(paste0("ipw_", exposures_i)))
-results_i <- c(coef(glm.bwg)[2],
-               sqrt(vcovHC(glm.bwg)[2,2]),
-               coef(glm.bwg)[2]*IQRs[,get(exposures_i)],
-               (coef(glm.bwg)[2]-qnorm(0.975)*sqrt(vcovHC(glm.bwg)[2,2]))*IQRs[,get(exposures_i)],
-               (coef(glm.bwg)[2]+qnorm(0.975)*sqrt(vcovHC(glm.bwg)[2,2]))*IQRs[,get(exposures_i)])
-results_glm.bwg <- rbind(results_glm.bwg, results_i)
