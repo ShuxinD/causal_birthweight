@@ -83,9 +83,9 @@ for (exposures_i in exposures){
   glm.lbw <- glm(lbw ~ get(exposures_i) + as.factor(year), family = quasibinomial(link = "logit"), data = dt, weights = get(paste0("ipw_", exposures_i)))
   results_i <- c(coef(glm.lbw)[2],
                  sqrt(vcovHC(glm.lbw)[2,2]),
-                 coef(glm.lbw)[2]*IQRs[,get(exposures_i)],
-                 (coef(glm.lbw)[2]-qnorm(0.975)*sqrt(vcovHC(glm.lbw)[2,2]))*IQRs[,get(exposures_i)],
-                 (coef(glm.lbw)[2]+qnorm(0.975)*sqrt(vcovHC(glm.lbw)[2,2]))*IQRs[,get(exposures_i)])
+                 exp(coef(glm.lbw)[2]*IQRs[,get(exposures_i)]),
+                 exp((coef(glm.lbw)[2]-qnorm(0.975)*sqrt(vcovHC(glm.lbw)[2,2]))*IQRs[,get(exposures_i)]),
+                 exp((coef(glm.lbw)[2]+qnorm(0.975)*sqrt(vcovHC(glm.lbw)[2,2]))*IQRs[,get(exposures_i)]))
   results_glm.lbw <- rbind(results_glm.lbw, results_i)
 }
 rownames(results_glm.lbw) <- exposures
@@ -111,36 +111,61 @@ ps_vars <- c(# "year",
 
 ps_exposures_i <- "no2_90280d"
 
-  response <- ps_exposures_i
-  predictor <- c(ps_vars, ps_exposures[ps_exposures!=response])
-  ipw <- dt[, get(paste0("ipw_", response))]
-  ac <- matrix(NA,length(predictor),2)
-  for (j in 1:length(predictor)){ ## unweighted
-    ac[j,1] <-  ifelse(!is.factor(birth[,..predictor][[j]]), 
-                       cor(birth[,get(response)], birth[,..predictor][[j]], method = "pearson"),
-                       polyserial(birth[,get(response)], birth[,..predictor][[j]]))
-    ac[j,2] <-  ifelse(!is.factor(birth[,..predictor][[j]]), 
-                       weightedCorr(birth[,get(response)], birth[,..predictor][[j]], method = "pearson", weights = ipw),
-                       weightedCorr(birth[,get(response)], birth[,..predictor][[j]], method = "polyserial", weights = ipw))
-    cat("finish column", j,"/", length(predictor), "\n")
-  }
-  balance <- data.frame(name.x=predictor,
-                        corr=c(ac[,1],ac[,2]),
-                        weighted = c(rep("unweighted", length(predictor)),rep("weighted", length(predictor))))
-  cat("plot", response, "\n")
-  pdf(file = paste0(dir_balance, response, "_balance.pdf"))
-  ggplot(balance, aes(x = name.x, y = corr, group = weighted)) +
-    # geom_line(aes(colour = weighted), size = 0.5, linetype = "dashed")+
-    geom_point(aes(colour = weighted), size = 2) +
-    geom_hline(yintercept=0, size=0.2) +
-    geom_hline(yintercept=-0.1, size=0.2, linetype = "dashed") +
-    geom_hline(yintercept=0.1, size=0.2, linetype = "dashed") +
-    geom_hline(yintercept=-0.2, size=0.1, linetype = "dashed") +
-    geom_hline(yintercept=0.2, size=0.1, linetype = "dashed") +
-    theme(plot.title = element_blank(),
-          axis.title.x = element_blank(),
-          axis.title.y = element_blank()) +
-    coord_flip() +
-    theme(legend.position = "bottom", legend.title = element_blank(),
-          text = element_text(size=16))
-  dev.off()
+response <- ps_exposures_i
+predictor <- c(ps_vars, ps_exposures[ps_exposures!=response])
+ipw <- dt[, get(paste0("ipw_", response))]
+ac <- matrix(NA,length(predictor),2)
+for (j in 1:length(predictor)){ ## unweighted
+  ac[j,1] <-  ifelse(!is.factor(birth[,..predictor][[j]]), 
+                     cor(birth[,get(response)], birth[,..predictor][[j]], method = "pearson"),
+                     polyserial(birth[,get(response)], birth[,..predictor][[j]]))
+  ac[j,2] <-  ifelse(!is.factor(birth[,..predictor][[j]]), 
+                     weightedCorr(birth[,get(response)], birth[,..predictor][[j]], method = "pearson", weights = ipw),
+                     weightedCorr(birth[,get(response)], birth[,..predictor][[j]], method = "polyserial", weights = ipw))
+  cat("finish column", j,"/", length(predictor), "\n")
+}
+balance <- data.frame(name.x=predictor,
+                      corr=c(ac[,1],ac[,2]),
+                      weighted = c(rep("unweighted", length(predictor)),rep("weighted", length(predictor))))
+cat("plot", response, "\n")
+pdf(file = paste0(dir_balance, response, "_balance.pdf"))
+ggplot(balance, aes(x = name.x, y = corr, group = weighted)) +
+  # geom_line(aes(colour = weighted), size = 0.5, linetype = "dashed")+
+  geom_point(aes(colour = weighted), size = 2) +
+  geom_hline(yintercept=0, size=0.2) +
+  geom_hline(yintercept=-0.1, size=0.2, linetype = "dashed") +
+  geom_hline(yintercept=0.1, size=0.2, linetype = "dashed") +
+  geom_hline(yintercept=-0.2, size=0.1, linetype = "dashed") +
+  geom_hline(yintercept=0.2, size=0.1, linetype = "dashed") +
+  theme(plot.title = element_blank(),
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank()) +
+  coord_flip() +
+  theme(legend.position = "bottom", legend.title = element_blank(),
+        text = element_text(size=16))
+dev.off()
+  
+## bootstrapping ----
+coef_bootstrap <- NULL
+for (rep_i in 1:100) {
+  bootstrap_sample <- NULL
+  cat("bootstrapping ", rep_i, "\n")
+  set.seed(rep_i)
+  bo <- sample(dim(dt)[1], floor(dim(dt)[1]^0.7))
+  bootstrap_sample <- dt[bo,]
+  glm.bwg <- glm(bwg ~ bc_3090d + as.factor(year), family = gaussian(link = "identity"), data = bootstrap_sample, weights = ipw_bc_3090d)
+  coef_bootstrap<- c(coef_bootstrap,coef(glm.bwg)[2])
+}
+par(mfrow=c(1,1))
+hist(coef_bootstrap)
+qnorm(0.975)*sd(coef_bootstrap)*sqrt(floor(dim(dt)[1]^0.7)/dim(dt)[1])
+
+
+
+glm.bwg <- glm(bwg ~ get(exposures_i) + as.factor(year), family = gaussian(link = "identity"), data = dt, weights = get(paste0("ipw_", exposures_i)))
+results_i <- c(coef(glm.bwg)[2],
+               sqrt(vcovHC(glm.bwg)[2,2]),
+               coef(glm.bwg)[2]*IQRs[,get(exposures_i)],
+               (coef(glm.bwg)[2]-qnorm(0.975)*sqrt(vcovHC(glm.bwg)[2,2]))*IQRs[,get(exposures_i)],
+               (coef(glm.bwg)[2]+qnorm(0.975)*sqrt(vcovHC(glm.bwg)[2,2]))*IQRs[,get(exposures_i)])
+results_glm.bwg <- rbind(results_glm.bwg, results_i)
