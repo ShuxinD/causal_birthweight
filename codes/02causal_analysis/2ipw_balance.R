@@ -19,6 +19,7 @@ n_cores <- detectCores() - 1
 
 setwd("/media/gate/Shuxin/")
 dir_in <- "/media/qnap3/Shuxin/airPollution_MAbirth/"
+dir_in_gs <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/1GridSearchResults/"
 dir_out_ipwraw <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/2ipw/"
 
 truncate_ipw <- function(ipw_raw, upper_bound_percentile, lower_bound_percentile){
@@ -58,14 +59,18 @@ ps_vars <- c("year","sex","married","mage", "cigdpp","cigddp",
              # "log_mhvalue", "log_mhincome",
              "percentPoverty", "firstborn")
 
+## load grid search results ----
+gs <- fread(paste0(dir_in_gs, "GridSearchResults1028.csv"))
+gs
+
 ## model GPS generate IPW ----
 #' set default parameters for H2O
 min.rows <- 10 
 learn.rate <- 0.01
 
-n.trees <- 800
-max.depth <- 8
-col.sample.rate <- 1
+# n.trees <- 800
+# max.depth <- 8
+# col.sample.rate <- 1
 
 h2o.init(nthreads = n_cores, min_mem_size = "250G", port = 54345)
 for (ps_exposures_i in ps_exposures) {
@@ -77,11 +82,11 @@ for (ps_exposures_i in ps_exposures) {
   gbm <- h2o.gbm(y = response, # exposure of interest
                  x = predictor,
                  training_frame = birth_h2o,
-                 ntrees = n.trees, 
-                 max_depth = max.depth ,
+                 ntrees = gs[exposure==response, ntree], 
+                 max_depth = gs[exposure==response, depth] ,
                  min_rows = min.rows,
                  learn_rate = learn.rate, 
-                 col_sample_rate = col.sample.rate,
+                 col_sample_rate = gs[exposure==response, rate],
                  distribution = "gaussian")
   pred.gbm <- h2o.predict(object = gbm, newdata = birth_h2o)
   ipw_raw <- generate_ipw(model_fitted_value = as.vector(pred.gbm), birth_raw_data = birth, exposure_of_interest = response)
@@ -93,15 +98,22 @@ h2o.shutdown(prompt = FALSE)
 
 ## truncate IPW based on balance results ----
 #' change for each exposure
-exposure_interest <- "bc_3090d"
-upper_percentile <- 0.99995
-lower_percentile <- 0.00005
+exposure_interest <- "no2_90280d"
+upper_percentile <- 0.9999
+lower_percentile <- 0.0001
+
+#' bc_30d 0.9995 0.0005
+#' bc_3090d 0.9998 0.0002
+#' bc_90280d 0.9993 0.0007
+#' no2_30d 0.9993 0.0007
+#' no2_3090d 0.9967 0.0033
+#' no2_90280d 0.9999 0.0001
 
 response <- exposure_interest
 predictor <- c(ps_vars, ps_exposures[ps_exposures!=response])
-ipw_id <- fread(paste0(dir_out_ipwraw, exposure_interest, ".csv"))
-summary(ipw_id[,ipw_raw])
-ipw <- truncate_ipw(ipw_id[,ipw_raw], upper_percentile, lower_percentile)
+ipw_id <- fread(paste0(dir_out_ipwraw, exposure_interest, ".csv"), colClasses = c("ipw_raw"="numeric"))
+summary(as.numeric(ipw_id[,ipw_raw]))
+ipw <- truncate_ipw(as.numeric(ipw_id[,ipw_raw]), upper_percentile, lower_percentile)
 summary(ipw)
 ac <- matrix(NA,length(predictor),2)
 for (j in 1:length(predictor)){ ## unweighted
@@ -133,5 +145,13 @@ ggplot(balance, aes(x = name.x, y = corr, group = weighted)) +
 
 assign(paste0("ipw_", exposure_interest), ipw)
 
+IPWs <- data.table(uniqueid_yr = birth[,uniqueid_yr],
+                   ipw_bc_30d,
+                   ipw_bc_3090d,
+                   ipw_bc_90280d,
+                   ipw_no2_30d,
+                   ipw_no2_3090d,
+                   ipw_no2_90280d)
+fwrite(IPWs, file = "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/2ipw/IPWs1028.csv")
 
 
