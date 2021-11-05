@@ -58,7 +58,6 @@ F.aac.iter <- function(col_i, data, ipw_num, ps.model.pred, rep) {
   # upper <- quantile(wt, 0.9992)
   # lower <- quantile(wt, 0.0008)
   ipw <- truncate_ipw(ipw_raw, 0.9995, 0.0005)
-  ipw <- ipw_raw
   aac_iter <- rep(NA,rep) 
   for (i in 1:rep){
     set.seed(i)
