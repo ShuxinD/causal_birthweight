@@ -129,19 +129,19 @@ for (ps_exposures_i in ps_exposures) {
 
 ## truncate IPW based on balance results ----
 #' change for each exposure
-exposure_interest <- "bc_all"
+exposure_interest <- "no2_all"
 upper_percentile <- 0.9995
 lower_percentile <- 0.0005
 
 response <- exposure_interest
 predictor <- c(ps_vars, ps_exposures[ps_exposures!=response])
 
-ipw_id_gbm <- fread(paste0(dir_ipwraw, exposure_interest, ".csv"), colClasses = c("ipw_raw"="numeric"))
+ipw_id_gbm <- fread(paste0(dir_ipwraw, exposure_interest, "_raw_gbm.csv"), colClasses = c("ipw_raw"="numeric"))
 summary(as.numeric(ipw_id_gbm[,ipw_raw]))
 ipw_gbm <- truncate_ipw(as.numeric(ipw_id_gbm[,ipw_raw]), upper_percentile, lower_percentile)
 summary(ipw_gbm)
 
-ipw_id_glm <- fread(paste0(dir_ipwraw, exposure_interest, "_glm.csv"), colClasses = c("ipw_raw"="numeric"))
+ipw_id_glm <- fread(paste0(dir_ipwraw, exposure_interest, "_raw_glm.csv"), colClasses = c("ipw_raw"="numeric"))
 summary(as.numeric(ipw_id_glm[,ipw_raw]))
 ipw_glm <- truncate_ipw(as.numeric(ipw_id_glm[,ipw_raw]), upper_percentile, lower_percentile)
 summary(ipw_glm)
@@ -185,6 +185,8 @@ assign(paste0("ipw_gbm_", exposure_interest), ipw_gbm)
 assign(paste0("ipw_glm_", exposure_interest), ipw_glm)
 
 IPWs <- data.table(uniqueid_yr = birth[,uniqueid_yr],
-                   ipw_bc_all,
-                   ipw_no2_all)
+                   ipw_gbm_bc_all,
+                   ipw_glm_bc_all,
+                   ipw_gbm_no2_all,
+                   ipw_glm_no2_all)
 fwrite(IPWs, file = "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/2ipw/IPWs_all_1104.csv")
