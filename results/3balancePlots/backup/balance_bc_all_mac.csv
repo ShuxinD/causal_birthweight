@@ -1,0 +1,51 @@
+name.x,corr,weighted,description
+cigddp,0.0192836903037648,unweighted,# of daily cigarettes smoking during pregnancy
+cigddp,0.0078481832413636,weighted,# of daily cigarettes smoking during pregnancy
+cigdpp,0.0113955302719463,unweighted,# of daily cigarettes smoking before pregnancy
+cigdpp,0.00571414962757034,weighted,# of daily cigarettes smoking before pregnancy
+clinega,0.0174651426316358,unweighted,Clinical gestational age
+clinega,0.00995036133063037,weighted,Clinical gestational age
+firstborn,0.0307748968633862,unweighted,First-born child
+firstborn,0.0187787666114147,weighted,First-born child
+log_mhincome,-0.214386441374689,unweighted,Log. median household income (census-tract level)
+log_mhincome,-0.0613849752436782,weighted,Log. median household income (census-tract level)
+log_mhvalue,-0.0919240385473443,unweighted,Log. median value of house (census-tract level)
+log_mhvalue,-0.0148590562403242,weighted,Log. median value of house (census-tract level)
+mage,-0.081795814493749,unweighted,Mother's age
+mage,-0.028581070327089,weighted,Mother's age
+married,-0.0842659907882921,unweighted,Married
+married,-0.0303016277203021,weighted,Married
+mrace_1,-0.121737336318443,unweighted,Maternal race = white
+mrace_1,-0.036609230504761,weighted,Maternal race = white
+mrace_2,0.0405110516154442,unweighted,Maternal race = black
+mrace_2,0.0217668094243925,weighted,Maternal race = black
+mrace_3,0.0448707080121566,unweighted,Maternal race = Asian/Pacific Islander
+mrace_3,0.0113870168892679,weighted,Maternal race = Asian/Pacific Islander
+mrace_4,0.0987357638099071,unweighted,Maternal race = others
+mrace_4,0.0230330431089944,weighted,Maternal race = others
+no2_all,0.199174416166207,unweighted,Average of daily NO[2] exposure levels over 0-280 days prior to the delivery date
+no2_all,0.070636749908484,weighted,Average of daily NO[2] exposure levels over 0-280 days prior to the delivery date
+percentPoverty,0.208401584880783,unweighted,% Poverty (census-tract level)
+percentPoverty,0.0580536130675206,weighted,% Poverty (census-tract level)
+pncgov,0.10355548371108,unweighted,Government support for prenatal care
+pncgov,0.0348521659437791,weighted,Government support for prenatal care
+rf_cervix,0.00202070190277123,unweighted,Maternal incompetent cervix
+rf_cervix,7.34178801076622e-05,weighted,Maternal incompetent cervix
+rf_db_gest,-0.0023917159505961,unweighted,Gestational diabetes
+rf_db_gest,-0.000660017903123717,weighted,Gestational diabetes
+rf_db_other,0.00611561256717822,unweighted,Maternal diabetes
+rf_db_other,0.00562598089367943,weighted,Maternal diabetes
+rf_hbp_chronic,0.00210601805375545,unweighted,Maternal chronic hypertension
+rf_hbp_chronic,0.00276134166909303,weighted,Maternal chronic hypertension
+rf_hbp_pregn,-0.00317591823986362,unweighted,Gestational hypertention
+rf_hbp_pregn,0.00263126453224507,weighted,Gestational hypertention
+rf_prev_4kg,-0.0033046663405341,unweighted,Mother with previous infant over 4000 g
+rf_prev_4kg,0.00069275070978437,weighted,Mother with previous infant over 4000 g
+rf_prev_sga,0.00259406803154832,unweighted,Mother with previous small-for-gestational-age infant
+rf_prev_sga,0.00147427421297564,weighted,Mother with previous small-for-gestational-age infant
+sex,-0.00138170075900098,unweighted,New-born sex = Female
+sex,-0.00325406145051816,weighted,New-born sex = Female
+smoker_ddp,0.019885515015294,unweighted,Smoking during pregnancy
+smoker_ddp,0.00902931957027185,weighted,Smoking during pregnancy
+smoker_dpp,0.0119129769854925,unweighted,Smoking before pregnancy
+smoker_dpp,0.00510922575737283,weighted,Smoking before pregnancy

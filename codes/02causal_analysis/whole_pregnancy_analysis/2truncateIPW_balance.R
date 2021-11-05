@@ -93,12 +93,12 @@ for (ps_exposures_i in ps_exposures) {
   ipw_raw <- generate_ipw(model_fitted_value = as.vector(pred.gbm), birth_raw_data = birth, exposure_of_interest = response)
   summary(ipw_raw)
   ipw_id <- data.table(uniqueid_yr = birth[,uniqueid_yr], ipw_raw = ipw_raw)
-  fwrite(ipw_id, file = paste0(dir_ipwraw, ps_exposures_i, ".csv"))
+  fwrite(ipw_id, file = paste0(dir_ipwraw, ps_exposures_i, "_raw_gbm.csv"))
 }
 h2o.shutdown(prompt = FALSE)
 
 ## simple linear regression for GPS ----
-response <- "bc_all" # change everytime 
+# response <- "no2_all" # change everytime 
 # ps_vars <- c("year","sex","married","mage", # "cigdpp","cigddp",
 #              "clinega","pncgov", 
 #              "rf_db_gest","rf_db_other", "rf_hbp_chronic", "rf_hbp_pregn","rf_cervix","rf_prev_4kg", "rf_prev_sga", 
@@ -109,21 +109,23 @@ response <- "bc_all" # change everytime
 #              "m_wg_cat_1","m_wg_cat_2","m_wg_cat_3","m_wg_cat_4",# "m_wg_cat_5",
 #              # "log_mhvalue", "log_mhincome",
 #              "percentPoverty", "firstborn")
-glm_exposure <- glm(get(reponse) ~ year + sex + married + mage + 
-                      clinega + pncgov +
-                      rf_db_gest + rf_db_other + rf_hbp_chronic + rf_hbp_pregn + rf_cervix + rf_prev_4kg + rf_prev_sga + 
-                      smoker_ddp + 
-                      mrace_1 + mrace_2 + mrace_3 + mrace_4 +
-                      m_edu_1 + m_edu_2 + m_edu_3 + 
-                      kotck_1 + kotck_2 + kotck_3 + kotck_4 + 
-                      m_wg_cat_1 + m_wg_cat_2 + m_wg_cat_3 + m_wg_cat_4 + 
-                      percentPoverty + firstborn,
-                    data = birth)
-pred.glm <- glm_exposure$fitted
-ipw_raw <- generate_ipw(model_fitted_value = as.vector(pred.glm), birth_raw_data = birth, exposure_of_interest = response)
-summary(ipw_raw)
-ipw_id <- data.table(uniqueid_yr = birth[,uniqueid_yr], ipw_raw = ipw_raw)
-fwrite(ipw_id, file = paste0(dir_ipwraw, response, "_glm.csv"))
+for (ps_exposures_i in ps_exposures) {
+  glm_exposure <- glm(get(ps_exposures_i) ~ year + sex + married + mage + 
+                        clinega + pncgov +
+                        rf_db_gest + rf_db_other + rf_hbp_chronic + rf_hbp_pregn + rf_cervix + rf_prev_4kg + rf_prev_sga + 
+                        smoker_ddp + 
+                        mrace_1 + mrace_2 + mrace_3 + mrace_4 +
+                        m_edu_1 + m_edu_2 + m_edu_3 + 
+                        kotck_1 + kotck_2 + kotck_3 + kotck_4 + 
+                        m_wg_cat_1 + m_wg_cat_2 + m_wg_cat_3 + m_wg_cat_4 + 
+                        percentPoverty + firstborn,
+                      data = birth)
+  pred.glm <- glm_exposure$fitted
+  ipw_raw <- generate_ipw(model_fitted_value = as.vector(pred.glm), birth_raw_data = birth, exposure_of_interest = ps_exposures_i)
+  summary(ipw_raw)
+  ipw_id <- data.table(uniqueid_yr = birth[,uniqueid_yr], ipw_raw = ipw_raw)
+  fwrite(ipw_id, file = paste0(dir_ipwraw, ps_exposures_i, "_raw_glm.csv"))
+}
 
 ## truncate IPW based on balance results ----
 #' change for each exposure
@@ -179,4 +181,10 @@ ggplot(balance, aes(x = name.x, y = corr, group = weighted)) +
         text = element_text(size=16))
 
 ## save the ipw
-assign(paste0("ipw_", exposure_interest), ipw)
+assign(paste0("ipw_gbm_", exposure_interest), ipw_gbm)
+assign(paste0("ipw_glm_", exposure_interest), ipw_glm)
+
+IPWs <- data.table(uniqueid_yr = birth[,uniqueid_yr],
+                   ipw_bc_all,
+                   ipw_no2_all)
+fwrite(IPWs, file = "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/2ipw/IPWs_all_1104.csv")
