@@ -34,7 +34,7 @@ IQRs <- data.table(bc_all=IQR(dt[,bc_all]),
                    no2_all=IQR(dt[,no2_all]))
 
 ## bwg ~ spline ----
-dir_splines <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/4mainEffects/"
+dir_splines <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/4mainEffects/whole_pregnancy/"
 exposures <- c("bc_all", "no2_all")
 
 pdf(file = paste0(dir_splines,"splines.pdf"))
@@ -48,7 +48,7 @@ for (exposures_i in exposures){
 dev.off()
 
 ## bwg ~ exposure ----
-dir_bwg <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/4mainEffects/"
+dir_bwg <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/4mainEffects/whole_pregnancy/"
 exposures <- c("bc_all", "no2_all")
 
 results_glm.bwg <- NULL
@@ -71,7 +71,7 @@ print(results_glm.bwg)
 write.csv(results_glm.bwg, file = paste0(dir_bwg, "results_all_bwg.csv"))
 
 ## lbw ~ exposure ----
-dir_lbw <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/4mainEffects/"
+dir_lbw <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/4mainEffects/whole_pregnancy/"
 exposures <- c("bc_all", "no2_all")
 
 results_glm.lbw <- NULL
@@ -89,7 +89,7 @@ for (exposures_i in exposures){
 rownames(results_glm.lbw) <- exposures
 colnames(results_glm.lbw) <- c("coef", "robust.se", "OR", "OR_lci", "OR_uci")
 print(results_glm.lbw)
-write.csv(results_glm.lbw, file = paste0(dir_bwg, "results_glm_lbw.csv"))
+write.csv(results_glm.lbw, file = paste0(dir_lbw, "results_all_lbw.csv"))
 
 ## export balance ----
 dir_balance <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/3balancePlots/"
