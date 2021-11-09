@@ -302,6 +302,7 @@ IQR_no2
 # nbw_no2_90280d     1.4542685 17.65838 23.01136 28.40323 64.61834
 # lbw_no2_90280d     3.4550755 18.14295 23.43051 28.75076 63.98316
 
+## export data ready for analyses ----
 summary(birth)
 dir_outdata <- "/media/qnap3/Shuxin/airPollution_MAbirth/"
 fwrite(birth, paste0(dir_outdata, "MAbirth_for_analyses.csv"))
@@ -313,6 +314,11 @@ birth$m_edu <- as.factor(birth$m_edu)
 birth$kotck <- as.factor(birth$kotck)
 birth$m_wg_cat <- as.factor(birth$m_wg_cat)
 birth <- fastDummies::dummy_cols(birth, select_columns = c("m_edu", "kotck","m_wg_cat"))
+fwrite(birth, paste0(dir_outdata, "MAbirth_for_analyses.csv"))
+
+birth <- fread(paste0(dir_outdata, "MAbirth_for_analyses.csv"))
+birth$bc_30280d <- (birth$bc_3090d*60 + birth$bc_90280d*190)/(60+190)
+birth$no2_30280d <- (birth$no2_3090d*60 + birth$no2_90280d*190)/(60+190)
 fwrite(birth, paste0(dir_outdata, "MAbirth_for_analyses.csv"))
 
 ## 5. correlation plot ----
