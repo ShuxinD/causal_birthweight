@@ -28,7 +28,7 @@ n_cores <- detectCores() - 1
 
 setwd("/media/gate/Shuxin/")
 dir_in <- "/media/qnap3/Shuxin/airPollution_MAbirth/"
-dir_gridsearch <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/1GridSearchResults/whole_pregnancy/two_pollutant/"
+dir_gridsearch <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/1GridSearchResults/two_period/four_exposures/"
 
 # 0.1 hyperparameter range ----
 ## set parameters for h2o.gbm model
@@ -182,8 +182,7 @@ for (max.depth_i in max.depth){
     cat(paste0("optimizing... with rate of ", col.sample.rate_i, "depth ", max.depth_i, "\n"))
     opt_aac_i  <- optimize(F.aac.iter, interval = c(200, ncol(pred.gbm_exposure)), data = dt,
                            ipw_num = ps.num, 
-                           ps.model.pred = pred.gbm_exposure,
-                           rep = rep.num)
+                           ps.model.pred = pred.gbm_exposure)
     cat(paste0("finished... with rate of ", col.sample.rate_i, "depth ", max.depth_i, "\n"))
     print(opt_aac_i)
     h2o:::.h2o.garbageCollect()
@@ -199,7 +198,7 @@ for (max.depth_i in max.depth){
   }
 }
 print(opt_aac)
-write.csv(opt_aac, paste0(dir_gridsearch, "GridSearch_bc_30d1108.csv"))
+write.csv(opt_aac, paste0(dir_gridsearch, "GridSearch_bc_30d.csv"))
 h2o.shutdown(prompt = FALSE)
 
 ## bc_30280d ----
@@ -236,8 +235,7 @@ for (max.depth_i in max.depth){
     cat(paste0("optimizing... with rate of ", col.sample.rate_i, "depth ", max.depth_i, "\n"))
     opt_aac_i  <- optimize(F.aac.iter, interval = c(50, ncol(pred.gbm_exposure)), data = dt,
                            ipw_num = ps.num, 
-                           ps.model.pred = pred.gbm_exposure,
-                           rep = rep.num)
+                           ps.model.pred = pred.gbm_exposure)
     cat(paste0("finished... with rate of ", col.sample.rate_i, "depth ", max.depth_i, "\n"))
     print(opt_aac_i)
     h2o:::.h2o.garbageCollect()
@@ -253,8 +251,8 @@ for (max.depth_i in max.depth){
   }
 }
 print(opt_aac)
-write.csv(opt_aac, paste0(dir_gridsearch, "GridSearch_bc_30280d1108.csv"))
-h2o.shutdown(prompt = FALSE)
+write.csv(opt_aac, paste0(dir_gridsearch, "GridSearch_bc_30280d.csv"))
+# h2o.shutdown(prompt = FALSE)
 
 ## no2_30d ----
 exposure <- "no2_30d"
@@ -290,8 +288,7 @@ for (max.depth_i in max.depth){
     cat(paste0("optimizing... with rate of ", col.sample.rate_i, "depth ", max.depth_i, "\n"))
     opt_aac_i  <- optimize(F.aac.iter, interval = c(50, ncol(pred.gbm_exposure)), data = dt,
                            ipw_num = ps.num, 
-                           ps.model.pred = pred.gbm_exposure,
-                           rep = rep.num)
+                           ps.model.pred = pred.gbm_exposure)
     cat(paste0("finished... with rate of ", col.sample.rate_i, "depth ", max.depth_i, "\n"))
     print(opt_aac_i)
     h2o:::.h2o.garbageCollect()
@@ -307,8 +304,8 @@ for (max.depth_i in max.depth){
   }
 }
 print(opt_aac)
-write.csv(opt_aac, paste0(dir_gridsearch, "GridSearch_no2_30d1108.csv"))
-h2o.shutdown(prompt = FALSE)
+write.csv(opt_aac, paste0(dir_gridsearch, "GridSearch_no2_30d.csv"))
+# h2o.shutdown(prompt = FALSE)
 
 ## no2_30280d ----
 exposure <- "no2_30280d"
@@ -344,8 +341,7 @@ for (max.depth_i in max.depth){
     cat(paste0("optimizing... with rate of ", col.sample.rate_i, "depth ", max.depth_i, "\n"))
     opt_aac_i  <- optimize(F.aac.iter, interval = c(50, ncol(pred.gbm_exposure)), data = dt,
                            ipw_num = ps.num, 
-                           ps.model.pred = pred.gbm_exposure,
-                           rep = rep.num)
+                           ps.model.pred = pred.gbm_exposure)
     cat(paste0("finished... with rate of ", col.sample.rate_i, "depth ", max.depth_i, "\n"))
     print(opt_aac_i)
     h2o:::.h2o.garbageCollect()
@@ -361,5 +357,5 @@ for (max.depth_i in max.depth){
   }
 }
 print(opt_aac)
-write.csv(opt_aac, paste0(dir_gridsearch, "GridSearch_no2_30280d1108.csv"))
+write.csv(opt_aac, paste0(dir_gridsearch, "GridSearch_no2_30280d.csv"))
 h2o.shutdown(prompt = FALSE)

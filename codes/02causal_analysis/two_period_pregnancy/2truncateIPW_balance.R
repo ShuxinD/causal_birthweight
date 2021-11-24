@@ -20,8 +20,8 @@ n_cores <- detectCores() - 1
 
 setwd("/media/gate/Shuxin/")
 dir_data <- "/media/qnap3/Shuxin/airPollution_MAbirth/"
-dir_gridsearch <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/1GridSearchResults/two_periods_analysis/"
-dir_ipwraw <- "/media/qnap3/Shuxin/airPollution_MAbirth/data/ipw_two_periods/"
+dir_gridsearch <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/1GridSearchResults/two_period/four_exposures/"
+dir_ipwraw <- "/media/qnap3/Shuxin/airPollution_MAbirth/data/ipw_two_periods/four_exposure/"
 
 truncate_ipw <- function(ipw_raw, upper_bound_percentile, lower_bound_percentile){
   #' ipw_raw: raw stabilized ipw
@@ -63,10 +63,10 @@ summary(birth[,..ps_vars])
 summary(birth[,..ps_exposures])
 
 ## load grid search results ----
-gs_bc_30d <- fread(paste0(dir_gridsearch, "GridSearch_bc_30d1108.csv"))
-gs_no2_30d <- fread(paste0(dir_gridsearch, "GridSearch_no2_30d1108.csv"))
-gs_bc_30280d <- fread(paste0(dir_gridsearch, "GridSearch_bc_30280d1108.csv"))
-gs_no2_30280d <- fread(paste0(dir_gridsearch, "GridSearch_no2_30280d1108.csv"))
+gs_bc_30d <- fread(paste0(dir_gridsearch, "GridSearch_bc_30d.csv"))
+gs_no2_30d <- fread(paste0(dir_gridsearch, "GridSearch_no2_30d.csv"))
+gs_bc_30280d <- fread(paste0(dir_gridsearch, "GridSearch_bc_30280d.csv"))
+gs_no2_30280d <- fread(paste0(dir_gridsearch, "GridSearch_no2_30280d.csv"))
 
 gs <- rbind(gs_bc_30d[objective==min(objective),][,.(objective, rate, depth, ntree)][,exposure:="bc_30d"],
             gs_no2_30d[objective==min(objective),][,.(objective, rate, depth, ntree)][,exposure:="no2_30d"],
@@ -105,7 +105,8 @@ h2o.shutdown(prompt = FALSE)
 
 for (ps_exposures_i in ps_exposures) {
   cat("FITTING ", ps_exposures_i, "\n")
-  glm_exposure <- glm(get(ps_exposures_i) ~ year + sex + married + mage + 
+  glm_exposure <- glm(get(ps_exposures_i) ~ get(ps_exposures[ps_exposures!=ps_exposures_i]) + 
+                        year + sex + married + mage + 
                         clinega + pncgov +
                         rf_db_gest + rf_db_other + rf_hbp_chronic + rf_hbp_pregn + rf_cervix + rf_prev_4kg + rf_prev_sga + 
                         smoker_ddp + 
@@ -125,8 +126,8 @@ for (ps_exposures_i in ps_exposures) {
 ## truncate IPW based on balance results ----
 #' change for each exposure
 exposure_interest <- "no2_30280d"
-upper_percentile <- 0.9995
-lower_percentile <- 0.0005
+upper_percentile <- 0.975
+lower_percentile <- 0.025
 
 response <- exposure_interest
 predictor <- c(ps_vars, ps_exposures[ps_exposures!=response])
@@ -135,12 +136,21 @@ ipw_id_gbm <- fread(paste0(dir_ipwraw, exposure_interest, "_raw_gbm.csv"), colCl
 summary(as.numeric(ipw_id_gbm[,ipw_raw]))
 ipw_gbm <- truncate_ipw(as.numeric(ipw_id_gbm[,ipw_raw]), upper_percentile, lower_percentile)
 summary(ipw_gbm)
+par(mfrow=c(2,1))
+hist(as.numeric(ipw_id_gbm[,ipw_raw]))
+plot(density(as.numeric(ipw_id_gbm[,ipw_raw])), lwd = 2, col = "red")
+hist(ipw_gbm)
+plot(density(ipw_gbm), lwd = 2, col = "red")
 
 ipw_id_glm <- fread(paste0(dir_ipwraw, exposure_interest, "_raw_glm.csv"), colClasses = c("ipw_raw"="numeric"))
 summary(as.numeric(ipw_id_glm[,ipw_raw]))
 ipw_glm <- truncate_ipw(as.numeric(ipw_id_glm[,ipw_raw]), upper_percentile, lower_percentile)
 summary(ipw_glm)
-
+par(mfrow=c(2,1))
+hist(as.numeric(ipw_id_glm[,ipw_raw]))
+plot(density(as.numeric(ipw_id_glm[,ipw_raw])), lwd = 2, col = "red")
+hist(ipw_glm)
+plot(density(ipw_glm), lwd = 2, col = "red")
 
 ac <- matrix(NA,length(predictor),3)
 for (j in 1:length(predictor)){ 
@@ -160,27 +170,32 @@ balance <- data.frame(name.x=predictor,
                       corr=c(ac[,1],ac[,2],ac[,3]),
                       weighted = c(rep("unweighted", length(predictor)),rep("weighted_gbm", length(predictor)), rep("weighted_glm", length(predictor))))
 
-ggplot(balance, aes(x = name.x, y = corr, group = weighted)) +
+balance_plot <- ggplot(balance, aes(x = name.x, y = corr, group = weighted)) +
   # geom_line(aes(colour = weighted), size = 0.5, linetype = "dashed")+
   geom_point(aes(colour = weighted), size = 2) +
   geom_line(aes(colour = weighted), size = 0.5) +
   geom_hline(yintercept=0, size=0.2) +
   geom_hline(yintercept=-0.1, size=0.2, linetype = "dashed") +
   geom_hline(yintercept=0.1, size=0.2, linetype = "dashed") +
-  geom_hline(yintercept=-0.2, size=0.1, linetype = "dashed") +
-  geom_hline(yintercept=0.2, size=0.1, linetype = "dashed") +
+  # geom_hline(yintercept=-0.2, size=0.1, linetype = "dashed") +
+  # geom_hline(yintercept=0.2, size=0.1, linetype = "dashed") +
   theme(plot.title = element_blank(),
         axis.title.x = element_blank(),
         axis.title.y = element_blank()) +
   coord_flip() +
   theme(legend.position = "bottom", legend.title = element_blank(),
         text = element_text(size=16))
+balance_plot
+
+dir_plot <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/3balancePlots/two_period/four_exposure/"
+pdf(file = paste0(dir_plot, exposure_interest, ".pdf"))
+balance_plot
+dev.off()
 
 ## save the ipw
 assign(paste0("ipw_gbm_", exposure_interest), ipw_gbm)
 assign(paste0("ipw_glm_", exposure_interest), ipw_glm)
 
-## final save datasets
 IPWs <- data.table(uniqueid_yr = birth[,uniqueid_yr],
                    ipw_gbm_bc_30d,
                    ipw_glm_bc_30d,
@@ -190,4 +205,4 @@ IPWs <- data.table(uniqueid_yr = birth[,uniqueid_yr],
                    ipw_glm_no2_30d,
                    ipw_gbm_no2_30280d,
                    ipw_glm_no2_30280d)
-fwrite(IPWs, file = "/media/qnap3/Shuxin/airPollution_MAbirth/data/ipw_two_periods/IPWs_two_periods_1108.csv")
+fwrite(IPWs, file = "/media/qnap3/Shuxin/airPollution_MAbirth/data/ipw_two_period/four_exposure/IPWs_all_truncated.csv")
