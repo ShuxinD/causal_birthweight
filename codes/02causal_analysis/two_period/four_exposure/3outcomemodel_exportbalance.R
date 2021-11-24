@@ -36,7 +36,7 @@ IQRs <- data.table(bc_30d=IQR(dt[,bc_30d]),
                    no2_30280d=IQR(dt[,no2_30280d]))
 
 ## bwg ~ spline ----
-dir_splines <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/2mainEffects/two_period/"
+dir_splines <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/2mainEffects/two_period/four_exposure/"
 exposures <- c("bc_30d", "bc_30280d", "no2_30d", "no2_30280d")
 
 pdf(file = paste0(dir_splines,"splines.pdf"))
