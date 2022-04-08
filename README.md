@@ -1,27 +1,43 @@
-# Grid Search Algorithm for Tree Methods in Generalized Propensity Score Model
+# Read me
 
-## Major difference
+This repository is the data analysis part of the paper "Maternal exposure to black carbon and nitrogen dioxide during pregnancy and birth weight: Using machine-learning methods to achieve balance in inverse-probability weights", [available online](https://doi.org/10.1016/j.envres.2022.112978) 25 February 2022.
 
-- Incorporate big data with the H2O machine (multiple cores)
-- Use the average of absolute correlations (AAC) as the stopping rule instead of mean squared error
-- Grid search for (1) **Number of Trees** (`ntrees`), (2) **Maximum Tree Depth**(`max_depth`) and (3) **Column Sample Rate**(`col_sample_rate`)
+## Files organized
 
-## Basic idea
+Under `codes` folder:
+
+`01merge_description` folder contains all the data preparation work, including merging datasets from different resources.
+
+`02causal_analysis` folder contains all the modelling work.
+
+Under `results` folder, there are different subfolders containing all the info as the name described.
+
+## Appendix: method part
+
+Grid Search Algorithm for Tree Methods in Generalized Propensity Score Model
+
+### Major difference
+
+-   Incorporate big data with the H2O machine (multiple cores)
+-   Use the average of absolute correlations (AAC) as the stopping rule instead of mean squared error
+-   Grid search for (1) **Number of Trees** (`ntrees`), (2) **Maximum Tree Depth**(`max_depth`) and (3) **Column Sample Rate**(`col_sample_rate`)
+
+### Basic idea
 
 search for the best `ntrees` for each combination of `max_depth` and `col_sample_rate`
 
 *Notes:*
 
-- set the potential values of `max_depth` large due to the relatively large number of variables.
-- set `ntrees` to a large enough value (e.g. `ntrees=25000`) so that we should not find the optimal at the boundary
-- use the `h2o.staged_predict_proba` function to predict the GBM results for different numbers of trees that less than the number we set to `ntrees`
-  - for each prediction result (e.g. when `ntrees=25000`, there will be 25000 prediction results each with different number of trees), do balancing checking and find the optimal `ntrees` for each combination of `max_depth` and `col_sample_rate`
+-   set the potential values of `max_depth` large due to the relatively large number of variables.
+-   set `ntrees` to a large enough value (e.g. `ntrees=25000`) so that we should not find the optimal at the boundary
+-   use the `h2o.staged_predict_proba` function to predict the GBM results for different numbers of trees that less than the number we set to `ntrees`
+    -   for each prediction result (e.g. when `ntrees=25000`, there will be 25000 prediction results each with different number of trees), do balancing checking and find the optimal `ntrees` for each combination of `max_depth` and `col_sample_rate`
 
 ## Steps
 
 ### Set default parameters
 
-```R
+``` r
 min.rows <- 10 # fewest allowed (weighted) observations in a leaf
 learn.rate <- 0.005 # learning rate 
 rep.bootstrap <- 50 # number of bootstrap replicates
@@ -29,7 +45,7 @@ rep.bootstrap <- 50 # number of bootstrap replicates
 
 ### Set the range of hyperparameters
 
-```R
+``` r
 n.trees <- 25000
 max.depth <- c(6, 8, 10, 12)
 col.sample.rate <- c(0.8, 0.9, 1.0)
@@ -37,7 +53,7 @@ col.sample.rate <- c(0.8, 0.9, 1.0)
 
 ### Fit generalized propensity score (GPS) model, do prediction
 
-```R
+``` r
 ## take bc_30d exposure as an example
 independent <- c("year","sex","married","mage","m_edu", "cigdpp","cigddp",
                    "clinega","kotck","pncgov", "rf_db_gest","rf_db_other",
@@ -61,7 +77,7 @@ pred.gbm_30d <- h2o.staged_predict_proba(object = gbm_30d, newdata = birth.hex)
 
 ### Check balance and find the optimal `n.trees`
 
-```R
+``` r
 ## the function to calculate the AAC for different number of trees -
 ## - for each combination of max_depth and col_sample_rate
 F.aac.iter <- function(i, data, data.hex, ps.num, ps.model.pred, rep) {
@@ -101,26 +117,24 @@ F.aac.iter <- function(i, data, data.hex, ps.num, ps.model.pred, rep) {
 }
 ```
 
-- **calculate the stabilized inverse-probability weights (SIPW)** using the staged GPS model prediction results (saved in `pred.gbm_30d` 
-  $$
-  SIPW=\frac{f_X(X;\mu_1,\sigma^2_1)}{f_{X|C}(X|C=c;\mu_2,\sigma^2_2)}
-  $$
+-   **calculate the stabilized inverse-probability weights (SIPW)** using the staged GPS model prediction results (saved in `pred.gbm_30d` $$
+    SIPW=\frac{f_X(X;\mu_1,\sigma^2_1)}{f_{X|C}(X|C=c;\mu_2,\sigma^2_2)}
+    $$
 
-- where $f_{\bullet}(\bullet)$ denotes the probability density function with mean $\mu$ and variance $\sigma^2$, $X$ the continuous exposure (black carbon exposure), and $C$ the set of confounders
+-   where $f_{\bullet}(\bullet)$ denotes the probability density function with mean $\mu$ and variance $\sigma^2$, $X$ the continuous exposure (black carbon exposure), and $C$ the set of confounders
 
-- **truncate the SIPW** at 1\% and 99\%: those larger than 99 percentile are set to 99 percentile, less than 1 percentile are set to 1 percentile
+-   **truncate the SIPW** at 1% and 99%: those larger than 99 percentile are set to 99 percentile, less than 1 percentile are set to 1 percentile
 
-- **calculate the balances, get AAC for each combination**
-  
-  - *do bootstrapping* to create data samples from the pseudo-population (bootstrap sampling with replacements with SIPW) for a designated number of replicates (`rep.bootstrap`)  
-    - the sample size is set to `population^{0.7}` according to [references]
-    - `rep.bootstrap = 50` in consideration of computation sources.
-    - in each bootstrap sample, calculate the Pearson correlation coefficients for binary and continuous confounders, and calculate the polyserial correlation for the ordinal confounders
-      - I am aware of that the most popular way to account for the balance results with the binary variable is to calculate the standardized mean difference, but according to <https://www.sciencedirect.com/topics/psychology/standardized-mean-difference>, the variance-accounted-for correlation is not really different statistically from it.
-      - polyserial correlation is used by Zhu in his paper in 2015 *A Boosting Algorithm for Estimating Generalized Propensity Scores with Continuous Treatments* <https://pubmed.ncbi.nlm.nih.gov/26877909/>, and see <http://documentation.sas.com/?cdcId=pgmsascdc&cdcVersion=9.4_3.5&docsetId=procstat&docsetTarget=procstat_corr_details16.htm&locale=en> for method details
-  - *average the absolute correlations over the bootstrapping replicates* as AAC
-      - previously, I did the Fisher transformation for each correlation and then average it, and this put more weights on the extreme value. In this case, the extreme values are the correlation between exposures for different time windows.
-      - while all the other balancing results are good according to previous results, we do not want to put all of efforts on the exposure correlation, which may result in overfitting/overadjustment for the other reasonable confounders
-  
-- **search the minimum of AACs**, and find its corresponding combination of `ntrees`, `max_depth` and `col_sample_rate`.
+-   **calculate the balances, get AAC for each combination**
 
+    -   *do bootstrapping* to create data samples from the pseudo-population (bootstrap sampling with replacements with SIPW) for a designated number of replicates (`rep.bootstrap`)
+        -   the sample size is set to `population^{0.7}` according to [references]
+        -   `rep.bootstrap = 50` in consideration of computation sources.
+        -   in each bootstrap sample, calculate the Pearson correlation coefficients for binary and continuous confounders, and calculate the polyserial correlation for the ordinal confounders
+            -   I am aware of that the most popular way to account for the balance results with the binary variable is to calculate the standardized mean difference, but according to <https://www.sciencedirect.com/topics/psychology/standardized-mean-difference>, the variance-accounted-for correlation is not really different statistically from it.
+            -   polyserial correlation is used by Zhu in his paper in 2015 *A Boosting Algorithm for Estimating Generalized Propensity Scores with Continuous Treatments* <https://pubmed.ncbi.nlm.nih.gov/26877909/>, and see <http://documentation.sas.com/?cdcId=pgmsascdc&cdcVersion=9.4_3.5&docsetId=procstat&docsetTarget=procstat_corr_details16.htm&locale=en> for method details
+    -   *average the absolute correlations over the bootstrapping replicates* as AAC
+        -   previously, I did the Fisher transformation for each correlation and then average it, and this put more weights on the extreme value. In this case, the extreme values are the correlation between exposures for different time windows.
+        -   while all the other balancing results are good according to previous results, we do not want to put all of efforts on the exposure correlation, which may result in overfitting/overadjustment for the other reasonable confounders
+
+-   **search the minimum of AACs**, and find its corresponding combination of `ntrees`, `max_depth` and `col_sample_rate`.
