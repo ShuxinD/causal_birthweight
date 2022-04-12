@@ -13,9 +13,9 @@ gc()
 
 library(data.table)
 
-dir_input_geocode <- "/media/gate/Shuxin/MAbirth/MAbirth_SES/"
+dir_input_geocode <- "/media/qnap3/Shuxin/bc_no2_MAbirth_causal/data/SES/"
 dir_input_census <- "/media/qnap3/Covariates/Census/"
-dir_output_birth <- "/media/gate/Shuxin/MAbirth/MAbirth_SES/"
+dir_output_birth <- "/media/qnap3/Shuxin/bc_no2_MAbirth_causal/data/SES/"
 
 ######################### 1. Load and check birth data #########################
 ## load data
