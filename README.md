@@ -4,13 +4,13 @@ This repository is the data analysis part of the paper "Maternal exposure to bla
 
 ## Files organized
 
-Under `codes` folder:
+Under [`codes`](https://github.com/ShuxinD/causal_birthweight/tree/main/codes) folder:
 
-`01merge_description` folder contains all the data preparation work, including merging datasets from different resources.
+[`01merge_description`](https://github.com/ShuxinD/causal_birthweight/tree/main/codes/01merge_description) folder contains all the data preparation work, including merging datasets from different resources.
 
-`02causal_analysis` folder contains all the modelling work.
+[`02causal_analysis`](https://github.com/ShuxinD/causal_birthweight/tree/main/codes/02causal_analysis) folder contains all the modelling work.
 
-Under `results` folder, there are different subfolders containing all the info as the name described.
+Under [`results`](https://github.com/ShuxinD/causal_birthweight/tree/main/results) folder, there are different subfolders containing all the info as the name described.
 
 ## Appendix: method part
 
