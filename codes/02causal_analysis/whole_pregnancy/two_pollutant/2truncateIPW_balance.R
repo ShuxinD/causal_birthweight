@@ -19,9 +19,9 @@ library(ggplot2)
 n_cores <- detectCores() - 1 
 
 setwd("/media/gate/Shuxin/")
-dir_data <- "/media/qnap3/Shuxin/airPollution_MAbirth/"
-dir_gridsearch <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/1GridSearchResults/whole_pregnancy/two_pollutant/"
-dir_ipwraw <- "/media/qnap3/Shuxin/airPollution_MAbirth/data/ipw_whole_pregnancy/two_pollutant/"
+dir_data <- "/media/qnap3/Shuxin/bc_no2_MAbirth_causal/data/"
+dir_gridsearch <- "/media/qnap3/Shuxin/bc_no2_MAbirth_causal/github_repo/results/1GridSearchResults/whole_pregnancy/two_pollutant/"
+dir_ipwraw <- "/media/qnap3/Shuxin/bc_no2_MAbirth_causal/data/ipw_whole_pregnancy/two_pollutant/"
 
 truncate_ipw <- function(ipw_raw, upper_bound_percentile, lower_bound_percentile){
   #' ipw_raw: raw stabilized ipw
@@ -182,7 +182,7 @@ balance_plot <- ggplot(balance, aes(x = name.x, y = corr, group = weighted)) +
         text = element_text(size=16))
 balance_plot
 
-dir_plot <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/3balancePlots/whole_pregnancy/two_pollutant/two_method/"
+dir_plot <- "/media/qnap3/Shuxin/bc_no2_MAbirth_causal/github_repo/results/3balancePlots/whole_pregnancy/two_pollutant/two_method/"
 pdf(file = paste0(dir_plot, exposure_interest, ".pdf"))
 balance_plot
 dev.off()
@@ -196,4 +196,4 @@ IPWs <- data.table(uniqueid_yr = birth[,uniqueid_yr],
                    ipw_glm_bc_all,
                    ipw_gbm_no2_all,
                    ipw_glm_no2_all)
-fwrite(IPWs, file = "/media/qnap3/Shuxin/airPollution_MAbirth/data/ipw_whole_pregnancy/two_pollutant/IPWs_all_truncated.csv")
+fwrite(IPWs, file = "/media/qnap3/Shuxin/bc_no2_MAbirth_causal/data/ipw_whole_pregnancy/two_pollutant/IPWs_all_truncated.csv")

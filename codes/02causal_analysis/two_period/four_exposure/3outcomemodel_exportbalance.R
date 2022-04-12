@@ -14,8 +14,8 @@ library(mgcv)
 library(sandwich)
 
 setwd("/media/gate/Shuxin/")
-dir_birth <- "/media/qnap3/Shuxin/airPollution_MAbirth/"
-dir_ipw <- "/media/qnap3/Shuxin/airPollution_MAbirth/data/ipw_two_period/four_exposure/"
+dir_birth <- "/media/qnap3/Shuxin/bc_no2_MAbirth_causal/data/"
+dir_ipw <- "/media/qnap3/Shuxin/bc_no2_MAbirth_causal/data/ipw_two_period/four_exposure/"
 
 ## load birth data ----
 birth <- fread(paste0(dir_birth, "MAbirth_for_analyses.csv"))
@@ -36,7 +36,7 @@ IQRs <- data.table(bc_30d=IQR(dt[,bc_30d]),
                    no2_30280d=IQR(dt[,no2_30280d]))
 
 ## bwg ~ spline ----
-dir_splines <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/2mainEffects/two_period/four_exposure/"
+dir_splines <- "/media/qnap3/Shuxin/bc_no2_MAbirth_causal/github_repo/results/2mainEffects/two_period/four_exposure/"
 exposures <- c("bc_30d", "bc_30280d", "no2_30d", "no2_30280d")
 
 pdf(file = paste0(dir_splines,"splines.pdf"))
@@ -50,7 +50,7 @@ for (exposures_i in exposures){
 dev.off()
 
 ## bwg ~ exposure ----
-dir_bwg <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/2mainEffects/two_period/four_exposure/"
+dir_bwg <- "/media/qnap3/Shuxin/bc_no2_MAbirth_causal/github_repo/results/2mainEffects/two_period/four_exposure/"
 exposures <- c("bc_30d", "bc_30280d", "no2_30d", "no2_30280d")
 
 results_bwg <- NULL
@@ -92,7 +92,7 @@ print(results_bwg)
 write.csv(results_bwg, file = paste0(dir_bwg, "bwg_glm.csv"))
 
 ## lbw ~ exposure ----
-dir_lbw <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/2mainEffects/two_period/four_exposure/"
+dir_lbw <- "/media/qnap3/Shuxin/bc_no2_MAbirth_causal/github_repo/results/2mainEffects/two_period/four_exposure/"
 exposures <- c("bc_30d", "bc_30280d", "no2_30d", "no2_30280d")
 
 results_lbw <- NULL
@@ -134,7 +134,7 @@ write.csv(results_lbw, file = paste0(dir_lbw, "lbw_glm.csv"))
 ## export balance ----
 library(ggplot2)
 library(stringr)
-dir_balance <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/3balancePlots/two_period/four_exposure/"
+dir_balance <- "/media/qnap3/Shuxin/bc_no2_MAbirth_causal/github_repo/results/3balancePlots/two_period/four_exposure/"
 ps_exposures <-  c("bc_30d", "bc_30280d", "no2_30d", "no2_30280d")
 ps_vars <- c("year","sex","married","mage", # "cigdpp","cigddp",
              "clinega","pncgov", 

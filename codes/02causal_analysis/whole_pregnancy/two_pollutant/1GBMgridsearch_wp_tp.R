@@ -19,8 +19,8 @@ library(wCorr)
 n_cores <- detectCores() - 1 
 
 setwd("/media/gate/Shuxin/")
-dir_in <- "/media/qnap3/Shuxin/airPollution_MAbirth/"
-dir_gridsearch <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/1GridSearchResults/whole_pregnancy/two_pollutant/"
+dir_in <- "/media/qnap3/Shuxin/bc_no2_MAbirth_causal/data/"
+dir_gridsearch <- "/media/qnap3/Shuxin/bc_no2_MAbirth_causal/github_repo/results/1GridSearchResults/whole_pregnancy/two_pollutant/"
 
 # 0.1 hyperparameter range ----
 ## set parameters for h2o.gbm model
