@@ -1,4 +1,3 @@
-###############################################################################
 # Project: causal birthweight
 # Analysis: Link 1km grid NO2                                                 # 
 # Machine: 164 RStudio Server                                                 #
@@ -8,7 +7,6 @@
 # Output: "no2_birth_average.csv" (30d, 31-90d, 91-280d averages)             #
 # Author: Shuxin Dong (modified from Yaguang's codes)                         #
 # Date: 2021-01-06                                                            #
-###############################################################################
 
 ############################# 0. Setup ########################################
 rm(list=ls())
@@ -20,9 +18,9 @@ library(nabor)
 setDTthreads(threads = 0)
 setwd("/media/gate/Shuxin")
 
-dir_birth <- "/media/gate/Shuxin/"
+dir_birth <- "/media/qnap3/Shuxin/bc_no2_MAbirth_causal/data/"
 dir_no2 <- "/media/qnap3/Exposure modeling/3 National scale/USA/5 NO2 v1.2000_16/7 Final predictions 1 km/Daily/"
-dir_output <- "/media/gate/Shuxin/"
+dir_output <- "/media/qnap3/Shuxin/bc_no2_MAbirth_causal/data/exposures/"
 
 ## read in birth data and convert formats
 birth <- fread(paste0(dir_birth, "mabirths_02NOV18.csv"))

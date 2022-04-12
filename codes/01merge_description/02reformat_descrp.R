@@ -15,8 +15,8 @@ library(tableone)
 library(rtf)
 
 setwd("/media/gate/Shuxin/")
-dir_in <- "/media/qnap3/Shuxin/airPollution_MAbirth/"
-dir_out <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/0TableOne_checkVarDistribution/"
+dir_in <- "/media/qnap3/Shuxin/bc_no2_MAbirth_causal/data/"
+dir_out <- "/media/qnap3/Shuxin/bc_no2_MAbirth_causal/github_repo/results/0TableOne_checkVarDistribution/"
 
 birth <- fread(paste0(dir_in, "MAbirth_merged.csv"))
 birth[, lbw:=0][]
@@ -304,7 +304,7 @@ IQR_no2
 
 ## export data ready for analyses ----
 summary(birth)
-dir_outdata <- "/media/qnap3/Shuxin/airPollution_MAbirth/"
+dir_outdata <- "/media/qnap3/Shuxin/bc_no2_MAbirth_causal/data/"
 fwrite(birth, paste0(dir_outdata, "MAbirth_for_analyses.csv"))
 
 birth <- fread(paste0(dir_outdata, "MAbirth_for_analyses.csv"))

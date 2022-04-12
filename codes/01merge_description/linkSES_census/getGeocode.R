@@ -19,8 +19,8 @@ library(foreach)
 n_cores <- detectCores()-1
 
 setwd("/media/gate/Shuxin/")
-dir_input <- "/media/gate/Shuxin/MAbirth/"
-dir_output <- "/media/gate/Shuxin/MAbirth/MAbirth_SES/"
+dir_input <- "/media/qnap3/Shuxin/bc_no2_MAbirth_causal/data/"
+dir_output <- "/media/qnap3/Shuxin/bc_no2_MAbirth_causal/data/SES/"
 
 ## load data
 birth <- fread(file = paste0(dir_input, "mabirths_02NOV18.csv"))

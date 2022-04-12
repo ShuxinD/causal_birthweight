@@ -13,9 +13,10 @@ gc()
 library(data.table)
 
 setwd("/media/gate/Shuxin/")
-dir_in <- "/media/gate/Shuxin/MAbirth/"
-dir_inSES <- "/media/gate/Shuxin/MAbirth/MAbirth_SES/"
-dir_out <- "/media/qnap3/Shuxin/airPollution_MAbirth/"
+dir_in <- "/media/qnap3/Shuxin/bc_no2_MAbirth_causal/data/"
+dir_inExp <- "/media/qnap3/Shuxin/bc_no2_MAbirth_causal/data/exposures/"
+dir_inSES <- "/media/qnap3/Shuxin/bc_no2_MAbirth_causal/data/SES/"
+dir_out <- "/media/qnap3/Shuxin/bc_no2_MAbirth_causal/data/"
 
 birth0 <- fread(paste0(dir_in, "mabirths_02NOV18.csv"), header = TRUE)
 setDT(birth0)
@@ -33,13 +34,13 @@ dim(SES) # SES variable dimension
 # [1] 1174107       4
 
 ## read BC data
-bc <- fread(paste0(dir_in, "bc_birth_average.csv"), drop = c("bc_90d", "bc_280d"))
+bc <- fread(paste0(dir_inExp, "bc_birth_average.csv"), drop = c("bc_90d", "bc_280d"))
 dim(bc)
 # > dim(bc)
 # [1] 1093528       4
 
 ## read NO2 data
-no2 <- fread(paste0(dir_in, "no2_birth_average.csv"))
+no2 <- fread(paste0(dir_inExp, "no2_birth_average.csv"))
 dim(no2)
 # > dim(no2)
 # [1] 1094520       4

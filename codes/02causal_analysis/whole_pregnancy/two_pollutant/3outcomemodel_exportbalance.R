@@ -14,8 +14,8 @@ library(mgcv)
 library(sandwich)
 
 setwd("/media/gate/Shuxin/")
-dir_birth <- "/media/qnap3/Shuxin/airPollution_MAbirth/"
-dir_ipw <- "/media/qnap3/Shuxin/airPollution_MAbirth/data/ipw_whole_pregnancy/two_pollutant/"
+dir_birth <- "/media/qnap3/Shuxin/bc_no2_MAbirth_causal/data/"
+dir_ipw <- "/media/qnap3/Shuxin/bc_no2_MAbirth_causal/data/ipw_whole_pregnancy/two_pollutant/"
 
 ## load birth data ----
 birth <- fread(paste0(dir_birth, "MAbirth_for_analyses.csv"))
@@ -34,7 +34,7 @@ IQRs <- data.table(bc_all=IQR(dt[,bc_all]),
                    no2_all=IQR(dt[,no2_all]))
 
 ## bwg ~ spline ----
-dir_splines <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/2mainEffects/whole_pregnancy/two_pollutant/"
+dir_splines <- "/media/qnap3/Shuxin/bc_no2_MAbirth_causal/github_repo/results/2mainEffects/whole_pregnancy/two_pollutant/"
 exposures <- c("bc_all", "no2_all")
 
 pdf(file = paste0(dir_splines,"splines.pdf"))
@@ -48,7 +48,7 @@ for (exposures_i in exposures){
 dev.off()
 
 ## bwg ~ exposure ----
-dir_bwg <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/2mainEffects/whole_pregnancy/two_pollutant/"
+dir_bwg <- "/media/qnap3/Shuxin/bc_no2_MAbirth_causal/github_repo/results/2mainEffects/whole_pregnancy/two_pollutant/"
 exposures <- c("bc_all", "no2_all")
 
 results_bwg <- NULL
@@ -90,7 +90,7 @@ print(results_bwg)
 write.csv(results_bwg, file = paste0(dir_bwg, "bwg_glm.csv"))
 
 ## lbw ~ exposure ----
-dir_lbw <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/2mainEffects/whole_pregnancy/two_pollutant/"
+dir_lbw <- "/media/qnap3/Shuxin/bc_no2_MAbirth_causal/github_repo/results/2mainEffects/whole_pregnancy/two_pollutant/"
 exposures <- c("bc_all", "no2_all")
 
 results_lbw <- NULL
@@ -132,7 +132,7 @@ write.csv(results_lbw, file = paste0(dir_lbw, "lbw_glm.csv"))
 ## export balance ----
 library(ggplot2)
 library(stringr)
-dir_balance <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/3balancePlots/whole_pregnancy/two_pollutant/"
+dir_balance <- "/media/qnap3/Shuxin/bc_no2_MAbirth_causal/github_repo/results/3balancePlots/whole_pregnancy/two_pollutant/"
 ps_exposures <- c("bc_all","no2_all")
 ps_vars <- c("year","sex","married","mage", # "cigdpp","cigddp",
              "clinega","pncgov",
