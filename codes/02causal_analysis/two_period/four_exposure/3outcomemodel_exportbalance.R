@@ -34,7 +34,24 @@ IQRs <- data.table(bc_30d=IQR(dt[,bc_30d]),
                    bc_30280d=IQR(dt[,bc_30280d]),
                    no2_30d=IQR(dt[,no2_30d]),
                    no2_30280d=IQR(dt[,no2_30280d]))
-
+MEDIANs_overall <- data.table(bc_30d=median(dt[,bc_30d]),
+                      bc_30280d=median(dt[,bc_30280d]),
+                      no2_30d=median(dt[,no2_30d]),
+                      no2_30280d=median(dt[,no2_30280d]))
+MEDIANs_normal <- data.table(bc_30d=median(dt[lbw==0,bc_30d]),
+                              bc_30280d=median(dt[lbw==0,bc_30280d]),
+                              no2_30d=median(dt[lbw==0,no2_30d]),
+                              no2_30280d=median(dt[lbw==0,no2_30280d]))
+MEDIANs_low <- data.table(bc_30d=median(dt[lbw==1,bc_30d]),
+                             bc_30280d=median(dt[lbw==1,bc_30280d]),
+                             no2_30d=median(dt[lbw==1,no2_30d]),
+                             no2_30280d=median(dt[lbw==1,no2_30280d]))
+quantile(dt[,bc_30280d])
+quantile(dt[lbw==0, bc_30280d])
+quantile(dt[lbw==1, bc_30280d])
+quantile(dt[,no2_30d])
+quantile(dt[lbw==0, no2_30d])
+quantile(dt[lbw==1, no2_30d])
 ## bwg ~ spline ----
 dir_splines <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/2mainEffects/two_period/four_exposure/"
 exposures <- c("bc_30d", "bc_30280d", "no2_30d", "no2_30280d")

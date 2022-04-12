@@ -20,8 +20,8 @@ n_cores <- detectCores() - 1
 
 setwd("/media/gate/Shuxin/")
 dir_data <- "/media/qnap3/Shuxin/airPollution_MAbirth/"
-dir_gridsearch <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/1GridSearchResults/two_period/four_exposures/"
-dir_ipwraw <- "/media/qnap3/Shuxin/airPollution_MAbirth/data/ipw_two_periods/four_exposure/"
+dir_gridsearch <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/1GridSearchResults/two_period/four_exposure/"
+dir_ipwraw <- "/media/qnap3/Shuxin/airPollution_MAbirth/data/ipw_two_period/four_exposure/"
 
 truncate_ipw <- function(ipw_raw, upper_bound_percentile, lower_bound_percentile){
   #' ipw_raw: raw stabilized ipw
@@ -36,8 +36,8 @@ truncate_ipw <- function(ipw_raw, upper_bound_percentile, lower_bound_percentile
 }
 
 generate_ipw <- function(model_fitted_value, birth_raw_data, exposure_of_interest){
-  numerator <- dnorm((birth_raw_data[,get(exposure_of_interest)]-mean(birth_raw_data[,get(exposure_of_interest)]))/sd(birth_raw_data[,get(exposure_of_interest)]),0,1)
-  gps <- dnorm((birth_raw_data[,get(exposure_of_interest)]-model_fitted_value)/sd(birth_raw_data[,get(exposure_of_interest)]-model_fitted_value),0,1)
+  numerator <- dnorm(birth_raw_data[,get(exposure_of_interest)]-mean(birth_raw_data[,get(exposure_of_interest)]),0,sd(birth_raw_data[,get(exposure_of_interest)]))
+  gps <- dnorm(birth_raw_data[,get(exposure_of_interest)]-model_fitted_value,0,sd(birth_raw_data[,get(exposure_of_interest)]-model_fitted_value))
   ipw <- numerator/gps
   return(ipw)
 }
@@ -125,7 +125,7 @@ for (ps_exposures_i in ps_exposures) {
 
 ## truncate IPW based on balance results ----
 #' change for each exposure
-exposure_interest <- "no2_30280d"
+exposure_interest <- "bc_30d"
 upper_percentile <- 0.975
 lower_percentile <- 0.025
 

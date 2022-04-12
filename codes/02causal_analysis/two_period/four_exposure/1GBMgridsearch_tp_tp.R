@@ -28,7 +28,7 @@ n_cores <- detectCores() - 1
 
 setwd("/media/gate/Shuxin/")
 dir_in <- "/media/qnap3/Shuxin/airPollution_MAbirth/"
-dir_gridsearch <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/1GridSearchResults/two_period/four_exposures/"
+dir_gridsearch <- "/media/qnap3/Shuxin/airPollution_MAbirth/causal_birthweight/results/1GridSearchResults/two_period/four_exposure/"
 
 # 0.1 hyperparameter range ----
 ## set parameters for h2o.gbm model
@@ -58,7 +58,7 @@ F.aac.iter <- function(col_i, data, ipw_num, ps.model.pred) {
   #' ps.model.pred: the staged prediction results of boosting model to estimate (p(T_iX_i)) 
   #' ipw_num: the estimated p(E_i) 
   GBM.fitted <- as.numeric(as.vector(ps.model.pred[, floor(col_i)]))
-  GPS <- dnorm((data$T - GBM.fitted)/sd(data$T - GBM.fitted), 0, 1)
+  GPS <- dnorm(data$T - GBM.fitted, 0, sd(data$T - GBM.fitted))
   ipw_raw <- ipw_num/GPS
   # upper <- quantile(wt, 0.9992)
   # lower <- quantile(wt, 0.0008)
@@ -158,7 +158,7 @@ dt[, T := get(exposure)]
 dt[, (exposure) := NULL]
 independent <- c(ps_vars, ps_exposures[ps_exposures!=exposure])
 model.num = lm(T~1, data = dt) 
-ps.num <- dnorm((dt$T-model.num$fitted)/(summary(model.num))$sigma,0,1) # p(E_i)
+ps.num <- dnorm(dt$T-model.num$fitted,0,summary(model.num)$sigma) # p(E_i)
 
 opt_aac <- NULL
 for (max.depth_i in max.depth){
