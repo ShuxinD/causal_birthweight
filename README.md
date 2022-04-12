@@ -2,6 +2,8 @@
 
 This repository is the data analysis part of the paper "Maternal exposure to black carbon and nitrogen dioxide during pregnancy and birth weight: Using machine-learning methods to achieve balance in inverse-probability weights", [available online](https://doi.org/10.1016/j.envres.2022.112978) 25 February 2022.
 
+All analysis were conducted on 10 server.
+
 ## Files organized
 
 Under [`codes`](https://github.com/ShuxinD/causal_birthweight/tree/main/codes) folder:
